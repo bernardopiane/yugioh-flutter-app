@@ -6,6 +6,19 @@ class CardLevel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(level.toString());
+    return Row(
+      children: [
+        const Image(
+          image: AssetImage("assets/images/Level.webp"),
+          height: 18,
+        ),
+        const SizedBox(
+          width: 4,
+        ),
+        Text(
+          level.toString(),
+        ),
+      ],
+    );
   }
 }

@@ -132,6 +132,7 @@ class _AdvSearchState extends State<AdvSearch> {
                 ),
               ),
             ),
+            _buildArchetype(),
             ListTile(
               title: TextField(
                 onTap: () {},
@@ -186,5 +187,10 @@ class _AdvSearchState extends State<AdvSearch> {
         ),
       ),
     );
+  }
+
+  _buildArchetype() {
+    //TODO Implement fetching archetypes from https://db.ygoprodeck.com/api/v7/archetypes.php
+    return const SizedBox();
   }
 }

@@ -5,14 +5,18 @@ import 'package:http/http.dart' as http;
 import 'package:yugi_deck/card_info_entity.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MainPageState extends State<MainPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   late Future<List<CardInfoEntity>> data;
 
   String searchTerm = "";
@@ -22,11 +26,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    data = fetchData(Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php"));
+    data =
+        fetchData(Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php"));
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Container(
@@ -90,7 +96,7 @@ class _HomePageState extends State<HomePage> {
 
     var json = jsonDecode(response.body);
 
-    if(json["error"] != null){
+    if (json["error"] != null) {
       var snackBar = SnackBar(
         content: Text(json["error"].toString()),
       );
@@ -119,8 +125,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   _search(String value) {
-    var url = Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value");
-    setState((){
+    var url =
+        Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value");
+    setState(() {
       data = fetchData(url);
     });
   }

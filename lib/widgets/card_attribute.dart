@@ -6,6 +6,15 @@ class CardAttribute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(attribute);
+    return Row(
+      children: [
+        Image(
+          image: AssetImage("assets/images/$attribute.png"),
+          height: 32,
+        ),
+        const SizedBox(width: 4),
+        Text(attribute)
+      ],
+    );
   }
 }

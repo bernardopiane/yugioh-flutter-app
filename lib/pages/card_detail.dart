@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/pages/card_set_page.dart';
 import 'package:yugi_deck/widgets/card_attribute.dart';
 import 'package:yugi_deck/widgets/card_level.dart';
 
@@ -29,28 +31,29 @@ class CardDetail extends StatelessWidget {
                   children: [
                     _buildImage(context, imageUrl),
                     const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        if (card.attribute != null)
-                          CardAttribute(attribute: card.attribute!),
-                        if (card.level != null) CardLevel(level: card.level!)
-                      ],
-                    ),
                     if (card.attribute != null)
-                      Text("[${card.race} / ${card.type}]"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CardAttribute(attribute: card.attribute!),
+                          CardLevel(level: card.level!)
+                        ],
+                      ),
                     if (card.attribute == null) Text("[${card.type}]"),
+                    if (card.race != null)
+                      //TODO: Create race widget
+                      Text("[${card.race} / ${card.type}]"),
                     const SizedBox(height: 8),
                     Text(card.desc!),
                     const SizedBox(height: 8),
                     if (card.level != null)
                       Text("ATK/ ${card.atk} DEF/ ${card.def}"),
                     const SizedBox(height: 8),
-                    const Text("How to obtain: "),
-                    const SizedBox(height: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildCardSet(card.cardSets!),
-                    ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: _buildCardSet(card.cardSets!),
+                    // ),
+                    _buildCardSet(context, card.cardSets!)
                   ],
                 ),
               );
@@ -76,10 +79,9 @@ class CardDetail extends StatelessWidget {
                           Text("[${card.race} / ${card.type}]"),
                           Text(card.desc!),
                           Text("ATK/ ${card.atk} DEF/ ${card.def}"),
-                          const Text("How to obtain: "),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: _buildCardSet(card.cardSets!),
+                            children: _buildCardSet(context, card.cardSets!),
                           )
                         ],
                       ),
@@ -94,14 +96,39 @@ class CardDetail extends StatelessWidget {
     );
   }
 
-  _buildCardSet(List<CardInfoCardSets> cardSets) {
+  _buildCardSet(context, List<CardInfoCardSets> cardSets) {
     List<Widget> widgets = [];
 
     for (var element in cardSets) {
-      widgets.add(Text("${element.setName} - ${element.setRarity}"));
+      widgets.add(
+        ListTile(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CardSetPage(setCode: element.setCode!)));
+          },
+          style: ListTileStyle.list,
+          title: Text("${element.setName} - ${element.setRarity}"),
+        ),
+      );
     }
 
-    return widgets;
+    return ExpandablePanel(
+      header: const Text(
+        "How to Obtain",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      ),
+      collapsed: Text("Available in ${widgets.length} packs"),
+      expanded: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: ListTile.divideTiles(
+          tiles: widgets,
+          color: Colors.grey.shade400,
+        ).toList(),
+      ),
+    );
   }
 
   _buildImage(context, imageUrl) {
