@@ -11,10 +11,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  // static const TextStyle optionStyle =
+  //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  late PageController _pageController;
+  PageController _pageController = PageController();
   late List<Widget> _pages;
 
   void _onItemTapped(int index) {
@@ -28,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     // TODO: implement initState
+    // TODO: Changing app keep state
     super.initState();
 
     _pages = [

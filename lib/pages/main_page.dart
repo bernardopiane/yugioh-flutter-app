@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:yugi_deck/card_info_entity.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
+import '../utils.dart';
+import '../widgets/card_grid_view.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -27,7 +26,7 @@ class _MainPageState extends State<MainPage>
   void initState() {
     super.initState();
     data =
-        fetchData(Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php"));
+        fetchCardList("https://db.ygoprodeck.com/api/v7/cardinfo.php", context);
   }
 
   @override
@@ -39,7 +38,7 @@ class _MainPageState extends State<MainPage>
           width: double.infinity,
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).backgroundColor,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Center(
@@ -67,19 +66,29 @@ class _MainPageState extends State<MainPage>
         child: FutureBuilder<List<CardInfoEntity>>(
           future: data,
           builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
             if (snapshot.hasError) {
               debugPrint(snapshot.error.toString());
               return const Text("Failed to load data");
             } else if (snapshot.hasData) {
-              return GridView(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 59 / 86,
-                ),
-                children: _buildList(snapshot.data!),
-              );
+              return CardGridView(cardList: snapshot.data!);
+              // return GridView(
+              //   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              //     maxCrossAxisExtent: 200,
+              //     mainAxisSpacing: 12,
+              //     crossAxisSpacing: 12,
+              //     childAspectRatio: 59 / 86,
+              //   ),
+              //   children: _buildList(snapshot.data!),
+              // );
             } else {
               return const CircularProgressIndicator();
             }
@@ -89,46 +98,23 @@ class _MainPageState extends State<MainPage>
     );
   }
 
-  Future<List<CardInfoEntity>> fetchData(url) async {
-    var response = await http.post(url);
-
-    List<CardInfoEntity> cardList = [];
-
-    var json = jsonDecode(response.body);
-
-    if (json["error"] != null) {
-      var snackBar = SnackBar(
-        content: Text(json["error"].toString()),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      return cardList;
-    }
-
-    var lista = json["data"] as List;
-
-    for (var element in lista) {
-      CardInfoEntity cardInfo = CardInfoEntity.fromJson(element);
-      cardList.add(cardInfo);
-    }
-
-    return cardList;
-  }
-
-  List<Widget> _buildList(List<CardInfoEntity> data) {
-    List<Widget> widgets = [];
-
-    for (var element in data) {
-      widgets.add(GridTile(child: MyCard(cardInfo: element)));
-    }
-
-    return widgets;
-  }
+  // List<Widget> _buildList(List<CardInfoEntity> data) {
+  //   List<Widget> widgets = [];
+  //
+  //   for (var element in data) {
+  //     widgets.add(GridTile(child: MyCard(cardInfo: element)));
+  //   }
+  //
+  //   return widgets;
+  // }
 
   _search(String value) {
-    var url =
-        Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value");
+    // var url =
+    //     Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value");
     setState(() {
-      data = fetchData(url);
+      data = fetchCardList(
+          "https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value",
+          context);
     });
   }
 }

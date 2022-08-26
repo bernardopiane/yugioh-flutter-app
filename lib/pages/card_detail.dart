@@ -53,7 +53,8 @@ class CardDetail extends StatelessWidget {
                     //   crossAxisAlignment: CrossAxisAlignment.start,
                     //   children: _buildCardSet(card.cardSets!),
                     // ),
-                    _buildCardSet(context, card.cardSets!)
+                    if (card.cardSets != null)
+                      _buildCardSet(context, card.cardSets!)
                   ],
                 ),
               );
@@ -70,19 +71,31 @@ class CardDetail extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              CardAttribute(attribute: card.attribute!),
-                              CardLevel(level: card.level!)
-                            ],
-                          ),
-                          Text("[${card.race} / ${card.type}]"),
+                          const SizedBox(height: 8),
+                          if (card.attribute != null)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CardAttribute(attribute: card.attribute!),
+                                CardLevel(level: card.level!)
+                              ],
+                            ),
+                          if (card.attribute == null) Text("[${card.type}]"),
+                          if (card.race != null)
+                            //TODO: Create race widget
+                            Text("[${card.race} / ${card.type}]"),
+                          const SizedBox(height: 8),
                           Text(card.desc!),
-                          Text("ATK/ ${card.atk} DEF/ ${card.def}"),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: _buildCardSet(context, card.cardSets!),
-                          )
+                          const SizedBox(height: 8),
+                          if (card.level != null)
+                            Text("ATK/ ${card.atk} DEF/ ${card.def}"),
+                          const SizedBox(height: 8),
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: _buildCardSet(card.cardSets!),
+                          // ),
+                          if (card.cardSets != null)
+                            _buildCardSet(context, card.cardSets!)
                         ],
                       ),
                     ),
@@ -107,7 +120,7 @@ class CardDetail extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        CardSetPage(setCode: element.setCode!)));
+                        CardSetPage(setName: element.setName!)));
           },
           style: ListTileStyle.list,
           title: Text("${element.setName} - ${element.setRarity}"),
@@ -116,6 +129,9 @@ class CardDetail extends StatelessWidget {
     }
 
     return ExpandablePanel(
+      theme: ExpandableThemeData(
+        iconColor: Theme.of(context).colorScheme.secondary
+      ),
       header: const Text(
         "How to Obtain",
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -163,15 +179,17 @@ class CardDetail extends StatelessWidget {
           },
         );
       },
-      child: CachedNetworkImage(
-        imageUrl: imageUrl.toString(),
-        height: 550,
-        progressIndicatorBuilder: (context, url, downloadProgress) => Center(
-          heightFactor: 30,
-          widthFactor: 30,
-          child: CircularProgressIndicator(value: downloadProgress.progress),
+      child: Center(
+        child: CachedNetworkImage(
+          imageUrl: imageUrl.toString(),
+          height: 550,
+          progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+            heightFactor: 30,
+            widthFactor: 30,
+            child: CircularProgressIndicator(value: downloadProgress.progress),
+          ),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
       ),
     );
   }
