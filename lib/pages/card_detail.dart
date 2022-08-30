@@ -35,8 +35,8 @@ class CardDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CardAttribute(attribute: card.attribute!),
-                          CardLevel(level: card.level!)
+                          if(card.attribute != null) CardAttribute(attribute: card.attribute!),
+                          if(card.level != null) CardLevel(level: card.level!)
                         ],
                       ),
                     if (card.attribute == null) Text("[${card.type}]"),

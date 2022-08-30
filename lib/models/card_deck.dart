@@ -4,7 +4,7 @@ class CardInDeck {
   CardInfoEntity? card;
   int? quantity;
 
-  CardInDeck(this.card);
+  CardInDeck(this.card, {this.quantity = 1});
 
   CardInDeck.multiple(this.card, this.quantity);
 }

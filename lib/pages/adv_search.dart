@@ -1,10 +1,7 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
-import 'package:yugi_deck/globals.dart';
 import 'package:yugi_deck/models/card_attributes.dart';
-import 'package:http/http.dart' as http;
 import 'package:yugi_deck/models/card_link_marker.dart';
 import 'package:yugi_deck/utils.dart';
 import 'package:yugi_deck/widgets/card_grid_view.dart';
@@ -51,7 +48,6 @@ class _AdvSearchState extends State<AdvSearch> {
       ),
       body: SafeArea(
         minimum: const EdgeInsets.all(8),
-        //TODO: migrate to sliverlistview with form as header
         child: SingleChildScrollView(
           child: Column(
             children: [

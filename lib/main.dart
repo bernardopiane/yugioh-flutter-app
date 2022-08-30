@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yugi_deck/globals.dart';
+import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      //TODO: implement saving to storage
+      create: (_) => DeckList([]),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

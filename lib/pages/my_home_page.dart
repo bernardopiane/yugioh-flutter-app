@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/pages/adv_search.dart';
+import 'package:yugi_deck/pages/deck_list_page.dart';
 import 'package:yugi_deck/pages/main_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -44,6 +45,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('MD Deck'),
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const DeckListPage(),
+              ),
+            );
+          }, icon: const Icon(Icons.save_alt))
+        ],
       ),
       body: Center(
         // child: _widgetOptions.elementAt(_selectedIndex),

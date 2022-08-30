@@ -6,7 +6,8 @@ import 'package:yugi_deck/pages/card_detail.dart';
 class MyCard extends StatelessWidget {
   final CardInfoEntity cardInfo;
   final bool fullImage = false;
-  const MyCard({Key? key, required this.cardInfo, fullImage = false})
+  final noTap;
+  const MyCard({Key? key, required this.cardInfo, fullImage = false, this.noTap = false})
       : super(key: key);
 
   @override
@@ -52,14 +53,17 @@ class MyCard extends StatelessWidget {
         ),
         Material(
           color: Colors.transparent,
-          child: InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CardDetail(card: cardInfo),
-                ),
-              );
-            },
+          child: IgnorePointer(
+            ignoring: noTap ? true : false,
+            child: InkWell(
+              onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CardDetail(card: cardInfo),
+                    ),
+                  );
+              },
+            ),
           ),
         )
       ],
