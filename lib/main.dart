@@ -6,9 +6,13 @@ import 'package:yugi_deck/pages/my_home_page.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
+    MultiProvider(
       //TODO: implement saving to storage
-      create: (_) => DeckList([]),
+      providers: [
+        ChangeNotifierProvider<DeckList>(
+          create: (_) => DeckList([]),
+        ),
+      ],
       child: const MyApp(),
     ),
   );

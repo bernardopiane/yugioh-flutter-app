@@ -5,9 +5,9 @@ import 'package:yugi_deck/pages/card_detail.dart';
 
 class MyCard extends StatelessWidget {
   final CardInfoEntity cardInfo;
-  final bool fullImage = false;
-  final noTap;
-  const MyCard({Key? key, required this.cardInfo, fullImage = false, this.noTap = false})
+  final bool fullImage;
+  final bool noTap;
+  const MyCard({Key? key, required this.cardInfo, this.fullImage = false, this.noTap = false})
       : super(key: key);
 
   @override
@@ -53,6 +53,7 @@ class MyCard extends StatelessWidget {
         ),
         Material(
           color: Colors.transparent,
+          //Ignore on tap event
           child: IgnorePointer(
             ignoring: noTap ? true : false,
             child: InkWell(

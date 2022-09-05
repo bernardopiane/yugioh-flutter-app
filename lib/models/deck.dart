@@ -4,7 +4,8 @@ import 'package:yugi_deck/models/card_deck.dart';
 class Deck {
   String name;
   String? description;
-  List<CardInDeck>? cards;
+  // List<CardInDeck>? cards;
+  List<CardInfoEntity>? cards;
 
   Deck(this.name);
 
@@ -13,16 +14,21 @@ class Deck {
   }
 
   addCard(CardInfoEntity card){
-    CardInDeck cardInDeck = CardInDeck(card);
+    // CardInDeck cardInDeck = CardInDeck(card);
     // if(cards.contains(cardInDeck)){
     //   cards.firstWhere((element) => element == cardInDeck).quantity = ;
     // }
-    cards!.add(cardInDeck);
+    cards!.add(card);
+  }
+
+  addMultipleCards(List<CardInfoEntity> cardList){
+    cards = cardList;
   }
 
   removeCard(CardInfoEntity card){
     CardInDeck cardInDeck = CardInDeck(card);
-    cards!.remove(cardInDeck);
+    // cards!.remove(cardInDeck);
+    cards!.remove(card);
   }
 
 }

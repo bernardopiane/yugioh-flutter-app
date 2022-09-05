@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/variables.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
 
 class CardGridView extends StatelessWidget {
@@ -13,7 +14,7 @@ class CardGridView extends StatelessWidget {
         maxCrossAxisExtent: 200,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: 59 / 86,
+        childAspectRatio: cardAspRatio,
       ),
       children: _buildList(cardList),
     );
