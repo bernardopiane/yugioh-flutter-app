@@ -10,6 +10,8 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
+//TODO change keep alive to Provider for performance
+
 class _MainPageState extends State<MainPage>
     with AutomaticKeepAliveClientMixin {
   @override

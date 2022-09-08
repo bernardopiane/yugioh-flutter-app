@@ -20,15 +20,12 @@ class DeckList extends ChangeNotifier {
   }
 
   setCards(Deck deck, List<CardInfoEntity> cards){
-  //  TODO find deck and set cards
     Deck curDeck = decks.firstWhere((element) => deck.name == element.name);
     curDeck.cards = cards;
   }
 
   saveToFile() async {
     //  Iterate over the deck list and saveToFile
-    //  TODO: save data to disk
-    debugPrint("saveToFile");
     for (var deck in decks) {
       final directory = await getApplicationDocumentsDirectory();
       debugPrint("Deck name: ${deck.name}");
@@ -42,7 +39,6 @@ class DeckList extends ChangeNotifier {
   loadFromFile(BuildContext context) async {
     decks = [];
     final directory = await getApplicationDocumentsDirectory();
-    //TODO Create directory if not found
     Directory("${directory.path}/decks").exists().then((directoryExists) {
       if (!directoryExists) {
         Directory("${directory.path}/decks")
@@ -64,7 +60,6 @@ class DeckList extends ChangeNotifier {
           List<CardInfoEntity> cardList = [];
           if(json != null) {
             json.forEach((element) {
-              debugPrint("Card: ${element.toString()}");
               CardInfoEntity card = CardInfoEntity.fromJson(element);
               cardList.add(card);
             });

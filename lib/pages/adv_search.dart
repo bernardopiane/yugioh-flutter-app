@@ -300,8 +300,6 @@ class _AdvSearchState extends State<AdvSearch> {
     query ??= <String, String>{};
 
     query?[queryField] = queryText;
-
-    debugPrint(query.toString());
   }
 
   // Future<List> handleSearch() async {

@@ -11,7 +11,10 @@ import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/utils.dart';
 import 'package:yugi_deck/variables.dart';
 import 'package:yugi_deck/widgets/card_grid_view.dart';
+import 'package:yugi_deck/widgets/card_width_slider.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
+
+import 'package:popover/popover.dart';
 
 class DeckDetail extends StatefulWidget {
   const DeckDetail({Key? key, required this.deck}) : super(key: key);
@@ -28,9 +31,10 @@ class _DeckDetailState extends State<DeckDetail> {
 
   String? inputCardName;
 
+  double cardWidth = 100;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setState(() {
       data = fetchCardList(
@@ -58,14 +62,23 @@ class _DeckDetailState extends State<DeckDetail> {
               onPressed: () {
                 _saveDeck();
               },
-              icon: const Icon(Icons.save))
+              icon: const Icon(Icons.save)),
+          IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                        return CardWidthSlider(notifyParent: changeWidth, currentWidth: cardWidth,);
+                    });
+              },
+              icon: const Icon(Icons.photo_size_select_large))
         ],
       ),
       body: SafeArea(
         minimum: const EdgeInsets.all(8),
         child: GridView(
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: cardWidth,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
             childAspectRatio: cardAspRatio,
@@ -79,19 +92,14 @@ class _DeckDetailState extends State<DeckDetail> {
   List<Widget> _buildCards() {
     List<Widget> widgets = [];
 
-    // widget.deck.cards?.forEach((element) {
-    //   widgets.add(MyCard(cardInfo: element));
-    // });
-
     for (var element in deckCards) {
-      widgets.add(MyCard(cardInfo: element));
+      widgets.add(MyCard(cardInfo: element, fullImage: true,));
     }
 
     return widgets;
   }
 
   void _openSearchCardDialog(BuildContext context) {
-    debugPrint("Search Dialog Open");
     showDialog<void>(
         context: context,
         builder: (BuildContext context) {
@@ -193,5 +201,11 @@ class _DeckDetailState extends State<DeckDetail> {
     // final File file = File('${directory.path}/decks/${widget.deck.name}.txt');
     // await file.writeAsString(jsonEncode(selectedCards));
     // file.readAsString().then((value) => debugPrint(value));
+  }
+
+  void changeWidth(double value) {
+    setState((){
+      cardWidth = value;
+    });
   }
 }

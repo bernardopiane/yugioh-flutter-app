@@ -17,7 +17,6 @@ class _CardSetPageState extends State<CardSetPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     data = fetchCardList(
         "https://db.ygoprodeck.com/api/v7/cardinfo.php?cardset=${widget.setName}",

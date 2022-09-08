@@ -1,10 +1,5 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:yugi_deck/card_info_entity.dart';
 import 'package:yugi_deck/models/deck.dart';
 import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/pages/deck_detail.dart';
@@ -19,12 +14,11 @@ class DeckListPage extends StatefulWidget {
 class _DeckListPageState extends State<DeckListPage> {
   String? inputDeckName;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // _loadData();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // _loadData();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +37,12 @@ class _DeckListPageState extends State<DeckListPage> {
                           content: TextFormField(
                             decoration: const InputDecoration(
                                 label: Text("Deck name: ")),
+                            onFieldSubmitted: (value){
+                              setState(() {
+                                inputDeckName = value;
+                              });
+                              Navigator.pop(context, true);
+                            },
                             onChanged: (value) {
                               setState(() {
                                 inputDeckName = value;
@@ -78,12 +78,6 @@ class _DeckListPageState extends State<DeckListPage> {
             const ListTile(
               title: Text("Deck List"),
             ),
-            ElevatedButton(
-              child: const Text("Print decks"),
-              onPressed: (){
-                debugPrint("Show decks: ${Provider.of<DeckList>(context, listen: false).decks.elementAt(0).cards.toString()}");
-              },
-            ),
             ..._buildDeckList(context)
           ],
         ),
@@ -93,43 +87,23 @@ class _DeckListPageState extends State<DeckListPage> {
 
   List<Widget> _buildDeckList(BuildContext context) {
     List<Widget> widgets = [];
-    //
-    // final directory = getApplicationDocumentsDirectory().then((value) {
-    //   //TODO Create directory if not found
-    //   Directory("${value.path}/decks").exists().then((directoryExists) {
-    //     if (!directoryExists) {
-    //       Directory("${value.path}/decks")
-    //           .create()
-    //           .then((value) => debugPrint("Directory created"));
-    //     } else {
-    //       debugPrint("Directory exists");
-    //     }
-    //   });
-    //
-    //   final deckDir = Directory("${value.path}/decks");
-    //   deckDir.list().forEach((element) {
-    //     File file = File(element.path);
-    //     debugPrint(file.absolute.toString());
-    //     widgets.add(
-    //       ListTile(
-    //         title: const Text("ndsan"),
-    //         onTap: (){},
-    //       )
-    //     );
-    //   });
-    // });
-    // return widgets;
 
     Provider.of<DeckList>(context).decks.forEach((element) {
-      widgets.add(ListTile(
-        title: Text(element.name),
-        onTap: () => {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => DeckDetail(deck: element)),
-          )
-        },
-      ));
+      widgets.add(
+        ListTile(
+          title: Text(element.name),
+          onLongPress: (){
+          //  TODO display actions
+          },
+          onTap: () => {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DeckDetail(deck: element)),
+            )
+          },
+        ),
+      );
     });
     return widgets;
   }
