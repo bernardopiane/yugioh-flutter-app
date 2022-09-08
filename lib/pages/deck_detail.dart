@@ -24,7 +24,7 @@ class DeckDetail extends StatefulWidget {
 class _DeckDetailState extends State<DeckDetail> {
   late Future<List<CardInfoEntity>> data;
 
-  List<CardInfoEntity> selectedCards = [];
+  List<CardInfoEntity> deckCards = [];
 
   String? inputCardName;
 
@@ -36,9 +36,11 @@ class _DeckDetailState extends State<DeckDetail> {
       data = fetchCardList(
           "https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Tornado%20Dragon",
           context);
+      if (widget.deck.cards != null) {
+        deckCards = widget.deck.cards!;
+      }
     });
-  //  Load from local file if exists
-
+    //  Load from local file if exists
   }
 
   @override
@@ -77,11 +79,11 @@ class _DeckDetailState extends State<DeckDetail> {
   List<Widget> _buildCards() {
     List<Widget> widgets = [];
 
-    widget.deck.cards?.forEach((element) {
-      widgets.add(MyCard(cardInfo: element));
-    });
+    // widget.deck.cards?.forEach((element) {
+    //   widgets.add(MyCard(cardInfo: element));
+    // });
 
-    for (var element in selectedCards) {
+    for (var element in deckCards) {
       widgets.add(MyCard(cardInfo: element));
     }
 
@@ -147,21 +149,13 @@ class _DeckDetailState extends State<DeckDetail> {
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
-            debugPrint("Tapped");
-            debugPrint(element.toString());
-
-            // //Check if already exists
-            // var exists = selectedCards.firstWhere(
-            //     (card) => card.id == element.id,
-            //     orElse: () => CardInfoEntity());
-
-            var quantity = selectedCards.where((card) => card.id == element.id);
+            var quantity = deckCards.where((card) => card.id == element.id);
 
             // if (exists.id == null) {
             if (quantity.length <= 2) {
               setState(() {
                 // if (!selectedCards.contains(element)) {
-                selectedCards.add(element);
+                deckCards.add(element);
                 // }
               });
             } else {
@@ -177,9 +171,6 @@ class _DeckDetailState extends State<DeckDetail> {
         ),
       );
     }
-
-    debugPrint("Build Search Results : ${data.toString()}");
-
     return widgets;
   }
 
@@ -191,9 +182,12 @@ class _DeckDetailState extends State<DeckDetail> {
     });
   }
 
-  void _saveDeck() async {
-    Provider.of<DeckList>(context).decks.add(widget.deck);
-    Provider.of<DeckList>(context).saveToFile();
+  void _saveDeck() {
+    // Provider.of<DeckList>(context, listen: false).decks.add(widget.deck);
+    Provider.of<DeckList>(context, listen: false)
+        .setCards(widget.deck, deckCards);
+    Provider.of<DeckList>(context, listen: false).saveToFile();
+    //TODO Fix double saving
     // final directory = await getApplicationDocumentsDirectory();
     // debugPrint("Dir: ${directory.toString()}");
     // final File file = File('${directory.path}/decks/${widget.deck.name}.txt');

@@ -24,6 +24,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Provider.of<DeckList>(context, listen: false).loadFromFile(context);
+
     return MaterialApp(
         title: 'MD Deck',
         scaffoldMessengerKey: snackbarKey,

@@ -23,7 +23,7 @@ class _DeckListPageState extends State<DeckListPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _loadData();
+    // _loadData();
   }
 
   @override
@@ -78,6 +78,12 @@ class _DeckListPageState extends State<DeckListPage> {
             const ListTile(
               title: Text("Deck List"),
             ),
+            ElevatedButton(
+              child: const Text("Print decks"),
+              onPressed: (){
+                debugPrint("Show decks: ${Provider.of<DeckList>(context, listen: false).decks.elementAt(0).cards.toString()}");
+              },
+            ),
             ..._buildDeckList(context)
           ],
         ),
@@ -128,43 +134,43 @@ class _DeckListPageState extends State<DeckListPage> {
     return widgets;
   }
 
-  void _loadData() {
-    final directory = getApplicationDocumentsDirectory().then((value) {
-      //TODO Create directory if not found
-      Directory("${value.path}/decks").exists().then((directoryExists) {
-        if (!directoryExists) {
-          Directory("${value.path}/decks")
-              .create()
-              .then((value) => debugPrint("Directory created"));
-        } else {
-          debugPrint("Directory exists");
-        }
-      });
-
-      final deckDir = Directory("${value.path}/decks");
-      deckDir.list().forEach((element) {
-        debugPrint(element.toString());
-        if (element.isAbsolute) {
-          // File file = File(element.path);
-          final File file = File(element.path);
-          file.readAsString().then((value) {
-            // debugPrint("File: ${element.toString()} - Content: $value");
-            var json = jsonDecode(value);
-            Deck deck = Deck(element.toString());
-            List<CardInfoEntity> cardList = [];
-            json.forEach((element) {
-              CardInfoEntity card = CardInfoEntity.fromJson(element);
-              cardList.add(card);
-            });
-            deck.addMultipleCards(cardList);
-            // debugPrint(deck.toString());
-          });
-        }
-      });
-
-      //TODO Read data and display
-
-      // final File file = File('${value.path}/${widget.deck.name}.txt');
-    });
-  }
+  // void _loadData() {
+  //   final directory = getApplicationDocumentsDirectory().then((value) {
+  //     //TODO Create directory if not found
+  //     Directory("${value.path}/decks").exists().then((directoryExists) {
+  //       if (!directoryExists) {
+  //         Directory("${value.path}/decks")
+  //             .create()
+  //             .then((value) => debugPrint("Directory created"));
+  //       } else {
+  //         debugPrint("Directory exists");
+  //       }
+  //     });
+  //
+  //     final deckDir = Directory("${value.path}/decks");
+  //     deckDir.list().forEach((element) {
+  //       debugPrint(element.toString());
+  //       if (element.isAbsolute) {
+  //         // File file = File(element.path);
+  //         final File file = File(element.path);
+  //         file.readAsString().then((value) {
+  //           // debugPrint("File: ${element.toString()} - Content: $value");
+  //           var json = jsonDecode(value);
+  //           Deck deck = Deck(element.toString());
+  //           List<CardInfoEntity> cardList = [];
+  //           json.forEach((element) {
+  //             CardInfoEntity card = CardInfoEntity.fromJson(element);
+  //             cardList.add(card);
+  //           });
+  //           deck.addMultipleCards(cardList);
+  //           // debugPrint(deck.toString());
+  //         });
+  //       }
+  //     });
+  //
+  //     //TODO Read data and display
+  //
+  //     // final File file = File('${value.path}/${widget.deck.name}.txt');
+  //   });
+  // }
 }
