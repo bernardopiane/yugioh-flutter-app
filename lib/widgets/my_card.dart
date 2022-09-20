@@ -7,7 +7,8 @@ class MyCard extends StatelessWidget {
   final CardInfoEntity cardInfo;
   final bool fullImage;
   final bool noTap;
-  const MyCard({Key? key, required this.cardInfo, this.fullImage = false, this.noTap = false})
+  final longPress;
+  const MyCard({Key? key, required this.cardInfo, this.fullImage = false, this.noTap = false, this.longPress = null})
       : super(key: key);
 
   @override
@@ -57,6 +58,7 @@ class MyCard extends StatelessWidget {
           child: IgnorePointer(
             ignoring: noTap ? true : false,
             child: InkWell(
+              onLongPress: longPress,
               onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(

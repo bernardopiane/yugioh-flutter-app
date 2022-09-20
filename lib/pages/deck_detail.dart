@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -33,6 +34,10 @@ class _DeckDetailState extends State<DeckDetail> {
 
   double cardWidth = 100;
 
+  bool deleteView = false;
+
+  HashSet selectedCards = HashSet();
+
   @override
   void initState() {
     super.initState();
@@ -50,30 +55,59 @@ class _DeckDetailState extends State<DeckDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.deck.name),
-        actions: [
-          IconButton(
-              onPressed: () {
-                _openSearchCardDialog(context);
-              },
-              icon: const Icon(Icons.add)),
-          IconButton(
-              onPressed: () {
-                _saveDeck();
-              },
-              icon: const Icon(Icons.save)),
-          IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                        return CardWidthSlider(notifyParent: changeWidth, currentWidth: cardWidth,);
-                    });
-              },
-              icon: const Icon(Icons.photo_size_select_large))
-        ],
-      ),
+      appBar: deleteView
+          ? AppBar(
+              title: Text("Selected: ${selectedCards.length}"),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    toggleDeleteView();
+                  },
+                  icon: const Icon(Icons.cancel),
+                ),
+                IconButton(
+                  onPressed: () {
+                    handleDeleteCards();
+                    toggleDeleteView();
+                  },
+                  icon: const Icon(Icons.delete_forever),
+                ),
+              ],
+            )
+          : AppBar(
+              title: Text(widget.deck.name),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      _openSearchCardDialog(context);
+                    },
+                    icon: const Icon(Icons.add)),
+                IconButton(
+                    onPressed: () {
+                      _saveDeck();
+                    },
+                    icon: const Icon(Icons.save)),
+                IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return CardWidthSlider(
+                            notifyParent: changeWidth,
+                            currentWidth: cardWidth,
+                          );
+                        });
+                  },
+                  icon: const Icon(Icons.photo_size_select_large),
+                ),
+                IconButton(
+                  onPressed: () {
+                    toggleDeleteView();
+                  },
+                  icon: const Icon(Icons.delete),
+                ),
+              ],
+            ),
       body: SafeArea(
         minimum: const EdgeInsets.all(8),
         child: GridView(
@@ -93,10 +127,87 @@ class _DeckDetailState extends State<DeckDetail> {
     List<Widget> widgets = [];
 
     for (var element in deckCards) {
-      widgets.add(MyCard(cardInfo: element, fullImage: true,));
+      if (deleteView) {
+        if (selectedCards.contains(element)) {
+          widgets.add(
+            Stack(
+              children: [
+                MyCard(
+                  cardInfo: element,
+                  fullImage: true,
+                  noTap: true,
+                ),
+                Material(
+                  color: Colors.grey.withOpacity(0.60),
+                  child: InkWell(
+                    onTap: () {
+                      handleSelectedCards(element);
+                    },
+                  ),
+                ),
+                Positioned(
+                  top: -10,
+                  right: -10,
+                  child: IconButton(
+                    icon: const Icon(Icons.remove_circle_outline),
+                    onPressed: () {},
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          widgets.add(
+            Stack(
+              children: [
+                MyCard(
+                  cardInfo: element,
+                  fullImage: true,
+                  noTap: true,
+                ),
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      handleSelectedCards(element);
+                    },
+                  ),
+                ),
+                Positioned(
+                  top: -10,
+                  right: -10,
+                  child: IconButton(
+                    icon: const Icon(Icons.remove_circle_outline),
+                    onPressed: () {
+                      deleteCard(element);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      } else {
+        widgets.add(MyCard(
+          cardInfo: element,
+          fullImage: true,
+        ));
+      }
     }
 
     return widgets;
+  }
+
+  void handleSelectedCards(CardInfoEntity element) {
+    if (selectedCards.contains(element)) {
+      setState(() {
+        selectedCards.remove(element);
+      });
+    } else {
+      setState(() {
+        selectedCards.add(element);
+      });
+    }
   }
 
   void _openSearchCardDialog(BuildContext context) {
@@ -104,6 +215,7 @@ class _DeckDetailState extends State<DeckDetail> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+            insetPadding: const EdgeInsets.all(8),
             title: TextFormField(
               onFieldSubmitted: (value) {
                 //  TODO: Search API
@@ -125,6 +237,7 @@ class _DeckDetailState extends State<DeckDetail> {
                     if (snapshot.hasData &&
                         snapshot.connectionState == ConnectionState.done) {
                       return GridView(
+                          key: Key(deckCards.length.toString()),
                           gridDelegate:
                               const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 200,
@@ -143,7 +256,7 @@ class _DeckDetailState extends State<DeckDetail> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text("add"))
+                  child: const Text("Ok"))
             ],
           );
         });
@@ -204,8 +317,28 @@ class _DeckDetailState extends State<DeckDetail> {
   }
 
   void changeWidth(double value) {
-    setState((){
+    setState(() {
       cardWidth = value;
+    });
+  }
+
+  void toggleDeleteView() {
+    setState(() {
+      deleteView = !deleteView;
+    });
+  }
+
+  void handleDeleteCards() {
+    for (var element in selectedCards) {
+      setState(() {
+        deleteCard(element);
+      });
+    }
+  }
+
+  void deleteCard(CardInfoEntity card) {
+    setState(() {
+      deckCards.remove(card);
     });
   }
 }

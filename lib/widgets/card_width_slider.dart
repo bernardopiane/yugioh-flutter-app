@@ -29,6 +29,8 @@ class _CardWidthSliderState extends State<CardWidthSlider> {
       width: double.maxFinite,
       height: 100,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text("Card width"),
           Slider(
@@ -40,6 +42,7 @@ class _CardWidthSliderState extends State<CardWidthSlider> {
               setState(() {
                 cardWidth = value;
               });
+              //Save selection
               widget.notifyParent(value);
             },
           ),

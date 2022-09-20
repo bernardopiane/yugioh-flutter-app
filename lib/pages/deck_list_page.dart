@@ -23,61 +23,60 @@ class _DeckListPageState extends State<DeckListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: TextFormField(
+                    decoration: const InputDecoration(
+                        label: Text("Deck name: ")),
+                    onFieldSubmitted: (value){
+                      setState(() {
+                        inputDeckName = value;
+                      });
+                      Navigator.pop(context, true);
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        inputDeckName = value;
+                      });
+                    },
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, true);
+                      },
+                      child: const Text("Add"),
+                    ),
+                  ],
+                );
+              }).then((value) {
+            if (value != null) {
+              if (inputDeckName != "") {
+                Provider.of<DeckList>(context, listen: false)
+                    .addDeck(Deck(inputDeckName.toString()));
+                inputDeckName = "";
+              }
+            }
+          });
+        },
+        backgroundColor: Colors.amber[800],
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(toolbarHeight: 0),
       body: SafeArea(
-        minimum: const EdgeInsets.all(8),
+        // minimum: const EdgeInsets.all(8),
         child: ListView(
           children: [
-            ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          content: TextFormField(
-                            decoration: const InputDecoration(
-                                label: Text("Deck name: ")),
-                            onFieldSubmitted: (value){
-                              setState(() {
-                                inputDeckName = value;
-                              });
-                              Navigator.pop(context, true);
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                inputDeckName = value;
-                              });
-                            },
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text("Cancel"),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context, true);
-                              },
-                              child: const Text("Add"),
-                            ),
-                          ],
-                        );
-                      }).then((value) {
-                    if (value != null) {
-                      if (inputDeckName != "") {
-                        Provider.of<DeckList>(context, listen: false)
-                            .addDeck(Deck(inputDeckName.toString()));
-                        inputDeckName = "";
-                      }
-                    }
-                  });
-                },
-                child: const Text("Add to Deck")),
-            const ListTile(
-              title: Text("Deck List"),
-            ),
             ..._buildDeckList(context)
           ],
         ),
@@ -91,6 +90,7 @@ class _DeckListPageState extends State<DeckListPage> {
     Provider.of<DeckList>(context).decks.forEach((element) {
       widgets.add(
         ListTile(
+          contentPadding: EdgeInsets.all(8),
           title: Text(element.name),
           onLongPress: (){
           //  TODO display actions
