@@ -57,14 +57,17 @@ class _DeckDetailState extends State<DeckDetail> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Are you sure?'),
-            content: const Text('Do you want to exit an App'),
+            content: const Text('Do you want to save the changes'),
             actions: <Widget>[
               TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
+                onPressed: () => Navigator.of(context).pop(true),
                 child: const Text('No'),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () {
+                  _saveDeck();
+                  Navigator.of(context).pop(true);
+                },
                 child: const Text('Yes'),
               ),
             ],
@@ -241,64 +244,70 @@ class _DeckDetailState extends State<DeckDetail> {
     showDialog<void>(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            // insetPadding: const EdgeInsets.all(8),
-            title: TextFormField(
-              onFieldSubmitted: (value) {
-                _searchAPI();
-              },
-              onChanged: (value) {
-                setState(() {
-                  inputCardName = value.toString();
-                });
-              },
-              decoration: const InputDecoration(label: Text("Search...")),
-            ),
-            content: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: FutureBuilder<List<CardInfoEntity>>(
-                  future: data,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData &&
-                        snapshot.connectionState == ConnectionState.done) {
-                      return GridView(
-                          key: Key(deckCards.length.toString()),
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 200,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: cardAspRatio,
-                          ),
-                          children: _buildSearchResults(snapshot.data!));
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  },
-                )),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
+          return SingleChildScrollView(
+            child: AlertDialog(
+              insetPadding: const EdgeInsets.all(8),
+              title: TextFormField(
+                onFieldSubmitted: (value) {
+                  _searchAPI();
                 },
-                child: const Text("Ok"),
+                onChanged: (value) {
+                  setState(() {
+                    inputCardName = value.toString();
+                  });
+                },
+                decoration: const InputDecoration(label: Text("Search...")),
               ),
-            ],
-            // actions: [
-            //   TextButton(
-            //       onPressed: () {
-            //         Navigator.of(context).pop();
-            //       },
-            //       child: const Text("Ok"))
-            // ],
+              content: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.65,
+                  width: MediaQuery.of(context).size.width,
+                  child: FutureBuilder<List<CardInfoEntity>>(
+                    future: data,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData &&
+                          snapshot.connectionState == ConnectionState.done) {
+                        return GridView(
+                            key: Key(deckCards.length.toString()),
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 200,
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              childAspectRatio: cardAspRatio,
+                            ),
+                            children: _buildSearchResults(snapshot.data!));
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
+                  )),
+              actions: [
+                SizedBox(
+                  height: 32,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("Ok"),
+                  ),
+                ),
+              ],
+              // actions: [
+              //   TextButton(
+              //       onPressed: () {
+              //         Navigator.of(context).pop();
+              //       },
+              //       child: const Text("Ok"))
+              // ],
+            ),
           );
         });
   }
 
-  addToState(CardInfoEntity element){
+  addToState(CardInfoEntity element) {
     setState(() {
       deckCards.add(element);
+      deckCards.sort((a, b) => a.name!.compareTo(b.name!));
       hasChanged = true;
     });
   }
@@ -320,13 +329,9 @@ class _DeckDetailState extends State<DeckDetail> {
                 // if (exists.id == null) {
                 if (quantity.length <= 2) {
                   addToState(element);
-                  setState((){
+                  setState(() {
                     howManyInDeck++;
                   });
-                  // setState(() {
-                  //   deckCards.add(element);
-                  //   hasChanged = true;
-                  // });
                 } else {
                   //TODO:  Display  feedback to user
                 }
