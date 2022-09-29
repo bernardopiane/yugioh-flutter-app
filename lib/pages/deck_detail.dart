@@ -39,7 +39,7 @@ class _DeckDetailState extends State<DeckDetail> {
     super.initState();
     setState(() {
       data = fetchCardList(
-          "https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Tornado%20Dragon",
+          "https://db.ygoprodeck.com/api/v7/cardinfo.php?staple=yes",
           context);
       if (widget.deck.cards != null) {
         deckCards = widget.deck.cards!;
@@ -244,62 +244,142 @@ class _DeckDetailState extends State<DeckDetail> {
     showDialog<void>(
         context: context,
         builder: (BuildContext context) {
-          return SingleChildScrollView(
-            child: AlertDialog(
-              insetPadding: const EdgeInsets.all(8),
-              title: TextFormField(
-                onFieldSubmitted: (value) {
-                  _searchAPI();
-                },
-                onChanged: (value) {
-                  setState(() {
-                    inputCardName = value.toString();
-                  });
-                },
-                decoration: const InputDecoration(label: Text("Search...")),
-              ),
-              content: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.65,
-                  width: MediaQuery.of(context).size.width,
-                  child: FutureBuilder<List<CardInfoEntity>>(
-                    future: data,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData &&
-                          snapshot.connectionState == ConnectionState.done) {
-                        return GridView(
-                            key: Key(deckCards.length.toString()),
-                            gridDelegate:
-                                const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 200,
-                              mainAxisSpacing: 12,
-                              crossAxisSpacing: 12,
-                              childAspectRatio: cardAspRatio,
-                            ),
-                            children: _buildSearchResults(snapshot.data!));
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    },
-                  )),
-              actions: [
-                SizedBox(
-                  height: 32,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Ok"),
+          return OrientationBuilder(
+            builder: (context, orientation) {
+              if (orientation == Orientation.portrait) {
+                debugPrint("Portrait");
+                return SingleChildScrollView(
+                  child: AlertDialog(
+                    insetPadding: const EdgeInsets.all(8),
+                    title: TextFormField(
+                      onFieldSubmitted: (value) {
+                        _searchAPI();
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          inputCardName = value.toString();
+                        });
+                      },
+                      decoration:
+                          const InputDecoration(label: Text("Search...")),
+                    ),
+                    content: SizedBox(
+                        height: MediaQuery.of(context).size.height - 240,
+                        width: MediaQuery.of(context).size.width,
+                        child: FutureBuilder<List<CardInfoEntity>>(
+                          future: data,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData &&
+                                snapshot.connectionState ==
+                                    ConnectionState.done) {
+                              return GridView(
+                                  key: Key(deckCards.length.toString()),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 200,
+                                    mainAxisSpacing: 12,
+                                    crossAxisSpacing: 12,
+                                    childAspectRatio: cardAspRatio,
+                                  ),
+                                  children:
+                                      _buildSearchResults(snapshot.data!));
+                            } else {
+                              return const CircularProgressIndicator();
+                            }
+                          },
+                        )),
+                    actions: [
+                      SizedBox(
+                        height: 32,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Ok"),
+                        ),
+                      ),
+                    ],
+                    // actions: [
+                    //   TextButton(
+                    //       onPressed: () {
+                    //         Navigator.of(context).pop();
+                    //       },
+                    //       child: const Text("Ok"))
+                    // ],
                   ),
-                ),
-              ],
-              // actions: [
-              //   TextButton(
-              //       onPressed: () {
-              //         Navigator.of(context).pop();
-              //       },
-              //       child: const Text("Ok"))
-              // ],
-            ),
+                );
+              } else {
+                debugPrint("Landscape");
+                return SingleChildScrollView(
+                  child: AlertDialog(
+                    insetPadding: const EdgeInsets.all(8),
+                    content: Column(
+                      children: [
+                        TextFormField(
+                          onFieldSubmitted: (value) {
+                            _searchAPI();
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              inputCardName = value.toString();
+                            });
+                          },
+                          decoration:
+                              const InputDecoration(label: Text("Search...")),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.6,
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              child: FutureBuilder<List<CardInfoEntity>>(
+                                future: data,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                    return GridView(
+                                        key: Key(deckCards.length.toString()),
+                                        gridDelegate:
+                                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                          maxCrossAxisExtent: 200,
+                                          mainAxisSpacing: 12,
+                                          crossAxisSpacing: 12,
+                                          childAspectRatio: cardAspRatio,
+                                        ),
+                                        children: _buildSearchResults(
+                                            snapshot.data!));
+                                  } else {
+                                    return const CircularProgressIndicator();
+                                  }
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 32,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Ok"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    // actions: [
+                    //   TextButton(
+                    //       onPressed: () {
+                    //         Navigator.of(context).pop();
+                    //       },
+                    //       child: const Text("Ok"))
+                    // ],
+                  ),
+                );
+              }
+            },
           );
         });
   }
