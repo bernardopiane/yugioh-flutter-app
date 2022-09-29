@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/card_info_entity.dart';
@@ -31,6 +32,8 @@ class _DeckDetailState extends State<DeckDetail> {
 
   HashSet selectedCards = HashSet();
 
+  bool hasChanged = false;
+
   @override
   void initState() {
     super.initState();
@@ -45,72 +48,101 @@ class _DeckDetailState extends State<DeckDetail> {
     //  Load from local file if exists
   }
 
+  Future<bool> _onWillPop() async {
+    if (!hasChanged) {
+      Navigator.of(context).pop(true);
+      return false;
+    }
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Are you sure?'),
+            content: const Text('Do you want to exit an App'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Yes'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: deleteView
-          ? AppBar(
-              title: Text("Selected: ${selectedCards.length}"),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    toggleDeleteView();
-                  },
-                  icon: const Icon(Icons.cancel),
-                ),
-                IconButton(
-                  onPressed: () {
-                    handleDeleteCards();
-                    toggleDeleteView();
-                  },
-                  icon: const Icon(Icons.delete_forever),
-                ),
-              ],
-            )
-          : AppBar(
-              title: Text(widget.deck.name),
-              actions: [
-                IconButton(
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: deleteView
+            ? AppBar(
+                title: Text("Selected: ${selectedCards.length}"),
+                actions: [
+                  IconButton(
                     onPressed: () {
-                      _openSearchCardDialog(context);
+                      toggleDeleteView();
                     },
-                    icon: const Icon(Icons.add)),
-                IconButton(
+                    icon: const Icon(Icons.cancel),
+                  ),
+                  IconButton(
                     onPressed: () {
-                      _saveDeck();
+                      handleDeleteCards();
+                      toggleDeleteView();
                     },
-                    icon: const Icon(Icons.save)),
-                IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return CardWidthSlider(
-                            notifyParent: changeWidth,
-                            currentWidth: cardWidth,
-                          );
-                        });
-                  },
-                  icon: const Icon(Icons.photo_size_select_large),
-                ),
-                IconButton(
-                  onPressed: () {
-                    toggleDeleteView();
-                  },
-                  icon: const Icon(Icons.delete),
-                ),
-              ],
+                    icon: const Icon(Icons.delete_forever),
+                  ),
+                ],
+              )
+            : AppBar(
+                title: Text(widget.deck.name),
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        _openSearchCardDialog(context);
+                      },
+                      icon: const Icon(Icons.add)),
+                  IconButton(
+                      onPressed: () {
+                        _saveDeck();
+                        hasChanged = false;
+                      },
+                      icon: const Icon(Icons.save)),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return CardWidthSlider(
+                              notifyParent: changeWidth,
+                              currentWidth: cardWidth,
+                            );
+                          });
+                    },
+                    icon: const Icon(Icons.photo_size_select_large),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      toggleDeleteView();
+                    },
+                    icon: const Icon(Icons.delete),
+                  ),
+                ],
+              ),
+        body: SafeArea(
+          minimum: const EdgeInsets.all(8),
+          child: GridView(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: cardWidth,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              childAspectRatio: cardAspRatio,
             ),
-      body: SafeArea(
-        minimum: const EdgeInsets.all(8),
-        child: GridView(
-          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: cardWidth,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: cardAspRatio,
+            children: _buildCards(),
           ),
-          children: _buildCards(),
         ),
       ),
     );
@@ -195,10 +227,12 @@ class _DeckDetailState extends State<DeckDetail> {
     if (selectedCards.contains(element)) {
       setState(() {
         selectedCards.remove(element);
+        hasChanged = true;
       });
     } else {
       setState(() {
         selectedCards.add(element);
+        hasChanged = true;
       });
     }
   }
@@ -208,10 +242,9 @@ class _DeckDetailState extends State<DeckDetail> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            insetPadding: const EdgeInsets.all(8),
+            // insetPadding: const EdgeInsets.all(8),
             title: TextFormField(
               onFieldSubmitted: (value) {
-                //  TODO: Search API
                 _searchAPI();
               },
               onChanged: (value) {
@@ -246,42 +279,122 @@ class _DeckDetailState extends State<DeckDetail> {
                 )),
             actions: [
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Ok"))
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Ok"),
+              ),
             ],
+            // actions: [
+            //   TextButton(
+            //       onPressed: () {
+            //         Navigator.of(context).pop();
+            //       },
+            //       child: const Text("Ok"))
+            // ],
           );
         });
+  }
+
+  addToState(CardInfoEntity element){
+    setState(() {
+      deckCards.add(element);
+      hasChanged = true;
+    });
   }
 
   List<Widget> _buildSearchResults(List<CardInfoEntity> cardList) {
     List<Widget> widgets = [];
 
     for (var element in cardList) {
+      int howManyInDeck =
+          deckCards.where((card) => element.id == card.id).length;
       widgets.add(
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            var quantity = deckCards.where((card) => card.id == element.id);
+        StatefulBuilder(
+          builder: (context, setState) {
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                var quantity = deckCards.where((card) => card.id == element.id);
 
-            // if (exists.id == null) {
-            if (quantity.length <= 2) {
-              setState(() {
-                // if (!selectedCards.contains(element)) {
-                deckCards.add(element);
-                // }
-              });
-            } else {
-              //TODO:  Display  feedback to user
-            }
+                // if (exists.id == null) {
+                if (quantity.length <= 2) {
+                  addToState(element);
+                  setState((){
+                    howManyInDeck++;
+                  });
+                  // setState(() {
+                  //   deckCards.add(element);
+                  //   hasChanged = true;
+                  // });
+                } else {
+                  //TODO:  Display  feedback to user
+                }
+              },
+              child: GridTile(
+                child: Stack(
+                  children: [
+                    MyCard(
+                      cardInfo: element,
+                      noTap: true,
+                    ),
+                    if (deckCards
+                        .where((card) => card.id == element.id)
+                        .isNotEmpty)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Badge(
+                          badgeContent: Text(deckCards
+                              .where((card) => element.id == card.id)
+                              .length
+                              .toString()),
+                        ),
+                      )
+                  ],
+                ),
+              ),
+            );
           },
-          child: GridTile(
-            child: MyCard(
-              cardInfo: element,
-              noTap: true,
-            ),
-          ),
+          // child: GestureDetector(
+          //   behavior: HitTestBehavior.opaque,
+          //   onTap: () {
+          //     var quantity = deckCards.where((card) => card.id == element.id);
+          //
+          //     // if (exists.id == null) {
+          //     if (quantity.length <= 2) {
+          //       setState(() {
+          //         // if (!selectedCards.contains(element)) {
+          //         deckCards.add(element);
+          //         hasChanged = true;
+          //         // }
+          //       });
+          //     } else {
+          //       //TODO:  Display  feedback to user
+          //     }
+          //   },
+          //   child: GridTile(
+          //     child: Stack(
+          //       children: [
+          //         MyCard(
+          //           cardInfo: element,
+          //           noTap: true,
+          //         ),
+          //         if (deckCards.where((card) => card.id == element.id).isNotEmpty)
+          //           Positioned(
+          //             top: 0,
+          //             right: 0,
+          //             child: Badge(
+          //               badgeContent: Text(deckCards
+          //                   .where((card) => element.id == card.id)
+          //                   .length
+          //                   .toString()),
+          //             ),
+          //           )
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ),
       );
     }
@@ -332,6 +445,7 @@ class _DeckDetailState extends State<DeckDetail> {
   void deleteCard(CardInfoEntity card) {
     setState(() {
       deckCards.remove(card);
+      hasChanged = true;
     });
   }
 }

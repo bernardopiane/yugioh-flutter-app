@@ -72,7 +72,9 @@ class _DeckListPageState extends State<DeckListPage> {
         backgroundColor: Colors.amber[800],
         child: const Icon(Icons.add),
       ),
-      appBar: AppBar(toolbarHeight: 0),
+      appBar: AppBar(
+        title: const Text("Deck List"),
+      ),
       body: SafeArea(
         // minimum: const EdgeInsets.all(8),
         child: ListView(
