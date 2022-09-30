@@ -1,3 +1,4 @@
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
 import 'package:yugi_deck/models/card_attributes.dart';
@@ -24,6 +25,8 @@ class _AdvSearchState extends State<AdvSearch> {
   Map<String, String>? query;
 
   Future<List<CardInfoEntity>>? data;
+
+  ExpandableController expandableController = ExpandableController();
 
   final GlobalKey dataKey = GlobalKey();
 
@@ -52,226 +55,235 @@ class _AdvSearchState extends State<AdvSearch> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        title: TextFormField(
-                          decoration:
-                              const InputDecoration(label: Text("Name")),
-                          onChanged: (value) {
-                            queryBuilder("fname", value);
-                          },
-                        ),
-                      ),
-                      ListTile(
-                        title: Row(
+              ExpandablePanel(
+                controller: expandableController,
+                header: const Text("Advanced Search"),
+                collapsed: Container(),
+                expanded: Column(
+                  children: [
+                    Form(
+                        key: _formKey,
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: TextFormField(
+                            ListTile(
+                              title: TextFormField(
+                                decoration:
+                                const InputDecoration(label: Text("Name")),
+                                onChanged: (value) {
+                                  queryBuilder("fname", value);
+                                },
+                              ),
+                            ),
+                            ListTile(
+                              title: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      onChanged: (value) {
+                                        if (value != "") {
+                                          queryBuilder("atk", value);
+                                        } else {
+                                          removeQuery("atk");
+                                        }
+                                      },
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        label: Text("Atk"),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 16,
+                                  ),
+                                  Expanded(
+                                    child: TextFormField(
+                                      onChanged: (value) {
+                                        queryBuilder("def", value);
+                                      },
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        label: Text("Def"),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ListTile(
+                              title: TextFormField(
                                 onChanged: (value) {
                                   if (value != "") {
-                                    queryBuilder("atk", value);
+                                    queryBuilder("level", value);
                                   } else {
-                                    removeQuery("atk");
+                                    removeQuery("level");
                                   }
                                 },
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
-                                  label: Text("Atk"),
+                                  label: Text("Level"),
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 16,
+                            ListTile(
+                              title: TextFormField(
+                                onTap: () {},
+                                //TODO: add race enum
+                                decoration: const InputDecoration(
+                                  label: Text("Race"),
+                                ),
+                              ),
                             ),
-                            Expanded(
-                              child: TextFormField(
+                            ListTile(
+                              title: const Text("Attribute"),
+                              subtitle: DropdownButtonFormField<String>(
+                                hint: const Text("Attribute"),
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.deepPurple),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    attributeSelector = newValue!;
+                                  });
+                                  queryBuilder("attribute", newValue!);
+                                },
+                                items: attributes
+                                    .map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            ListTile(
+                              title: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      onChanged: (value) {
+                                        queryBuilder("link", value);
+                                      },
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        label: Text("Link"),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: ListTile(
+                                      // title: const Text("Link marker"),
+                                      subtitle: DropdownButtonFormField<String>(
+                                        key: linkMarkerSelectorKey,
+                                        hint: const Text("Link marker"),
+                                        // value: linkMarkerSelector,
+                                        elevation: 16,
+                                        style:
+                                        const TextStyle(color: Colors.deepPurple),
+                                        onChanged: (String? newValue) {
+                                          setState(() {
+                                            linkMarkerSelector = newValue!;
+                                          });
+                                          queryBuilder("linkmarker", newValue!);
+                                        },
+                                        items: linkMarker
+                                            .map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ListTile(
+                              title: TextFormField(
                                 onChanged: (value) {
-                                  queryBuilder("def", value);
+                                  queryBuilder("scale", value);
                                 },
                                 keyboardType: TextInputType.number,
+                                maxLength: 1,
                                 decoration: const InputDecoration(
-                                  label: Text("Def"),
+                                  label: Text("Scale"),
                                 ),
+                              ),
+                            ),
+                            ListTile(
+                              title: TextFormField(
+                                onChanged: (value) {
+                                  queryBuilder("cardset", value);
+                                },
+                                decoration: const InputDecoration(
+                                  label: Text("Cardset"),
+                                ),
+                              ),
+                            ),
+                            _buildArchetype(),
+                            ListTile(
+                              title: TextFormField(
+                                onChanged: (value) {
+                                  queryBuilder("archetype", value);
+                                },
+                                decoration: const InputDecoration(
+                                  label: Text("Archetype"),
+                                ),
+                              ),
+                            ),
+                            ListTile(
+                              title: TextFormField(
+                                onTap: () {},
+                                //TODO: add banlist enum
+                                decoration: const InputDecoration(
+                                  label: Text("Banlist"),
+                                ),
+                              ),
+                            ),
+                            ListTile(
+                              title: const Text("Sort Order"),
+                              subtitle: DropdownButtonFormField<String>(
+                                hint: const Text("Sort order"),
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.deepPurple),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    sortSelector = newValue!;
+                                  });
+                                  queryBuilder("sort", newValue!);
+                                },
+                                items: <String>[
+                                  'Atk',
+                                  'Def',
+                                  'Name',
+                                  'Type',
+                                  'Level',
+                                  'Id',
+                                  'New'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            ListTile(
+                              title: ElevatedButton(
+                                onPressed: () {
+                                  handleSearch();
+                                  expandableController.toggle();
+                                },
+                                child: const Text("Search"),
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      ListTile(
-                        title: TextFormField(
-                          onChanged: (value) {
-                            if (value != "") {
-                              queryBuilder("level", value);
-                            } else {
-                              removeQuery("level");
-                            }
-                          },
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                            label: Text("Level"),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: TextFormField(
-                          onTap: () {},
-                          //TODO: add race enum
-                          decoration: const InputDecoration(
-                            label: Text("Race"),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: const Text("Attribute"),
-                        subtitle: DropdownButtonFormField<String>(
-                          hint: const Text("Attribute"),
-                          elevation: 16,
-                          style: const TextStyle(color: Colors.deepPurple),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              attributeSelector = newValue!;
-                            });
-                            queryBuilder("attribute", newValue!);
-                          },
-                          items: attributes
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      ListTile(
-                        title: Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                onChanged: (value) {
-                                  queryBuilder("link", value);
-                                },
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  label: Text("Link"),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: ListTile(
-                                // title: const Text("Link marker"),
-                                subtitle: DropdownButtonFormField<String>(
-                                  key: linkMarkerSelectorKey,
-                                  hint: const Text("Link marker"),
-                                  // value: linkMarkerSelector,
-                                  elevation: 16,
-                                  style:
-                                      const TextStyle(color: Colors.deepPurple),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      linkMarkerSelector = newValue!;
-                                    });
-                                    queryBuilder("linkmarker", newValue!);
-                                  },
-                                  items: linkMarker
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        title: TextFormField(
-                          onChanged: (value) {
-                            queryBuilder("scale", value);
-                          },
-                          keyboardType: TextInputType.number,
-                          maxLength: 1,
-                          decoration: const InputDecoration(
-                            label: Text("Scale"),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: TextFormField(
-                          onChanged: (value) {
-                            queryBuilder("cardset", value);
-                          },
-                          decoration: const InputDecoration(
-                            label: Text("Cardset"),
-                          ),
-                        ),
-                      ),
-                      _buildArchetype(),
-                      ListTile(
-                        title: TextFormField(
-                          onChanged: (value) {
-                            queryBuilder("archetype", value);
-                          },
-                          decoration: const InputDecoration(
-                            label: Text("Archetype"),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: TextFormField(
-                          onTap: () {},
-                          //TODO: add banlist enum
-                          decoration: const InputDecoration(
-                            label: Text("Banlist"),
-                          ),
-                        ),
-                      ),
-                      ListTile(
-                        title: const Text("Sort Order"),
-                        subtitle: DropdownButtonFormField<String>(
-                          hint: const Text("Sort order"),
-                          elevation: 16,
-                          style: const TextStyle(color: Colors.deepPurple),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              sortSelector = newValue!;
-                            });
-                            queryBuilder("sort", newValue!);
-                          },
-                          items: <String>[
-                            'Atk',
-                            'Def',
-                            'Name',
-                            'Type',
-                            'Level',
-                            'Id',
-                            'New'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      ListTile(
-                        title: ElevatedButton(
-                          onPressed: () {
-                            handleSearch();
-                            Scrollable.ensureVisible(dataKey.currentContext!);
-                          },
-                          child: const Text("Search"),
-                        ),
-                      ),
-                    ],
-                  )),
-              if (data != null)
+                        )),
+                  ],
+                ),
+              ),
+              if (data != null && !expandableController.expanded)
                 FutureBuilder<List<CardInfoEntity>>(
                   future: data,
                   key: dataKey,
@@ -289,6 +301,246 @@ class _AdvSearchState extends State<AdvSearch> {
                 ),
             ],
           ),
+
+          // child: Column(
+          //   children: [
+          //     Form(
+          //         key: _formKey,
+          //         child: Column(
+          //           children: [
+          //             ListTile(
+          //               title: TextFormField(
+          //                 decoration:
+          //                     const InputDecoration(label: Text("Name")),
+          //                 onChanged: (value) {
+          //                   queryBuilder("fname", value);
+          //                 },
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: Row(
+          //                 children: [
+          //                   Expanded(
+          //                     child: TextFormField(
+          //                       onChanged: (value) {
+          //                         if (value != "") {
+          //                           queryBuilder("atk", value);
+          //                         } else {
+          //                           removeQuery("atk");
+          //                         }
+          //                       },
+          //                       keyboardType: TextInputType.number,
+          //                       decoration: const InputDecoration(
+          //                         label: Text("Atk"),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                   const SizedBox(
+          //                     width: 16,
+          //                   ),
+          //                   Expanded(
+          //                     child: TextFormField(
+          //                       onChanged: (value) {
+          //                         queryBuilder("def", value);
+          //                       },
+          //                       keyboardType: TextInputType.number,
+          //                       decoration: const InputDecoration(
+          //                         label: Text("Def"),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ],
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: TextFormField(
+          //                 onChanged: (value) {
+          //                   if (value != "") {
+          //                     queryBuilder("level", value);
+          //                   } else {
+          //                     removeQuery("level");
+          //                   }
+          //                 },
+          //                 keyboardType: TextInputType.number,
+          //                 decoration: const InputDecoration(
+          //                   label: Text("Level"),
+          //                 ),
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: TextFormField(
+          //                 onTap: () {},
+          //                 //TODO: add race enum
+          //                 decoration: const InputDecoration(
+          //                   label: Text("Race"),
+          //                 ),
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: const Text("Attribute"),
+          //               subtitle: DropdownButtonFormField<String>(
+          //                 hint: const Text("Attribute"),
+          //                 elevation: 16,
+          //                 style: const TextStyle(color: Colors.deepPurple),
+          //                 onChanged: (String? newValue) {
+          //                   setState(() {
+          //                     attributeSelector = newValue!;
+          //                   });
+          //                   queryBuilder("attribute", newValue!);
+          //                 },
+          //                 items: attributes
+          //                     .map<DropdownMenuItem<String>>((String value) {
+          //                   return DropdownMenuItem<String>(
+          //                     value: value,
+          //                     child: Text(value),
+          //                   );
+          //                 }).toList(),
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: Row(
+          //                 children: [
+          //                   Expanded(
+          //                     child: TextFormField(
+          //                       onChanged: (value) {
+          //                         queryBuilder("link", value);
+          //                       },
+          //                       keyboardType: TextInputType.number,
+          //                       decoration: const InputDecoration(
+          //                         label: Text("Link"),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                   const SizedBox(width: 8),
+          //                   Expanded(
+          //                     child: ListTile(
+          //                       // title: const Text("Link marker"),
+          //                       subtitle: DropdownButtonFormField<String>(
+          //                         key: linkMarkerSelectorKey,
+          //                         hint: const Text("Link marker"),
+          //                         // value: linkMarkerSelector,
+          //                         elevation: 16,
+          //                         style:
+          //                             const TextStyle(color: Colors.deepPurple),
+          //                         onChanged: (String? newValue) {
+          //                           setState(() {
+          //                             linkMarkerSelector = newValue!;
+          //                           });
+          //                           queryBuilder("linkmarker", newValue!);
+          //                         },
+          //                         items: linkMarker
+          //                             .map<DropdownMenuItem<String>>(
+          //                                 (String value) {
+          //                           return DropdownMenuItem<String>(
+          //                             value: value,
+          //                             child: Text(value),
+          //                           );
+          //                         }).toList(),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ],
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: TextFormField(
+          //                 onChanged: (value) {
+          //                   queryBuilder("scale", value);
+          //                 },
+          //                 keyboardType: TextInputType.number,
+          //                 maxLength: 1,
+          //                 decoration: const InputDecoration(
+          //                   label: Text("Scale"),
+          //                 ),
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: TextFormField(
+          //                 onChanged: (value) {
+          //                   queryBuilder("cardset", value);
+          //                 },
+          //                 decoration: const InputDecoration(
+          //                   label: Text("Cardset"),
+          //                 ),
+          //               ),
+          //             ),
+          //             _buildArchetype(),
+          //             ListTile(
+          //               title: TextFormField(
+          //                 onChanged: (value) {
+          //                   queryBuilder("archetype", value);
+          //                 },
+          //                 decoration: const InputDecoration(
+          //                   label: Text("Archetype"),
+          //                 ),
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: TextFormField(
+          //                 onTap: () {},
+          //                 //TODO: add banlist enum
+          //                 decoration: const InputDecoration(
+          //                   label: Text("Banlist"),
+          //                 ),
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: const Text("Sort Order"),
+          //               subtitle: DropdownButtonFormField<String>(
+          //                 hint: const Text("Sort order"),
+          //                 elevation: 16,
+          //                 style: const TextStyle(color: Colors.deepPurple),
+          //                 onChanged: (String? newValue) {
+          //                   setState(() {
+          //                     sortSelector = newValue!;
+          //                   });
+          //                   queryBuilder("sort", newValue!);
+          //                 },
+          //                 items: <String>[
+          //                   'Atk',
+          //                   'Def',
+          //                   'Name',
+          //                   'Type',
+          //                   'Level',
+          //                   'Id',
+          //                   'New'
+          //                 ].map<DropdownMenuItem<String>>((String value) {
+          //                   return DropdownMenuItem<String>(
+          //                     value: value,
+          //                     child: Text(value),
+          //                   );
+          //                 }).toList(),
+          //               ),
+          //             ),
+          //             ListTile(
+          //               title: ElevatedButton(
+          //                 onPressed: () {
+          //                   handleSearch();
+          //                   Scrollable.ensureVisible(dataKey.currentContext!);
+          //                 },
+          //                 child: const Text("Search"),
+          //               ),
+          //             ),
+          //           ],
+          //         )),
+          //     if (data != null)
+          //       FutureBuilder<List<CardInfoEntity>>(
+          //         future: data,
+          //         key: dataKey,
+          //         initialData: const [],
+          //         builder: (context, snapshot) {
+          //           if (snapshot.hasData) {
+          //             return SizedBox(
+          //                 height: MediaQuery.of(context).size.height * 0.6,
+          //                 width: MediaQuery.of(context).size.width,
+          //                 child: CardGridView(cardList: snapshot.data!));
+          //           } else {
+          //             return const CircularProgressIndicator();
+          //           }
+          //         },
+          //       ),
+          //   ],
+          // ),
         ),
       ),
     );

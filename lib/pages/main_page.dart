@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/widgets/search_filter.dart';
 import '../utils.dart';
 import '../widgets/card_grid_view.dart';
 
@@ -19,6 +20,9 @@ class _MainPageState extends State<MainPage>
 
   late Future<List<CardInfoEntity>> data;
 
+  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey();
+  //TODO: remove adv search, move settings to filter
+
   String searchTerm = "";
 
   TextEditingController searchController = TextEditingController();
@@ -27,7 +31,7 @@ class _MainPageState extends State<MainPage>
   void initState() {
     super.initState();
     data = fetchCardList(
-        "https://db.ygoprodeck.com/api/v7/cardinfo.php?num=10&offset=0",
+        "https://db.ygoprodeck.com/api/v7/cardinfo.php?staple=yes&num=15&offset=0",
         context);
   }
 
@@ -35,6 +39,13 @@ class _MainPageState extends State<MainPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      key: _scaffoldkey,
+      endDrawer: Container(
+        width: MediaQuery.of(context).size.width / 1.5,
+        height: MediaQuery.of(context).size.height,
+        color: Theme.of(context).dialogBackgroundColor,
+        child: SearchFilter(search: _advSearch),
+      ),
       appBar: AppBar(
         title: Container(
           width: double.infinity,
@@ -62,6 +73,13 @@ class _MainPageState extends State<MainPage>
             ),
           ),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                _scaffoldkey.currentState!.openEndDrawer();
+              },
+              icon: const Icon(Icons.filter_list))
+        ],
       ),
       body: SafeArea(
         minimum: const EdgeInsets.all(8),
@@ -117,6 +135,21 @@ class _MainPageState extends State<MainPage>
       data = fetchCardList(
           "https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value",
           context);
+    });
+  }
+
+  _advSearch(Map<String, String>? query) {
+    debugPrint("Clicked");
+    Uri uri = Uri(
+        scheme: "https",
+        host: "db.ygoprodeck.com",
+        path: "/api/v7/cardinfo.php",
+        queryParameters: query);
+
+    // var response = await http.post(uri);
+
+    setState(() {
+      data = fetchCardList(uri.toString(), context);
     });
   }
 }
