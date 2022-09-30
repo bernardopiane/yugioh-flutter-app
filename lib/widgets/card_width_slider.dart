@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CardWidthSlider extends StatefulWidget {
   final notifyParent;
@@ -13,14 +14,19 @@ class CardWidthSlider extends StatefulWidget {
 
 class _CardWidthSliderState extends State<CardWidthSlider> {
   double? cardWidth;
+  late final prefs;
+
+  final double minWidth = 100.0;
+  final double maxWidth = 400.0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      cardWidth = widget.currentWidth;
-    });
+    SharedPreferences.getInstance().then((value) => setState(() {
+          prefs = value;
+          cardWidth = prefs.getDouble("cardWidth");
+        }));
   }
 
   @override
@@ -33,19 +39,23 @@ class _CardWidthSliderState extends State<CardWidthSlider> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text("Card width"),
-          Slider(
-            value: cardWidth!,
-            min: 100.0,
-            max: 400.0,
-            label: "Card Width: ",
-            onChanged: (double value) {
-              setState(() {
-                cardWidth = value;
-              });
-              //Save selection
-              widget.notifyParent(value);
-            },
-          ),
+          cardWidth == null
+              ? const CircularProgressIndicator()
+              : Slider.adaptive(
+                  value: cardWidth!,
+                  min: minWidth,
+                  max: maxWidth,
+                  divisions: 4,
+                  label: "Card Width: ",
+                  onChanged: (double value) {
+                    setState(() {
+                      cardWidth = value;
+                      prefs.setDouble("cardWidth", value);
+                    });
+                    //Save selection
+                    widget.notifyParent(value);
+                  },
+                ),
         ],
       ),
     );

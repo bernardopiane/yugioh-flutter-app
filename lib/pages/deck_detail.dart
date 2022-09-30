@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yugi_deck/card_info_entity.dart';
 import 'package:yugi_deck/models/deck.dart';
 import 'package:yugi_deck/models/deck_list.dart';
@@ -20,6 +21,8 @@ class DeckDetail extends StatefulWidget {
 }
 
 class _DeckDetailState extends State<DeckDetail> {
+  late final SharedPreferences prefs;
+
   late Future<List<CardInfoEntity>> data;
 
   List<CardInfoEntity> deckCards = [];
@@ -37,10 +40,15 @@ class _DeckDetailState extends State<DeckDetail> {
   @override
   void initState() {
     super.initState();
+    SharedPreferences.getInstance().then((value) => setState((){
+      prefs = value;
+      if(prefs.getDouble("cardWidth") != null){
+        cardWidth = prefs.getDouble("cardWidth")!;
+      }
+    }));
     setState(() {
       data = fetchCardList(
-          "https://db.ygoprodeck.com/api/v7/cardinfo.php?staple=yes",
-          context);
+          "https://db.ygoprodeck.com/api/v7/cardinfo.php?staple=yes", context);
       if (widget.deck.cards != null) {
         deckCards = widget.deck.cards!;
       }

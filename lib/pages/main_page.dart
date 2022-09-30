@@ -26,8 +26,9 @@ class _MainPageState extends State<MainPage>
   @override
   void initState() {
     super.initState();
-    data =
-        fetchCardList("https://db.ygoprodeck.com/api/v7/cardinfo.php", context);
+    data = fetchCardList(
+        "https://db.ygoprodeck.com/api/v7/cardinfo.php?num=10&offset=0",
+        context);
   }
 
   @override

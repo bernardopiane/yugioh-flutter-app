@@ -30,9 +30,10 @@ class _DeckListPageState extends State<DeckListPage> {
               builder: (context) {
                 return AlertDialog(
                   content: TextFormField(
-                    decoration: const InputDecoration(
-                        label: Text("Deck name: ")),
-                    onFieldSubmitted: (value){
+                    autofocus: true,
+                    decoration:
+                        const InputDecoration(label: Text("Deck name: ")),
+                    onFieldSubmitted: (value) {
                       setState(() {
                         inputDeckName = value;
                       });
@@ -78,9 +79,7 @@ class _DeckListPageState extends State<DeckListPage> {
       body: SafeArea(
         // minimum: const EdgeInsets.all(8),
         child: ListView(
-          children: [
-            ..._buildDeckList(context)
-          ],
+          children: [..._buildDeckList(context)],
         ),
       ),
     );
@@ -94,8 +93,8 @@ class _DeckListPageState extends State<DeckListPage> {
         ListTile(
           contentPadding: EdgeInsets.all(8),
           title: Text(element.name),
-          onLongPress: (){
-          //  TODO display actions
+          onLongPress: () {
+            //  TODO display actions
           },
           onTap: () => {
             Navigator.push(

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
 import 'package:yugi_deck/models/card_attributes.dart';
@@ -25,6 +24,8 @@ class _AdvSearchState extends State<AdvSearch> {
   Map<String, String>? query;
 
   Future<List<CardInfoEntity>>? data;
+
+  final GlobalKey dataKey = GlobalKey();
 
   final GlobalKey<FormFieldState> linkMarkerSelectorKey =
       GlobalKey<FormFieldState>();
@@ -263,6 +264,7 @@ class _AdvSearchState extends State<AdvSearch> {
                         title: ElevatedButton(
                           onPressed: () {
                             handleSearch();
+                            Scrollable.ensureVisible(dataKey.currentContext!);
                           },
                           child: const Text("Search"),
                         ),
@@ -272,6 +274,7 @@ class _AdvSearchState extends State<AdvSearch> {
               if (data != null)
                 FutureBuilder<List<CardInfoEntity>>(
                   future: data,
+                  key: dataKey,
                   initialData: const [],
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
