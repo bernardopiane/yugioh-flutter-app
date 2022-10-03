@@ -40,12 +40,12 @@ class _DeckDetailState extends State<DeckDetail> {
   @override
   void initState() {
     super.initState();
-    SharedPreferences.getInstance().then((value) => setState((){
-      prefs = value;
-      if(prefs.getDouble("cardWidth") != null){
-        cardWidth = prefs.getDouble("cardWidth")!;
-      }
-    }));
+    SharedPreferences.getInstance().then((value) => setState(() {
+          prefs = value;
+          if (prefs.getDouble("cardWidth") != null) {
+            cardWidth = prefs.getDouble("cardWidth")!;
+          }
+        }));
     setState(() {
       data = fetchCardList(
           "https://db.ygoprodeck.com/api/v7/cardinfo.php?staple=yes", context);
@@ -292,7 +292,13 @@ class _DeckDetailState extends State<DeckDetail> {
                                   children:
                                       _buildSearchResults(snapshot.data!));
                             } else {
-                              return const CircularProgressIndicator();
+                              return const Center(
+                                child: SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
                             }
                           },
                         )),
