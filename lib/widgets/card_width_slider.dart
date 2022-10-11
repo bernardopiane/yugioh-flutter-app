@@ -25,6 +25,9 @@ class _CardWidthSliderState extends State<CardWidthSlider> {
     super.initState();
     SharedPreferences.getInstance().then((value) => setState(() {
           prefs = value;
+          if(prefs.getDouble("cardWidth") == null){
+            prefs.setDouble("cardWidth", 100.0);
+          }
           cardWidth = prefs.getDouble("cardWidth");
         }));
   }
