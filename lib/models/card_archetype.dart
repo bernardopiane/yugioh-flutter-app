@@ -8,8 +8,8 @@ class CardArchetype {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['archetype_name'] = this.archetypeName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['archetype_name'] = archetypeName;
     return data;
   }
 }

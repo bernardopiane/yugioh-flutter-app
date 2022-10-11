@@ -14,6 +14,10 @@ class CardInfoEntity {
 	int? level;
 	String? race;
 	String? attribute;
+	String? archetype;
+	int? linkval;
+	int? scale;
+	List<String>? linkmarkers;
 	@JSONField(name: "card_sets")
 	List<CardInfoCardSets>? cardSets;
 	@JSONField(name: "card_images")

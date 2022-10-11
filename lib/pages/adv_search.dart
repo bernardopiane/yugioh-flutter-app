@@ -68,7 +68,7 @@ class _AdvSearchState extends State<AdvSearch> {
                             ListTile(
                               title: TextFormField(
                                 decoration:
-                                const InputDecoration(label: Text("Name")),
+                                    const InputDecoration(label: Text("Name")),
                                 onChanged: (value) {
                                   queryBuilder("fname", value);
                                 },
@@ -138,15 +138,16 @@ class _AdvSearchState extends State<AdvSearch> {
                               subtitle: DropdownButtonFormField<String>(
                                 hint: const Text("Attribute"),
                                 elevation: 16,
-                                style: const TextStyle(color: Colors.deepPurple),
+                                style:
+                                    const TextStyle(color: Colors.deepPurple),
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     attributeSelector = newValue!;
                                   });
                                   queryBuilder("attribute", newValue!);
                                 },
-                                items: attributes
-                                    .map<DropdownMenuItem<String>>((String value) {
+                                items: attributes.map<DropdownMenuItem<String>>(
+                                    (String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text(value),
@@ -177,8 +178,8 @@ class _AdvSearchState extends State<AdvSearch> {
                                         hint: const Text("Link marker"),
                                         // value: linkMarkerSelector,
                                         elevation: 16,
-                                        style:
-                                        const TextStyle(color: Colors.deepPurple),
+                                        style: const TextStyle(
+                                            color: Colors.deepPurple),
                                         onChanged: (String? newValue) {
                                           setState(() {
                                             linkMarkerSelector = newValue!;
@@ -188,11 +189,11 @@ class _AdvSearchState extends State<AdvSearch> {
                                         items: linkMarker
                                             .map<DropdownMenuItem<String>>(
                                                 (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(value),
-                                              );
-                                            }).toList(),
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
                                   ),
@@ -246,7 +247,8 @@ class _AdvSearchState extends State<AdvSearch> {
                               subtitle: DropdownButtonFormField<String>(
                                 hint: const Text("Sort order"),
                                 elevation: 16,
-                                style: const TextStyle(color: Colors.deepPurple),
+                                style:
+                                    const TextStyle(color: Colors.deepPurple),
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     sortSelector = newValue!;

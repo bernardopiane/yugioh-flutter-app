@@ -39,6 +39,22 @@ CardInfoEntity $CardInfoEntityFromJson(Map<String, dynamic> json) {
 	if (attribute != null) {
 		cardInfoEntity.attribute = attribute;
 	}
+	final String? archetype = jsonConvert.convert<String>(json['archetype']);
+	if (archetype != null) {
+		cardInfoEntity.archetype = archetype;
+	}
+	final int? linkval = jsonConvert.convert<int>(json['linkval']);
+	if (linkval != null) {
+		cardInfoEntity.linkval = linkval;
+	}
+	final int? scale = jsonConvert.convert<int>(json['scale']);
+	if (scale != null) {
+		cardInfoEntity.scale = scale;
+	}
+	final List<String>? linkmarkers = jsonConvert.convertListNotNull<String>(json['linkmarkers']);
+	if (linkmarkers != null) {
+		cardInfoEntity.linkmarkers = linkmarkers;
+	}
 	final List<CardInfoCardSets>? cardSets = jsonConvert.convertListNotNull<CardInfoCardSets>(json['card_sets']);
 	if (cardSets != null) {
 		cardInfoEntity.cardSets = cardSets;
@@ -65,6 +81,10 @@ Map<String, dynamic> $CardInfoEntityToJson(CardInfoEntity entity) {
 	data['level'] = entity.level;
 	data['race'] = entity.race;
 	data['attribute'] = entity.attribute;
+	data['archetype'] = entity.archetype;
+	data['linkval'] = entity.linkval;
+	data['scale'] = entity.scale;
+	data['linkmarkers'] =  entity.linkmarkers;
 	data['card_sets'] =  entity.cardSets?.map((v) => v.toJson()).toList();
 	data['card_images'] =  entity.cardImages?.map((v) => v.toJson()).toList();
 	data['card_prices'] =  entity.cardPrices?.map((v) => v.toJson()).toList();

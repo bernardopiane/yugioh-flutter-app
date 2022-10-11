@@ -35,8 +35,9 @@ class CardDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          if(card.attribute != null) CardAttribute(attribute: card.attribute!),
-                          if(card.level != null) CardLevel(level: card.level!)
+                          if (card.attribute != null)
+                            CardAttribute(attribute: card.attribute!),
+                          if (card.level != null) CardLevel(level: card.level!),
                         ],
                       ),
                     if (card.attribute == null) Text("[${card.type}]"),
@@ -48,6 +49,12 @@ class CardDetail extends StatelessWidget {
                     const SizedBox(height: 8),
                     if (card.level != null)
                       Text("ATK/ ${card.atk} DEF/ ${card.def}"),
+                    if (card.linkval != null)
+                      Text("LINK-${card.linkval.toString()}"),
+                    if (card.scale != null)
+                      Text("Scale: ${card.scale.toString()}"),
+                    if (card.linkmarkers != null)
+                      Text("Points to: ${card.linkmarkers.toString()}"),
                     const SizedBox(height: 8),
                     // Column(
                     //   crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,8 +137,7 @@ class CardDetail extends StatelessWidget {
 
     return ExpandablePanel(
       theme: ExpandableThemeData(
-        iconColor: Theme.of(context).colorScheme.secondary
-      ),
+          iconColor: Theme.of(context).colorScheme.secondary),
       header: const Text(
         "How to Obtain",
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),

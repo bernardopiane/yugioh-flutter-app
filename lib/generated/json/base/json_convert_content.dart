@@ -51,6 +51,9 @@ class JsonConvert {
   }
 
   T? asT<T extends Object?>(dynamic value) {
+    if(value == null){
+      return null;
+    }
     if (value is T) {
       return value;
     }
@@ -107,7 +110,6 @@ class JsonConvert {
 		if(<CardInfoCardPrices>[] is M){
 			return data.map<CardInfoCardPrices>((Map<String, dynamic> e) => CardInfoCardPrices.fromJson(e)).toList() as M;
 		}
-
 		debugPrint("${M.toString()} not found");
 	
 		return null;

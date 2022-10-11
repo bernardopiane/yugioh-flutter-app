@@ -91,7 +91,7 @@ class _DeckListPageState extends State<DeckListPage> {
     Provider.of<DeckList>(context).decks.forEach((element) {
       widgets.add(
         ListTile(
-          contentPadding: EdgeInsets.all(8),
+          contentPadding: const EdgeInsets.all(8),
           title: Text(element.name),
           onLongPress: () {
             //  TODO display actions

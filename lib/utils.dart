@@ -32,3 +32,17 @@ Future<List<CardInfoEntity>> fetchCardList(
 
   return cardList;
 }
+
+bool isExtraDeck(CardInfoEntity card) {
+  if ((card.type!.contains("Fusion Monster") ||
+      card.type!.contains("Link Monster") ||
+      card.type!.contains("Pendulum Effect Fusion Monster") ||
+      card.type!.contains("Synchro Monster") ||
+      card.type!.contains("Synchro Pendulum Effect Monster") ||
+      card.type!.contains("Synchro Tuner Monster") ||
+      card.type!.contains("XYZ Monster") ||
+      card.type!.contains("XYZ Pendulum Effect Monster"))) {
+    return true;
+  }
+  return false;
+}

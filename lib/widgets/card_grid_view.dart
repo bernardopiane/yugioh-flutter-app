@@ -9,6 +9,22 @@ class CardGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return GridView.builder(
+      itemCount: cardList.length,
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: cardAspRatio,
+        ),
+        itemBuilder: (BuildContext ctx, index) {
+          return GridTile(
+              child: MyCard(
+            cardInfo: cardList.elementAt(index),
+          ));
+        });
+
+    //Old
     return GridView(
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200,

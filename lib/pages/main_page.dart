@@ -56,6 +56,8 @@ class _MainPageState extends State<MainPage>
           ),
           child: Center(
             child: TextField(
+              autofocus: false,
+              //TODO stop autofocus on navigation pop
               controller: searchController,
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search),
@@ -136,6 +138,7 @@ class _MainPageState extends State<MainPage>
           "https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value",
           context);
     });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   _advSearch(Map<String, String>? query) {
@@ -151,5 +154,6 @@ class _MainPageState extends State<MainPage>
     setState(() {
       data = fetchCardList(uri.toString(), context);
     });
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 }
