@@ -16,6 +16,7 @@ class DeckList extends ChangeNotifier {
 
   addDeck(deck) {
     decks.add(deck);
+    saveToFile(deck);
     notifyListeners();
   }
 
@@ -69,10 +70,10 @@ class DeckList extends ChangeNotifier {
         final File file = File(element.path);
         file.readAsString().then((value) {
           var json = jsonDecode(value);
-          Deck deck = Deck.withId(json['name'], json["id"]);
+          Deck deck = Deck.withId(json['name'], json['id']);
           List<CardInfoEntity> cardList = [];
           List<CardInfoEntity> extraList = [];
-          if (json['cards'] != null || json['cards'].isNotEmpty) {
+          if (json['cards'] != null && json['cards'].isNotEmpty) {
             json['cards'].forEach((element) {
               CardInfoEntity card = CardInfoEntity.fromJson(element);
               debugPrint("Carta: ${card.name} : ${card.type}");
@@ -80,7 +81,7 @@ class DeckList extends ChangeNotifier {
             });
             deck.setCards(cardList);
           }
-          if (json['extra'] != null || json['extra'].isNotEmpty) {
+          if (json['extra'] != null && json['extra'].isNotEmpty) {
             json['extra'].forEach((element) {
               CardInfoEntity card = CardInfoEntity.fromJson(element);
               debugPrint("Carta: ${card.name} : ${card.type}");
@@ -95,7 +96,7 @@ class DeckList extends ChangeNotifier {
     notifyListeners();
   }
 
-  deleteDeck(int id) async {
+  deleteDeck(String id) async {
     final directory = await getApplicationDocumentsDirectory();
     Directory("${directory.path}/decks").exists().then((directoryExists) {
       if (!directoryExists) {
@@ -108,11 +109,9 @@ class DeckList extends ChangeNotifier {
     debugPrint(id.toString());
 
     final deckDir = Directory("${directory.path}/decks");
-    deckDir.list().forEach((element) {
-      debugPrint(element.toString());
-    });
-
-    deckDir.exists().then((value) => debugPrint(value.toString()));
+    File file = File("${deckDir.path}/$id");
+    file.delete();
+    decks.removeWhere((element) => element.id == id);
+    notifyListeners();
   }
-
 }

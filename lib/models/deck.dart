@@ -6,7 +6,7 @@ import 'card_deck.dart';
 
 @JsonSerializable()
 class Deck {
-  int? id;
+  String? id;
   String name;
   String? description;
 
@@ -15,12 +15,12 @@ class Deck {
   List<CardInfoEntity>? extra;
 
 
-  Deck.withId(this.id, this.name);
+  Deck.withId(this.name, this.id);
 
   Deck(this.name) {
     id = DateTime
         .now()
-        .millisecondsSinceEpoch;
+        .millisecondsSinceEpoch.toString();
   }
 
   Map toJson() => {

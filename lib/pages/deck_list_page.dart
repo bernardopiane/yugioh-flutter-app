@@ -109,7 +109,7 @@ class _DeckListPageState extends State<DeckListPage> {
             onSelected: (String value) {
               if(value == "delete"){
                 Provider.of<DeckList>(context, listen: false)
-                    .deleteDeck(element.id!);
+                    .deleteDeck(element.id!.toString());
               } else if(value == "rename"){
               //  TODO Implement rename function
               } else {
