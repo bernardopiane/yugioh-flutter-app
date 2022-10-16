@@ -736,7 +736,7 @@ class _DeckDetailState extends State<DeckDetail> {
         .setCards(widget.deck, deckCards);
     Provider.of<DeckList>(context, listen: false)
         .setExtra(widget.deck, extraCards);
-    Provider.of<DeckList>(context, listen: false).saveToFile();
+    Provider.of<DeckList>(context, listen: false).saveToFile(widget.deck);
     //TODO Fix double saving
     // final directory = await getApplicationDocumentsDirectory();
     // debugPrint("Dir: ${directory.toString()}");

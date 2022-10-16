@@ -93,9 +93,30 @@ class _DeckListPageState extends State<DeckListPage> {
         ListTile(
           contentPadding: const EdgeInsets.all(8),
           title: Text(element.name),
-          onLongPress: () {
-            //  TODO display actions
-          },
+          trailing: PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem(
+                  value: 'rename',
+                  child: Text('Rename'),
+                ),
+                const PopupMenuItem(
+                  value: 'delete',
+                  child: Text('Delete'),
+                )
+              ];
+            },
+            onSelected: (String value) {
+              if(value == "delete"){
+                Provider.of<DeckList>(context, listen: false)
+                    .deleteDeck(element.id!);
+              } else if(value == "rename"){
+              //  TODO Implement rename function
+              } else {
+                debugPrintStack();
+              }
+            },
+          ),
           onTap: () => {
             Navigator.push(
               context,
