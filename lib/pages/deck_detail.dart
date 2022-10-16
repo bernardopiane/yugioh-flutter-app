@@ -99,7 +99,7 @@ class _DeckDetailState extends State<DeckDetail> {
         initialIndex: 0,
         child: Scaffold(
           bottomNavigationBar: Material(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).bottomAppBarColor,
             elevation: 2,
             child: TabBar(
               labelColor: Theme.of(context).textTheme.bodyMedium?.color,

@@ -175,7 +175,8 @@ class CardDetail extends StatelessWidget {
                         imageProvider: CachedNetworkImageProvider(
                           imageUrl.toString(),
                         ),
-                        minScale: 1.0,
+                        minScale: 0.5,
+                        maxScale: 1.5,
                       ),
                     ),
                   ),
