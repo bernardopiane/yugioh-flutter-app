@@ -98,16 +98,20 @@ class _DeckDetailState extends State<DeckDetail> {
         length: 2,
         initialIndex: 0,
         child: Scaffold(
-          bottomNavigationBar: TabBar(
-            labelColor: Theme.of(context).primaryColor,
-            tabs: const [
-              Tab(
-                child: Text("Normal"),
-              ),
-              Tab(
-                child: Text("Extra"),
-              ),
-            ],
+          bottomNavigationBar: Material(
+            color: Theme.of(context).primaryColor,
+            elevation: 2,
+            child: TabBar(
+              labelColor: Theme.of(context).textTheme.bodyMedium?.color,
+              tabs: const [
+                Tab(
+                  child: Text("Normal"),
+                ),
+                Tab(
+                  child: Text("Extra"),
+                ),
+              ],
+            ),
           ),
           appBar: deleteView
               ? AppBar(
@@ -592,7 +596,7 @@ class _DeckDetailState extends State<DeckDetail> {
   addToState(CardInfoEntity element) {
     //TODO: Check if api returns extra deck type - remove hardcoded
     if (isExtraDeck(element)) {
-      setState((){
+      setState(() {
         extraCards.add(element);
         extraCards.sort((a, b) => a.name!.compareTo(b.name!));
         hasChanged = true;
@@ -610,13 +614,13 @@ class _DeckDetailState extends State<DeckDetail> {
     List<Widget> widgets = [];
 
     for (var element in cardList) {
-      // int howManyInDeck;
-      // if (isExtraDeck(element)) {
-      //   howManyInDeck =
-      //       extraCards.where((card) => element.id == card.id).length;
-      // } else {
-      //   howManyInDeck = deckCards.where((card) => element.id == card.id).length;
-      // }
+      int howManyInDeck;
+      if (isExtraDeck(element)) {
+        howManyInDeck =
+            extraCards.where((card) => element.id == card.id).length;
+      } else {
+        howManyInDeck = deckCards.where((card) => element.id == card.id).length;
+      }
       widgets.add(
         StatefulBuilder(
           builder: (context, setState) {
@@ -632,9 +636,9 @@ class _DeckDetailState extends State<DeckDetail> {
                 // if (exists.id == null) {
                 if (quantity.length <= 2) {
                   addToState(element);
-                  // setState(() {
-                  //   howManyInDeck++;
-                  // });
+                  setState(() {
+                    howManyInDeck++;
+                  });
                 } else {
                   //TODO:  Display  feedback to user
                 }

@@ -88,6 +88,10 @@ class Deck {
     // CardInDeck cardInDeck = CardInDeck(card);
     extra!.remove(card);
   }
+
+  rename(String newName){
+    name = newName;
+  }
 }
 
 

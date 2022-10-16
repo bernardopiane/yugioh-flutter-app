@@ -15,17 +15,22 @@ class DeckList extends ChangeNotifier {
   addDeck(deck) {
     decks.add(deck);
     saveToFile(deck);
-    notifyListeners();
+  }
+
+  renameDeck(Deck deck, String newName){
+    Deck curDeck = decks.firstWhere((element) => deck.id == element.id);
+    curDeck.name = newName;
+    saveToFile(deck);
   }
 
   setCards(Deck deck, List<CardInfoEntity> cards) {
-    Deck curDeck = decks.firstWhere((element) => deck.name == element.name);
+    Deck curDeck = decks.firstWhere((element) => deck.id == element.id);
     curDeck.cards = cards;
     notifyListeners();
   }
 
   setExtra(Deck deck, List<CardInfoEntity> cards) {
-    Deck curDeck = decks.firstWhere((element) => deck.name == element.name);
+    Deck curDeck = decks.firstWhere((element) => deck.id == element.id);
     curDeck.extra = cards;
     notifyListeners();
   }

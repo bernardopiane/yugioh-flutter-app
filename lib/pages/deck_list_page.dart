@@ -107,11 +107,55 @@ class _DeckListPageState extends State<DeckListPage> {
               ];
             },
             onSelected: (String value) {
-              if(value == "delete"){
+              if (value == "delete") {
                 Provider.of<DeckList>(context, listen: false)
                     .deleteDeck(element.id!.toString());
-              } else if(value == "rename"){
-              //  TODO Implement rename function
+              } else if (value == "rename") {
+                //  TODO Implement rename function
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: TextFormField(
+                          autofocus: true,
+                          decoration:
+                              const InputDecoration(label: Text("Deck name: ")),
+                          onFieldSubmitted: (value) {
+                            setState(() {
+                              inputDeckName = value;
+                            });
+                            Navigator.pop(context, true);
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              inputDeckName = value;
+                            });
+                          },
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: const Text("Add"),
+                          ),
+                        ],
+                      );
+                    }).then((value) {
+                  if (value != null) {
+                    if (inputDeckName != "") {
+                      Provider.of<DeckList>(context, listen: false)
+                          .renameDeck(element, inputDeckName!);
+                      inputDeckName = "";
+                    }
+                  }
+                });
               } else {
                 debugPrintStack();
               }

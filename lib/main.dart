@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/globals.dart';
 import 'package:yugi_deck/models/deck_list.dart';
@@ -6,7 +7,12 @@ import 'package:yugi_deck/models/query_results.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 
 void main() {
-  runApp(
+  WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((value) => runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider<DeckList>(
@@ -18,7 +24,21 @@ void main() {
       ],
       child: const MyApp(),
     ),
-  );
+  ));
+
+  // runApp(
+  //   MultiProvider(
+  //     providers: [
+  //       ChangeNotifierProvider<DeckList>(
+  //         create: (_) => DeckList([]),
+  //       ),
+  //       ChangeNotifierProvider<QueryResults>(
+  //         create: (_) => QueryResults([]),
+  //       ),
+  //     ],
+  //     child: const MyApp(),
+  //   ),
+  // );
 }
 
 class MyApp extends StatelessWidget {
