@@ -2,7 +2,6 @@ import 'package:yugi_deck/card_info_entity.dart';
 import 'package:yugi_deck/utils.dart';
 
 import '../generated/json/base/json_field.dart';
-import 'card_deck.dart';
 
 @JsonSerializable()
 class Deck {

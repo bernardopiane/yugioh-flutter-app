@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:path/path.dart';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:yugi_deck/card_info_entity.dart';
-import 'package:yugi_deck/utils.dart';
 
 import 'deck.dart';
 

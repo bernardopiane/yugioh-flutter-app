@@ -348,81 +348,81 @@ class _DeckDetailState extends State<DeckDetail> {
     );
   }
 
-  List<Widget> _buildCards() {
-    List<Widget> widgets = [];
-
-    for (var element in deckCards) {
-      if (deleteView) {
-        if (selectedCards.contains(element)) {
-          widgets.add(
-            Stack(
-              children: [
-                MyCard(
-                  cardInfo: element,
-                  fullImage: true,
-                  noTap: true,
-                ),
-                Material(
-                  color: Colors.grey.withOpacity(0.60),
-                  child: InkWell(
-                    onTap: () {
-                      handleSelectedCards(element);
-                    },
-                  ),
-                ),
-                Positioned(
-                  top: -10,
-                  right: -10,
-                  child: IconButton(
-                    icon: const Icon(Icons.remove_circle_outline),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          widgets.add(
-            Stack(
-              children: [
-                MyCard(
-                  cardInfo: element,
-                  fullImage: true,
-                  noTap: true,
-                ),
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      handleSelectedCards(element);
-                    },
-                  ),
-                ),
-                Positioned(
-                    top: 0,
-                    right: 0,
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        deleteCard(element);
-                      },
-                      backgroundColor: Colors.red,
-                      mini: true,
-                      child: const Icon(Icons.close),
-                    )),
-              ],
-            ),
-          );
-        }
-      } else {
-        widgets.add(MyCard(
-          cardInfo: element,
-          fullImage: true,
-        ));
-      }
-    }
-
-    return widgets;
-  }
+  // List<Widget> _buildCards() {
+  //   List<Widget> widgets = [];
+  //
+  //   for (var element in deckCards) {
+  //     if (deleteView) {
+  //       if (selectedCards.contains(element)) {
+  //         widgets.add(
+  //           Stack(
+  //             children: [
+  //               MyCard(
+  //                 cardInfo: element,
+  //                 fullImage: true,
+  //                 noTap: true,
+  //               ),
+  //               Material(
+  //                 color: Colors.grey.withOpacity(0.60),
+  //                 child: InkWell(
+  //                   onTap: () {
+  //                     handleSelectedCards(element);
+  //                   },
+  //                 ),
+  //               ),
+  //               Positioned(
+  //                 top: -10,
+  //                 right: -10,
+  //                 child: IconButton(
+  //                   icon: const Icon(Icons.remove_circle_outline),
+  //                   onPressed: () {},
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       } else {
+  //         widgets.add(
+  //           Stack(
+  //             children: [
+  //               MyCard(
+  //                 cardInfo: element,
+  //                 fullImage: true,
+  //                 noTap: true,
+  //               ),
+  //               Material(
+  //                 color: Colors.transparent,
+  //                 child: InkWell(
+  //                   onTap: () {
+  //                     handleSelectedCards(element);
+  //                   },
+  //                 ),
+  //               ),
+  //               Positioned(
+  //                   top: 0,
+  //                   right: 0,
+  //                   child: FloatingActionButton(
+  //                     onPressed: () {
+  //                       deleteCard(element);
+  //                     },
+  //                     backgroundColor: Colors.red,
+  //                     mini: true,
+  //                     child: const Icon(Icons.close),
+  //                   )),
+  //             ],
+  //           ),
+  //         );
+  //       }
+  //     } else {
+  //       widgets.add(MyCard(
+  //         cardInfo: element,
+  //         fullImage: true,
+  //       ));
+  //     }
+  //   }
+  //
+  //   return widgets;
+  // }
 
   void handleSelectedCards(CardInfoEntity element) {
     if (selectedCards.contains(element)) {
@@ -610,13 +610,13 @@ class _DeckDetailState extends State<DeckDetail> {
     List<Widget> widgets = [];
 
     for (var element in cardList) {
-      int howManyInDeck;
-      if (isExtraDeck(element)) {
-        howManyInDeck =
-            extraCards.where((card) => element.id == card.id).length;
-      } else {
-        howManyInDeck = deckCards.where((card) => element.id == card.id).length;
-      }
+      // int howManyInDeck;
+      // if (isExtraDeck(element)) {
+      //   howManyInDeck =
+      //       extraCards.where((card) => element.id == card.id).length;
+      // } else {
+      //   howManyInDeck = deckCards.where((card) => element.id == card.id).length;
+      // }
       widgets.add(
         StatefulBuilder(
           builder: (context, setState) {
@@ -632,9 +632,9 @@ class _DeckDetailState extends State<DeckDetail> {
                 // if (exists.id == null) {
                 if (quantity.length <= 2) {
                   addToState(element);
-                  setState(() {
-                    howManyInDeck++;
-                  });
+                  // setState(() {
+                  //   howManyInDeck++;
+                  // });
                 } else {
                   //TODO:  Display  feedback to user
                 }
@@ -777,79 +777,79 @@ class _DeckDetailState extends State<DeckDetail> {
     }
   }
 
-  _buildExtra() {
-    List<Widget> widgets = [];
-
-    //TODO create proper extra deck display
-    for (var element in extraCards) {
-      if (deleteView) {
-        if (selectedCards.contains(element)) {
-          widgets.add(
-            Stack(
-              children: [
-                MyCard(
-                  cardInfo: element,
-                  fullImage: true,
-                  noTap: true,
-                ),
-                Material(
-                  color: Colors.grey.withOpacity(0.60),
-                  child: InkWell(
-                    onTap: () {
-                      handleSelectedCards(element);
-                    },
-                  ),
-                ),
-                Positioned(
-                  top: -10,
-                  right: -10,
-                  child: IconButton(
-                    icon: const Icon(Icons.remove_circle_outline),
-                    onPressed: () {},
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          widgets.add(
-            Stack(
-              children: [
-                MyCard(
-                  cardInfo: element,
-                  fullImage: true,
-                  noTap: true,
-                ),
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      handleSelectedCards(element);
-                    },
-                  ),
-                ),
-                Positioned(
-                  top: -10,
-                  right: -10,
-                  child: IconButton(
-                    icon: const Icon(Icons.remove_circle_outline),
-                    onPressed: () {
-                      deleteCard(element);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-      } else {
-        widgets.add(MyCard(
-          cardInfo: element,
-          fullImage: true,
-        ));
-      }
-    }
-
-    return widgets;
-  }
+  // _buildExtra() {
+  //   List<Widget> widgets = [];
+  //
+  //   //TODO create proper extra deck display
+  //   for (var element in extraCards) {
+  //     if (deleteView) {
+  //       if (selectedCards.contains(element)) {
+  //         widgets.add(
+  //           Stack(
+  //             children: [
+  //               MyCard(
+  //                 cardInfo: element,
+  //                 fullImage: true,
+  //                 noTap: true,
+  //               ),
+  //               Material(
+  //                 color: Colors.grey.withOpacity(0.60),
+  //                 child: InkWell(
+  //                   onTap: () {
+  //                     handleSelectedCards(element);
+  //                   },
+  //                 ),
+  //               ),
+  //               Positioned(
+  //                 top: -10,
+  //                 right: -10,
+  //                 child: IconButton(
+  //                   icon: const Icon(Icons.remove_circle_outline),
+  //                   onPressed: () {},
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       } else {
+  //         widgets.add(
+  //           Stack(
+  //             children: [
+  //               MyCard(
+  //                 cardInfo: element,
+  //                 fullImage: true,
+  //                 noTap: true,
+  //               ),
+  //               Material(
+  //                 color: Colors.transparent,
+  //                 child: InkWell(
+  //                   onTap: () {
+  //                     handleSelectedCards(element);
+  //                   },
+  //                 ),
+  //               ),
+  //               Positioned(
+  //                 top: -10,
+  //                 right: -10,
+  //                 child: IconButton(
+  //                   icon: const Icon(Icons.remove_circle_outline),
+  //                   onPressed: () {
+  //                     deleteCard(element);
+  //                   },
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       }
+  //     } else {
+  //       widgets.add(MyCard(
+  //         cardInfo: element,
+  //         fullImage: true,
+  //       ));
+  //     }
+  //   }
+  //
+  //   return widgets;
+  // }
 }

@@ -9,10 +9,10 @@ class CardWidthSlider extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CardWidthSliderState createState() => _CardWidthSliderState();
+  CardWidthSliderState createState() => CardWidthSliderState();
 }
 
-class _CardWidthSliderState extends State<CardWidthSlider> {
+class CardWidthSliderState extends State<CardWidthSlider> {
   double? cardWidth;
   late final prefs;
 
