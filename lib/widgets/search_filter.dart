@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:yugi_deck/models/card_attributes.dart';
 import 'package:yugi_deck/models/card_banlist.dart';
 import 'package:yugi_deck/models/card_link_marker.dart';
+import 'package:yugi_deck/models/card_race.dart';
+import 'package:yugi_deck/models/card_type.dart';
 
 import '../card_info_entity.dart';
 import '../utils.dart';
@@ -34,6 +36,8 @@ class _SearchFilterState extends State<SearchFilter> {
       GlobalKey<FormFieldState>();
 
   final _formKey = GlobalKey<FormState>();
+
+  String? typeSelector;
 
   @override
   Widget build(BuildContext context) {
@@ -102,13 +106,84 @@ class _SearchFilterState extends State<SearchFilter> {
               ),
               ListTile(
                 title: TextFormField(
-                  onTap: () {},
+                  onChanged: (value) {
+                    if (value != "") {
+                      queryBuilder("race", value);
+                    } else {
+                      removeQuery("race");
+                    }
+                  },
                   //TODO: add race enum
                   decoration: const InputDecoration(
                     label: Text("Race"),
                   ),
                 ),
               ),
+              ListTile(
+                title: const Text("Type"),
+                subtitle: DropdownButtonFormField<String>(
+                  isExpanded: true,
+                  hint: const Text("Type"),
+                  elevation: 16,
+                  style: const TextStyle(color: Colors.deepPurple),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      typeSelector = newValue!;
+                    });
+                    queryBuilder("type", newValue!);
+                  },
+                  items: typeList.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
+              if (typeSelector == "Trap Card")
+                ListTile(
+                  title: const Text("Trap Race"),
+                  subtitle: DropdownButtonFormField<String>(
+                    hint: const Text("Race"),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        raceSelector = newValue!;
+                      });
+                      queryBuilder("race", newValue!);
+                    },
+                    items: trapRaceList
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              if (typeSelector == "Spell Card")
+                ListTile(
+                  title: const Text("Spell Race"),
+                  subtitle: DropdownButtonFormField<String>(
+                    hint: const Text("Race"),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        raceSelector = newValue!;
+                      });
+                      queryBuilder("race", newValue!);
+                    },
+                    items: spellRaceList
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ListTile(
                 title: const Text("Attribute"),
                 subtitle: DropdownButtonFormField<String>(
