@@ -30,29 +30,35 @@ class _CardSetPageState extends State<CardSetPage> {
       appBar: AppBar(
         title: Text("Card set: ${widget.setName}"),
       ),
-      body: SafeArea(
-        minimum: const EdgeInsets.all(8),
-        child: FutureBuilder<List<CardInfoEntity>>(
-          future: data,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const CircularProgressIndicator();
-            }
-            if (snapshot.hasData) {
-              return GridView(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 59 / 86,
-                ),
-                children: _buildItems(snapshot.data!),
-              );
-            } else {
-              return const CircularProgressIndicator();
-            }
-          },
-        ),
+      body: FutureBuilder<List<CardInfoEntity>>(
+        future: data,
+        builder: (context, snapshot) {
+          Widget child;
+          if (snapshot.connectionState != ConnectionState.done) {
+            child = const CircularProgressIndicator();
+          }
+          if (snapshot.hasData) {
+            child = GridView(
+              padding: const EdgeInsets.all(8),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                childAspectRatio: 59 / 86,
+              ),
+              children: _buildItems(snapshot.data!),
+            );
+          } else {
+            child = const CircularProgressIndicator();
+          }
+
+          return Center(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 225),
+              child: child,
+            ),
+          );
+        },
       ),
     );
   }

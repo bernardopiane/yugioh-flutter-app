@@ -9,22 +9,24 @@ import 'package:yugi_deck/pages/my_home_page.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Lock vertical only
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((value) => runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider<DeckList>(
-          create: (_) => DeckList([]),
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<DeckList>(
+              create: (_) => DeckList([]),
+            ),
+            ChangeNotifierProvider<QueryResults>(
+              create: (_) => QueryResults([]),
+            ),
+          ],
+          child: const MyApp(),
         ),
-        ChangeNotifierProvider<QueryResults>(
-          create: (_) => QueryResults([]),
-        ),
-      ],
-      child: const MyApp(),
-    ),
-  ));
+      ));
 
   // runApp(
   //   MultiProvider(

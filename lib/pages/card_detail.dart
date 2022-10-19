@@ -18,100 +18,99 @@ class CardDetail extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 0,
+        title: Text("${card.name}"),
+        // toolbarHeight: 0,
       ),
-      body: SafeArea(
-        minimum: const EdgeInsets.all(8),
-        child: OrientationBuilder(
-          builder: (context, orientation) {
-            if (orientation == Orientation.portrait) {
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildImage(context, imageUrl),
-                    const SizedBox(height: 8),
-                    if (card.attribute != null)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (card.attribute != null)
-                            CardAttribute(attribute: card.attribute!),
-                          if (card.level != null) CardLevel(level: card.level!),
-                        ],
-                      ),
-                    if (card.attribute == null) Text("[${card.type}]"),
-                    if (card.race != null)
-                      //TODO: Create race widget
-                      Text("[${card.race} / ${card.type}]"),
-                    const SizedBox(height: 8),
-                    Text(card.desc!),
-                    const SizedBox(height: 8),
-                    if (card.level != null)
-                      Text("ATK/ ${card.atk} DEF/ ${card.def}"),
-                    if (card.linkval != null)
-                      Text("LINK-${card.linkval.toString()}"),
-                    if (card.scale != null)
-                      Text("Scale: ${card.scale.toString()}"),
-                    if (card.linkmarkers != null)
-                      Text("Points to: ${card.linkmarkers.toString()}"),
-                    const SizedBox(height: 8),
-                    // Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: _buildCardSet(card.cardSets!),
-                    // ),
-                    if (card.cardSets != null)
-                      _buildCardSet(context, card.cardSets!)
-                  ],
-                ),
-              );
-            } else {
-              return SingleChildScrollView(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildImage(context, imageUrl),
-                    const SizedBox(
-                      width: 8,
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          if (orientation == Orientation.portrait) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildImage(context, imageUrl),
+                  const SizedBox(height: 8),
+                  if (card.attribute != null)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (card.attribute != null)
+                          CardAttribute(attribute: card.attribute!),
+                        if (card.level != null) CardLevel(level: card.level!),
+                      ],
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 8),
-                          if (card.attribute != null)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CardAttribute(attribute: card.attribute!),
-                                CardLevel(level: card.level!)
-                              ],
-                            ),
-                          if (card.attribute == null) Text("[${card.type}]"),
-                          if (card.race != null)
-                            //TODO: Create race widget
-                            Text("[${card.race} / ${card.type}]"),
-                          const SizedBox(height: 8),
-                          Text(card.desc!),
-                          const SizedBox(height: 8),
-                          if (card.level != null)
-                            Text("ATK/ ${card.atk} DEF/ ${card.def}"),
-                          const SizedBox(height: 8),
-                          // Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   children: _buildCardSet(card.cardSets!),
-                          // ),
-                          if (card.cardSets != null)
-                            _buildCardSet(context, card.cardSets!)
-                        ],
-                      ),
+                  if (card.attribute == null) Text("[${card.type}]"),
+                  if (card.race != null)
+                    //TODO: Create race widget
+                    Text("[${card.race} / ${card.type}]"),
+                  const SizedBox(height: 8),
+                  Text(card.desc!),
+                  const SizedBox(height: 8),
+                  if (card.level != null)
+                    Text("ATK/ ${card.atk} DEF/ ${card.def}"),
+                  if (card.linkval != null)
+                    Text("LINK-${card.linkval.toString()}"),
+                  if (card.scale != null)
+                    Text("Scale: ${card.scale.toString()}"),
+                  if (card.linkmarkers != null)
+                    Text("Points to: ${card.linkmarkers.toString()}"),
+                  const SizedBox(height: 8),
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: _buildCardSet(card.cardSets!),
+                  // ),
+                  if (card.cardSets != null)
+                    _buildCardSet(context, card.cardSets!)
+                ],
+              ),
+            );
+          } else {
+            return SingleChildScrollView(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildImage(context, imageUrl),
+                  const SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        if (card.attribute != null)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CardAttribute(attribute: card.attribute!),
+                              CardLevel(level: card.level!)
+                            ],
+                          ),
+                        if (card.attribute == null) Text("[${card.type}]"),
+                        if (card.race != null)
+                          //TODO: Create race widget
+                          Text("[${card.race} / ${card.type}]"),
+                        const SizedBox(height: 8),
+                        Text(card.desc!),
+                        const SizedBox(height: 8),
+                        if (card.level != null)
+                          Text("ATK/ ${card.atk} DEF/ ${card.def}"),
+                        const SizedBox(height: 8),
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: _buildCardSet(card.cardSets!),
+                        // ),
+                        if (card.cardSets != null)
+                          _buildCardSet(context, card.cardSets!)
+                      ],
                     ),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
       ),
     );
   }

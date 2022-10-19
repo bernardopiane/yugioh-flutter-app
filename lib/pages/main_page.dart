@@ -88,8 +88,9 @@ class _MainPageState extends State<MainPage>
         child: FutureBuilder<List<CardInfoEntity>>(
           future: data,
           builder: (context, snapshot) {
+            Widget child;
             if (snapshot.connectionState != ConnectionState.done) {
-              return SizedBox(
+              child = SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: const Center(
@@ -99,9 +100,9 @@ class _MainPageState extends State<MainPage>
             }
             if (snapshot.hasError) {
               debugPrint(snapshot.error.toString());
-              return const Text("Failed to load data");
+              child = const Text("Failed to load data");
             } else if (snapshot.hasData) {
-              return CardGridView(cardList: snapshot.data!);
+              child = CardGridView(cardList: snapshot.data!);
               // return GridView(
               //   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               //     maxCrossAxisExtent: 200,
@@ -112,8 +113,15 @@ class _MainPageState extends State<MainPage>
               //   children: _buildList(snapshot.data!),
               // );
             } else {
-              return const CircularProgressIndicator();
+              child = const CircularProgressIndicator();
             }
+
+            return Center(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 225),
+                child: child,
+              ),
+            );
           },
         ),
       ),
@@ -142,7 +150,6 @@ class _MainPageState extends State<MainPage>
   }
 
   _advSearch(Map<String, String>? query) {
-    debugPrint("Clicked");
     Uri uri = Uri(
         scheme: "https",
         host: "db.ygoprodeck.com",

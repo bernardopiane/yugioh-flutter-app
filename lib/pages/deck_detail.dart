@@ -472,10 +472,11 @@ class _DeckDetailState extends State<DeckDetail> {
                         child: FutureBuilder<List<CardInfoEntity>>(
                           future: data,
                           builder: (context, snapshot) {
+                            Widget child;
                             if (snapshot.hasData &&
                                 snapshot.connectionState ==
                                     ConnectionState.done) {
-                              return GridView(
+                              child = GridView(
                                   key: Key(deckCards.length.toString()),
                                   gridDelegate:
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -487,14 +488,19 @@ class _DeckDetailState extends State<DeckDetail> {
                                   children:
                                       _buildSearchResults(snapshot.data!));
                             } else {
-                              return const Center(
-                                child: SizedBox(
+                              child = const SizedBox(
                                   height: 100,
                                   width: 100,
                                   child: CircularProgressIndicator(),
-                                ),
                               );
                             }
+
+                            return Center(
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 225),
+                                child: child,
+                              ),
+                            );
                           },
                         )),
                     actions: [
