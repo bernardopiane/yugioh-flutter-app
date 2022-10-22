@@ -43,7 +43,6 @@ class DeckList extends ChangeNotifier {
     //   List<CardInfoEntity> cards = deck.cards!;
     //   cards.addAll(deck.extra!);
     //   await file.writeAsString(jsonEncode(cards));
-    // //TODO Fix saving extra cards to normal
     // }
 
     final directory = await getApplicationDocumentsDirectory();

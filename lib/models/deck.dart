@@ -1,4 +1,5 @@
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/globals.dart';
 import 'package:yugi_deck/utils.dart';
 
 import '../generated/json/base/json_field.dart';
@@ -28,8 +29,6 @@ class Deck {
     'extra': extra,
     'id': id,
   };
-
-    //TODO merge deck and extra on save, separate them on app
 
   int getCardsLength() {
     int len = 0;
@@ -71,6 +70,7 @@ class Deck {
     if (extra!.length <= 15) {
       extra!.add(card);
     } else {
+
       //  TODO Display msg to user
     }
   }

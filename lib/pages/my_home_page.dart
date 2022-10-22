@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _pages = [
       const MainPage(),
-      const AdvSearch(),
+      const DeckListPage(),
     ];
 
     _pageController = PageController(initialPage: _selectedIndex);
@@ -75,8 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Advanced Search',
+            icon: Icon(Icons.save_rounded),
+            label: 'Saved Decks',
           ),
         ],
         currentIndex: _selectedIndex,

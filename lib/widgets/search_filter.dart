@@ -5,6 +5,9 @@ import 'package:yugi_deck/models/card_banlist.dart';
 import 'package:yugi_deck/models/card_link_marker.dart';
 import 'package:yugi_deck/models/card_race.dart';
 import 'package:yugi_deck/models/card_type.dart';
+import 'package:yugi_deck/models/sort.dart';
+import 'package:yugi_deck/widgets/dropdown_selector.dart';
+import 'package:yugi_deck/widgets/race.dart';
 
 import '../card_info_entity.dart';
 import '../utils.dart';
@@ -20,9 +23,14 @@ class SearchFilter extends StatefulWidget {
 class _SearchFilterState extends State<SearchFilter> {
   String? raceSelector;
 
+  List<String> raceFilter = spellRaceList;
+  //TODO: implement race filtering & search
+
   String? sortSelector;
 
   String? attributeSelector;
+
+  String? banSelector;
 
   String? linkMarkerSelector;
 
@@ -104,26 +112,36 @@ class _SearchFilterState extends State<SearchFilter> {
                   ),
                 ),
               ),
+              Race(filter: raceSelector),
               ListTile(
-                title: TextFormField(
-                  onChanged: (value) {
-                    if (value != "") {
-                      queryBuilder("race", value);
-                    } else {
-                      removeQuery("race");
-                    }
-                  },
-                  //TODO: add race enum
-                  decoration: const InputDecoration(
-                    label: Text("Race"),
-                  ),
+                title: const Text("Card Type"),
+                subtitle: DropdownSelector(
+                  handleChange: handleChange,
+                  list: raceFilter,
+                  selector: typeSelector,
+                  query: "type",
                 ),
               ),
+              // ListTile(
+              //   title: TextFormField(
+              //     onChanged: (value) {
+              //       if (value != "") {
+              //         queryBuilder("race", value);
+              //       } else {
+              //         removeQuery("race");
+              //       }
+              //     },
+              //     //TODO: add race enum
+              //     decoration: const InputDecoration(
+              //       label: Text("Race"),
+              //     ),
+              //   ),
+              // ),
               ListTile(
-                title: const Text("Type"),
+                title: const Text("Monster Type"),
                 subtitle: DropdownButtonFormField<String>(
                   isExpanded: true,
-                  hint: const Text("Type"),
+                  hint: const Text("Monster Type"),
                   elevation: 16,
                   style: const TextStyle(color: Colors.deepPurple),
                   onChanged: (String? newValue) {
@@ -185,26 +203,32 @@ class _SearchFilterState extends State<SearchFilter> {
                   ),
                 ),
               ListTile(
-                title: const Text("Attribute"),
-                subtitle: DropdownButtonFormField<String>(
-                  hint: const Text("Attribute"),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      attributeSelector = newValue!;
-                    });
-                    queryBuilder("attribute", newValue!);
-                  },
-                  items:
-                      attributes.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ),
+                  title: const Text("Attribute"),
+                  subtitle: DropdownSelector(
+                    handleChange: handleChange,
+                    list: attributes,
+                    selector: attributeSelector,
+                    query: "attribute",
+                  )
+                  // DropdownButtonFormField<String>(
+                  //   hint: const Text("Attribute"),
+                  //   elevation: 16,
+                  //   style: const TextStyle(color: Colors.deepPurple),
+                  //   onChanged: (String? newValue) {
+                  //     setState(() {
+                  //       attributeSelector = newValue!;
+                  //     });
+                  //     queryBuilder("attribute", newValue!);
+                  //   },
+                  //   items:
+                  //       attributes.map<DropdownMenuItem<String>>((String value) {
+                  //     return DropdownMenuItem<String>(
+                  //       value: value,
+                  //       child: Text(value),
+                  //     );
+                  //   }).toList(),
+                  // ),
+                  ),
               ListTile(
                 title: TextFormField(
                   onChanged: (value) {
@@ -217,28 +241,34 @@ class _SearchFilterState extends State<SearchFilter> {
                 ),
               ),
               ListTile(
-                // title: const Text("Link marker"),
-                subtitle: DropdownButtonFormField<String>(
-                  key: linkMarkerSelectorKey,
-                  hint: const Text("Link marker"),
-                  // value: linkMarkerSelector,
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      linkMarkerSelector = newValue!;
-                    });
-                    queryBuilder("linkmarker", newValue!);
-                  },
-                  items:
-                      linkMarker.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ),
+                  title: const Text("Link marker"),
+                  subtitle: DropdownSelector(
+                    handleChange: handleChange,
+                    list: linkMarker,
+                    selector: linkMarkerSelector,
+                    query: "linkmarker",
+                  )
+                  // DropdownButtonFormField<String>(
+                  //   key: linkMarkerSelectorKey,
+                  //   hint: const Text("Link marker"),
+                  //   // value: linkMarkerSelector,
+                  //   elevation: 16,
+                  //   style: const TextStyle(color: Colors.deepPurple),
+                  //   onChanged: (String? newValue) {
+                  //     setState(() {
+                  //       linkMarkerSelector = newValue!;
+                  //     });
+                  //     queryBuilder("linkmarker", newValue!);
+                  //   },
+                  //   items:
+                  //       linkMarker.map<DropdownMenuItem<String>>((String value) {
+                  //     return DropdownMenuItem<String>(
+                  //       value: value,
+                  //       child: Text(value),
+                  //     );
+                  //   }).toList(),
+                  // ),
+                  ),
               ListTile(
                 title: TextFormField(
                   onChanged: (value) {
@@ -275,51 +305,63 @@ class _SearchFilterState extends State<SearchFilter> {
               ),
               ListTile(
                 title: const Text("Ban List"),
-                subtitle: DropdownButtonFormField<String>(
-                  hint: const Text("Banned from"),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      attributeSelector = newValue!;
-                    });
-                    queryBuilder("banlist", newValue!);
-                  },
-                  items: banList.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                subtitle: DropdownSelector(
+                  handleChange: handleChange,
+                  selector: banSelector,
+                  list: banList,
+                  query: "banlist",
                 ),
+                // DropdownButtonFormField<String>(
+                //   hint: const Text("Banned from"),
+                //   elevation: 16,
+                //   style: const TextStyle(color: Colors.deepPurple),
+                //   onChanged: (String? newValue) {
+                //     setState(() {
+                //       attributeSelector = newValue!;
+                //     });
+                //     queryBuilder("banlist", newValue!);
+                //   },
+                //   items: banList.map<DropdownMenuItem<String>>((String value) {
+                //     return DropdownMenuItem<String>(
+                //       value: value,
+                //       child: Text(value),
+                //     );
+                //   }).toList(),
+                // ),
               ),
               ListTile(
                 title: const Text("Sort Order"),
-                subtitle: DropdownButtonFormField<String>(
-                  hint: const Text("Sort order"),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      sortSelector = newValue!;
-                    });
-                    queryBuilder("sort", newValue!);
-                  },
-                  items: <String>[
-                    'Atk',
-                    'Def',
-                    'Name',
-                    'Type',
-                    'Level',
-                    'Id',
-                    'New'
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                subtitle: DropdownSelector(
+                  handleChange: handleChange,
+                  selector: sortSelector,
+                  list: sortType,
+                  query: "sort",
                 ),
+                // DropdownButtonFormField<String>(
+                //   hint: const Text("Sort order"),
+                //   elevation: 16,
+                //   style: const TextStyle(color: Colors.deepPurple),
+                //   onChanged: (String? newValue) {
+                //     setState(() {
+                //       sortSelector = newValue!;
+                //     });
+                //     queryBuilder("sort", newValue!);
+                //   },
+                //   items: <String>[
+                //     'Atk',
+                //     'Def',
+                //     'Name',
+                //     'Type',
+                //     'Level',
+                //     'Id',
+                //     'New'
+                //   ].map<DropdownMenuItem<String>>((String value) {
+                //     return DropdownMenuItem<String>(
+                //       value: value,
+                //       child: Text(value),
+                //     );
+                //   }).toList(),
+                // ),
               ),
               ListTile(
                 title: ElevatedButton(
@@ -362,5 +404,13 @@ class _SearchFilterState extends State<SearchFilter> {
 
   void removeQuery(String s) {
     query?.remove(s);
+  }
+
+  void handleChange(newValue, selector, String query) {
+    debugPrint("Value changed");
+    setState(() {
+      selector = newValue!;
+    });
+    queryBuilder(query, newValue!);
   }
 }
