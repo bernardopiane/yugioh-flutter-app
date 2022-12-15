@@ -43,18 +43,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('MD Deck'),
-        actions: [
-          IconButton(onPressed: (){
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const DeckListPage(),
-              ),
-            );
-          }, icon: const Icon(Icons.save_alt))
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: const Text('MD Deck'),
+      //   actions: [
+      //     IconButton(onPressed: (){
+      //       Navigator.of(context).push(
+      //         MaterialPageRoute(
+      //           builder: (context) => const DeckListPage(),
+      //         ),
+      //       );
+      //     }, icon: const Icon(Icons.save_alt))
+      //   ],
+      // ),
       body: Center(
         // child: _widgetOptions.elementAt(_selectedIndex),
         child: PageView(

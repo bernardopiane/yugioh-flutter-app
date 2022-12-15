@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
@@ -13,60 +15,32 @@ class CardDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: Export iamges url to new file
     Uri imageUrl = Uri.parse(
-        "https://storage.googleapis.com/ygoprodeck.com/pics/${card.id.toString()}.jpg");
+        "https://images.ygoprodeck.com/images/cards/${card.id.toString()}.jpg");
 
     return Scaffold(
       appBar: AppBar(
         title: Text("${card.name}"),
         // toolbarHeight: 0,
       ),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          if (orientation == Orientation.portrait) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildImage(context, imageUrl),
-                  const SizedBox(height: 8),
-                  if (card.attribute != null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (card.attribute != null)
-                          CardAttribute(attribute: card.attribute!),
-                        if (card.level != null) CardLevel(level: card.level!),
-                      ],
-                    ),
-                  if (card.attribute == null) Text("[${card.type}]"),
-                  if (card.race != null)
-                    //TODO: Create race widget
-                    Text("[${card.race} / ${card.type}]"),
-                  const SizedBox(height: 8),
-                  Text(card.desc!),
-                  const SizedBox(height: 8),
-                  if (card.level != null)
-                    Text("ATK/ ${card.atk} DEF/ ${card.def}"),
-                  if (card.linkval != null)
-                    Text("LINK-${card.linkval.toString()}"),
-                  if (card.scale != null)
-                    Text("Scale: ${card.scale.toString()}"),
-                  if (card.linkmarkers != null)
-                    Text("Points to: ${card.linkmarkers.toString()}"),
-                  const SizedBox(height: 8),
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: _buildCardSet(card.cardSets!),
-                  // ),
-                  if (card.cardSets != null)
-                    _buildCardSet(context, card.cardSets!)
-                ],
-              ),
-            );
-          } else {
-            return SingleChildScrollView(
+      body: Container(
+        child: Platform.isWindows ? buildLandscapeView(context, imageUrl) : OrientationBuilder(
+          builder: (context, orientation) {
+            if (orientation == Orientation.portrait) {
+              return buildPortraitView(context, imageUrl);
+            } else {
+              return buildLandscapeView(context, imageUrl);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  SingleChildScrollView buildLandscapeView(BuildContext context, Uri imageUrl) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -78,24 +52,30 @@ class CardDetail extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 8),
                         if (card.attribute != null)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CardAttribute(attribute: card.attribute!),
-                              CardLevel(level: card.level!)
+                              if (card.attribute != null)
+                                CardAttribute(attribute: card.attribute!),
+                              if (card.level != null) CardLevel(level: card.level!),
                             ],
                           ),
                         if (card.attribute == null) Text("[${card.type}]"),
                         if (card.race != null)
-                          //TODO: Create race widget
+                        //TODO: Create race widget
                           Text("[${card.race} / ${card.type}]"),
                         const SizedBox(height: 8),
                         Text(card.desc!),
                         const SizedBox(height: 8),
                         if (card.level != null)
                           Text("ATK/ ${card.atk} DEF/ ${card.def}"),
+                        if (card.linkval != null)
+                          Text("LINK-${card.linkval.toString()}"),
+                        if (card.scale != null)
+                          Text("Scale: ${card.scale.toString()}"),
+                        if (card.linkmarkers != null)
+                          Text("Points to: ${card.linkmarkers.toString()}"),
                         const SizedBox(height: 8),
                         // Column(
                         //   crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,10 +89,50 @@ class CardDetail extends StatelessWidget {
                 ],
               ),
             );
-          }
-        },
-      ),
-    );
+  }
+
+  SingleChildScrollView buildPortraitView(BuildContext context, Uri imageUrl) {
+    return SingleChildScrollView(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildImage(context, imageUrl),
+                const SizedBox(height: 8),
+                if (card.attribute != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (card.attribute != null)
+                        CardAttribute(attribute: card.attribute!),
+                      if (card.level != null) CardLevel(level: card.level!),
+                    ],
+                  ),
+                if (card.attribute == null) Text("[${card.type}]"),
+                if (card.race != null)
+                  //TODO: Create race widget
+                  Text("[${card.race} / ${card.type}]"),
+                const SizedBox(height: 8),
+                Text(card.desc!),
+                const SizedBox(height: 8),
+                if (card.level != null)
+                  Text("ATK/ ${card.atk} DEF/ ${card.def}"),
+                if (card.linkval != null)
+                  Text("LINK-${card.linkval.toString()}"),
+                if (card.scale != null)
+                  Text("Scale: ${card.scale.toString()}"),
+                if (card.linkmarkers != null)
+                  Text("Points to: ${card.linkmarkers.toString()}"),
+                const SizedBox(height: 8),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: _buildCardSet(card.cardSets!),
+                // ),
+                if (card.cardSets != null)
+                  _buildCardSet(context, card.cardSets!)
+              ],
+            ),
+          );
   }
 
   _buildCardSet(context, List<CardInfoCardSets> cardSets) {

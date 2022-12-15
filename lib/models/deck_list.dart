@@ -17,7 +17,7 @@ class DeckList extends ChangeNotifier {
     saveToFile(deck);
   }
 
-  renameDeck(Deck deck, String newName){
+  renameDeck(Deck deck, String newName) {
     Deck curDeck = decks.firstWhere((element) => deck.id == element.id);
     curDeck.name = newName;
     saveToFile(deck);
@@ -78,7 +78,6 @@ class DeckList extends ChangeNotifier {
           if (json['cards'] != null && json['cards'].isNotEmpty) {
             json['cards'].forEach((element) {
               CardInfoEntity card = CardInfoEntity.fromJson(element);
-              debugPrint("Carta: ${card.name} : ${card.type}");
               cardList.add(card);
             });
             deck.setCards(cardList);
@@ -86,7 +85,6 @@ class DeckList extends ChangeNotifier {
           if (json['extra'] != null && json['extra'].isNotEmpty) {
             json['extra'].forEach((element) {
               CardInfoEntity card = CardInfoEntity.fromJson(element);
-              debugPrint("Carta: ${card.name} : ${card.type}");
               extraList.add(card);
             });
             deck.setExtra(extraList);

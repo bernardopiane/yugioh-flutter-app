@@ -240,6 +240,7 @@ class _SearchFilterState extends State<SearchFilter> {
                   ),
                 ),
               ),
+              //TODO create new linkmarker widget for multiselection
               ListTile(
                   title: const Text("Link marker"),
                   subtitle: DropdownSelector(

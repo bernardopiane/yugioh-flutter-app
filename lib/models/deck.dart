@@ -59,7 +59,9 @@ class Deck {
     // if(cards.contains(cardInDeck)){
     //   cards.firstWhere((element) => element == cardInDeck).quantity = ;
     // }
-    cards!.add(card);
+    if(cards!.length <= 60){
+      cards!.add(card);
+    }
   }
 
   setCards(List<CardInfoEntity> cardList) {
@@ -70,7 +72,6 @@ class Deck {
     if (extra!.length <= 15) {
       extra!.add(card);
     } else {
-
       //  TODO Display msg to user
     }
   }

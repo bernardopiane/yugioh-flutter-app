@@ -16,10 +16,10 @@ class MyCard extends StatelessWidget {
     Uri imageUrl;
     if (fullImage) {
       imageUrl = Uri.parse(
-          "https://storage.googleapis.com/ygoprodeck.com/pics/${cardInfo.id.toString()}.jpg");
+          "https://images.ygoprodeck.com/images/cards/${cardInfo.id.toString()}.jpg");
     } else {
       imageUrl = Uri.parse(
-          "https://storage.googleapis.com/ygoprodeck.com/pics_small/${cardInfo.id.toString()}.jpg");
+          "https://images.ygoprodeck.com/images/cards_small/${cardInfo.id.toString()}.jpg");
     }
     // return InkWell(
     //   onTap: () {

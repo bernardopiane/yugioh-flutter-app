@@ -46,3 +46,17 @@ bool isExtraDeck(CardInfoEntity card) {
   }
   return false;
 }
+
+
+bool isBelowDeckLimit(List<CardInfoEntity> cards, bool isExtraDeck){
+  if(isExtraDeck){
+    if(cards.length < 15){
+      return true;
+    }
+  } else {
+    if(cards.length < 60){
+      return true;
+    }
+  }
+  return false;
+}

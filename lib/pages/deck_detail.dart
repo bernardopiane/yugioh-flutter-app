@@ -88,8 +88,6 @@ class _DeckDetailState extends State<DeckDetail> {
         false;
   }
 
-  //TODO fix extra deck display not updating correctly
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -180,6 +178,8 @@ class _DeckDetailState extends State<DeckDetail> {
                       childAspectRatio: cardAspRatio,
                     ),
                     itemBuilder: (BuildContext ctx, index) {
+                      //TODO fix selecting all same name cards BEFORE saving
+                      //TODO remove multiselect, keep only single
                       if (deleteView) {
                         if (selectedCards
                             .contains(deckCards.elementAt(index))) {
@@ -489,9 +489,9 @@ class _DeckDetailState extends State<DeckDetail> {
                                       _buildSearchResults(snapshot.data!));
                             } else {
                               child = const SizedBox(
-                                  height: 100,
-                                  width: 100,
-                                  child: CircularProgressIndicator(),
+                                height: 100,
+                                width: 100,
+                                child: CircularProgressIndicator(),
                               );
                             }
 
@@ -602,17 +602,21 @@ class _DeckDetailState extends State<DeckDetail> {
   addToState(CardInfoEntity element) {
     //TODO: Check if api returns extra deck type - remove hardcoded
     if (isExtraDeck(element)) {
-      setState(() {
-        extraCards.add(element);
-        extraCards.sort((a, b) => a.name!.compareTo(b.name!));
-        hasChanged = true;
-      });
+      if (extraCards.length <= 15) {
+        setState(() {
+          extraCards.add(element);
+          extraCards.sort((a, b) => a.name!.compareTo(b.name!));
+          hasChanged = true;
+        });
+      }
     } else {
-      setState(() {
-        deckCards.add(element);
-        deckCards.sort((a, b) => a.name!.compareTo(b.name!));
-        hasChanged = true;
-      });
+      if (deckCards.length <= 60) {
+        setState(() {
+          deckCards.add(element);
+          deckCards.sort((a, b) => a.name!.compareTo(b.name!));
+          hasChanged = true;
+        });
+      }
     }
   }
 
@@ -641,10 +645,21 @@ class _DeckDetailState extends State<DeckDetail> {
                 }
                 // if (exists.id == null) {
                 if (quantity.length <= 2) {
-                  addToState(element);
-                  setState(() {
-                    howManyInDeck++;
-                  });
+                  if (isExtraDeck(element)) {
+                    if (isBelowDeckLimit(extraCards, true)) {
+                      addToState(element);
+                      setState(() {
+                        howManyInDeck++;
+                      });
+                    }
+                  } else {
+                    if (isBelowDeckLimit(deckCards, false)) {
+                      addToState(element);
+                      setState(() {
+                        howManyInDeck++;
+                      });
+                    }
+                  }
                 } else {
                   //TODO:  Display  feedback to user
                 }
