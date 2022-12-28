@@ -113,13 +113,14 @@ class _SearchFilterState extends State<SearchFilter> {
                 ),
               ),
               Race(filter: raceSelector),
+              //TODO Implement race filter
               ListTile(
                 title: const Text("Card Type"),
                 subtitle: DropdownSelector(
                   handleChange: handleChange,
                   list: raceFilter,
                   selector: typeSelector,
-                  query: "type",
+                  query: "race",
                 ),
               ),
               // ListTile(

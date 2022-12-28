@@ -38,6 +38,8 @@ class _DeckDetailState extends State<DeckDetail> {
 
   bool hasChanged = false;
 
+  int howManyInDeck = 0;
+
   @override
   void initState() {
     super.initState();
@@ -101,12 +103,12 @@ class _DeckDetailState extends State<DeckDetail> {
             elevation: 2,
             child: TabBar(
               labelColor: Theme.of(context).textTheme.bodyMedium?.color,
-              tabs: const [
+              tabs: [
                 Tab(
-                  child: Text("Normal"),
+                  child: Text("Normal - ${deckCards.length.toString()}"),
                 ),
                 Tab(
-                  child: Text("Extra"),
+                  child: Text("Extra - ${extraCards.length.toString()}"),
                 ),
               ],
             ),
@@ -278,15 +280,15 @@ class _DeckDetailState extends State<DeckDetail> {
                                 fullImage: true,
                                 noTap: true,
                               ),
-                              Material(
-                                color: Colors.grey.withOpacity(0.60),
-                                child: InkWell(
-                                  onTap: () {
-                                    handleSelectedCards(
-                                        extraCards.elementAt(index));
-                                  },
-                                ),
-                              ),
+                              // Material(
+                              //   color: Colors.grey.withOpacity(0.60),
+                              //   child: InkWell(
+                              //     onTap: () {
+                              //       handleSelectedCards(
+                              //           extraCards.elementAt(index));
+                              //     },
+                              //   ),
+                              // ),
                               Positioned(
                                 top: -10,
                                 right: -10,
@@ -305,15 +307,15 @@ class _DeckDetailState extends State<DeckDetail> {
                                 fullImage: true,
                                 noTap: true,
                               ),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () {
-                                    handleSelectedCards(
-                                        extraCards.elementAt(index));
-                                  },
-                                ),
-                              ),
+                              // Material(
+                              //   color: Colors.transparent,
+                              //   child: InkWell(
+                              //     onTap: () {
+                              //       handleSelectedCards(
+                              //           extraCards.elementAt(index));
+                              //     },
+                              //   ),
+                              // ),
                               Positioned(
                                   top: 0,
                                   right: 0,
@@ -624,7 +626,6 @@ class _DeckDetailState extends State<DeckDetail> {
     List<Widget> widgets = [];
 
     for (var element in cardList) {
-      int howManyInDeck;
       if (isExtraDeck(element)) {
         howManyInDeck =
             extraCards.where((card) => element.id == card.id).length;

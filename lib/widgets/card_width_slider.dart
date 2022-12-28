@@ -25,7 +25,7 @@ class CardWidthSliderState extends State<CardWidthSlider> {
     super.initState();
     SharedPreferences.getInstance().then((value) => setState(() {
           prefs = value;
-          if(prefs.getDouble("cardWidth") == null){
+          if (prefs.getDouble("cardWidth") == null) {
             prefs.setDouble("cardWidth", 100.0);
           }
           cardWidth = prefs.getDouble("cardWidth");
@@ -48,15 +48,16 @@ class CardWidthSliderState extends State<CardWidthSlider> {
                   value: cardWidth!,
                   min: minWidth,
                   max: maxWidth,
-                  divisions: 4,
+                  // divisions: 4,
                   label: "Card Width: ",
                   onChanged: (double value) {
                     setState(() {
                       cardWidth = value;
-                      prefs.setDouble("cardWidth", value);
                     });
-                    //Save selection
                     widget.notifyParent(value);
+                  },
+                  onChangeEnd: (value) {
+                    prefs.setDouble("cardWidth", value);
                   },
                 ),
         ],

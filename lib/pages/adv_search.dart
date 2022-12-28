@@ -4,7 +4,6 @@ import 'package:yugi_deck/card_info_entity.dart';
 import 'package:yugi_deck/models/card_attributes.dart';
 import 'package:yugi_deck/models/card_link_marker.dart';
 import 'package:yugi_deck/utils.dart';
-import 'package:yugi_deck/widgets/card_grid_view.dart';
 
 class AdvSearch extends StatefulWidget {
   const AdvSearch({Key? key}) : super(key: key);

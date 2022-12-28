@@ -71,6 +71,7 @@ class _MainPageState extends State<MainPage>
                   border: InputBorder.none),
               onEditingComplete: () {
                 _search(searchController.value.text);
+                FocusScope.of(context).unfocus();
               },
             ),
           ),

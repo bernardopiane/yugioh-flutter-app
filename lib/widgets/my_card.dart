@@ -43,6 +43,7 @@ class MyCard extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         CachedNetworkImage(
+
           imageUrl: imageUrl.toString(),
           fit: BoxFit.contain,
           progressIndicatorBuilder: (context, url, downloadProgress) => Center(
