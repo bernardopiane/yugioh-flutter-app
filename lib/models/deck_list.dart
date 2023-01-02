@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 
 import 'deck.dart';
 
@@ -23,13 +24,13 @@ class DeckList extends ChangeNotifier {
     saveToFile(deck);
   }
 
-  setCards(Deck deck, List<CardInfoEntity> cards) {
+  setCards(Deck deck, List<CardV2> cards) {
     Deck curDeck = decks.firstWhere((element) => deck.id == element.id);
     curDeck.cards = cards;
     notifyListeners();
   }
 
-  setExtra(Deck deck, List<CardInfoEntity> cards) {
+  setExtra(Deck deck, List<CardV2> cards) {
     Deck curDeck = decks.firstWhere((element) => deck.id == element.id);
     curDeck.extra = cards;
     notifyListeners();
@@ -73,18 +74,18 @@ class DeckList extends ChangeNotifier {
         file.readAsString().then((value) {
           var json = jsonDecode(value);
           Deck deck = Deck.withId(json['name'], json['id']);
-          List<CardInfoEntity> cardList = [];
-          List<CardInfoEntity> extraList = [];
+          List<CardV2> cardList = [];
+          List<CardV2> extraList = [];
           if (json['cards'] != null && json['cards'].isNotEmpty) {
             json['cards'].forEach((element) {
-              CardInfoEntity card = CardInfoEntity.fromJson(element);
+              CardV2 card = CardV2.fromJson(element);
               cardList.add(card);
             });
             deck.setCards(cardList);
           }
           if (json['extra'] != null && json['extra'].isNotEmpty) {
             json['extra'].forEach((element) {
-              CardInfoEntity card = CardInfoEntity.fromJson(element);
+              CardV2 card = CardV2.fromJson(element);
               extraList.add(card);
             });
             deck.setExtra(extraList);

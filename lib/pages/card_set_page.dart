@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 import 'package:yugi_deck/utils.dart';
 
 import '../widgets/my_card.dart';
@@ -13,7 +14,7 @@ class CardSetPage extends StatefulWidget {
 }
 
 class _CardSetPageState extends State<CardSetPage> {
-  late Future<List<CardInfoEntity>> data;
+  late Future<List<CardV2>> data;
 
   @override
   void initState() {
@@ -30,7 +31,7 @@ class _CardSetPageState extends State<CardSetPage> {
       appBar: AppBar(
         title: Text("Card set: ${widget.setName}"),
       ),
-      body: FutureBuilder<List<CardInfoEntity>>(
+      body: FutureBuilder<List<CardV2>>(
         future: data,
         builder: (context, snapshot) {
           Widget child;
@@ -63,7 +64,7 @@ class _CardSetPageState extends State<CardSetPage> {
     );
   }
 
-  List<Widget> _buildItems(List<CardInfoEntity>? cards) {
+  List<Widget> _buildItems(List<CardV2>? cards) {
     List<Widget> widgets = [];
 
     for (var element in cards!) {

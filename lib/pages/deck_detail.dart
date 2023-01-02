@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 import 'package:yugi_deck/models/deck.dart';
 import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/utils.dart';
@@ -23,10 +24,10 @@ class DeckDetail extends StatefulWidget {
 class _DeckDetailState extends State<DeckDetail> {
   late final SharedPreferences prefs;
 
-  late Future<List<CardInfoEntity>> data;
+  late Future<List<CardV2>> data;
 
-  List<CardInfoEntity> deckCards = [];
-  List<CardInfoEntity> extraCards = [];
+  List<CardV2> deckCards = [];
+  List<CardV2> extraCards = [];
 
   String? inputCardName;
 
@@ -430,7 +431,7 @@ class _DeckDetailState extends State<DeckDetail> {
   //   return widgets;
   // }
 
-  void handleSelectedCards(CardInfoEntity element) {
+  void handleSelectedCards(CardV2 element) {
     if (selectedCards.contains(element)) {
       setState(() {
         selectedCards.remove(element);
@@ -471,7 +472,7 @@ class _DeckDetailState extends State<DeckDetail> {
                     content: SizedBox(
                         height: MediaQuery.of(context).size.height - 240,
                         width: MediaQuery.of(context).size.width,
-                        child: FutureBuilder<List<CardInfoEntity>>(
+                        child: FutureBuilder<List<CardV2>>(
                           future: data,
                           builder: (context, snapshot) {
                             Widget child;
@@ -550,7 +551,7 @@ class _DeckDetailState extends State<DeckDetail> {
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.6,
                               width: MediaQuery.of(context).size.width * 0.8,
-                              child: FutureBuilder<List<CardInfoEntity>>(
+                              child: FutureBuilder<List<CardV2>>(
                                 future: data,
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData &&
@@ -601,7 +602,7 @@ class _DeckDetailState extends State<DeckDetail> {
         });
   }
 
-  addToState(CardInfoEntity element) {
+  addToState(CardV2 element) {
     //TODO: Check if api returns extra deck type - remove hardcoded
     if (isExtraDeck(element)) {
       if (extraCards.length <= 15) {
@@ -622,7 +623,7 @@ class _DeckDetailState extends State<DeckDetail> {
     }
   }
 
-  List<Widget> _buildSearchResults(List<CardInfoEntity> cardList) {
+  List<Widget> _buildSearchResults(List<CardV2> cardList) {
     List<Widget> widgets = [];
 
     for (var element in cardList) {
@@ -638,7 +639,7 @@ class _DeckDetailState extends State<DeckDetail> {
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                Iterable<CardInfoEntity> quantity;
+                Iterable<CardV2> quantity;
                 if (isExtraDeck(element)) {
                   quantity = extraCards.where((card) => card.id == element.id);
                 } else {
@@ -789,7 +790,7 @@ class _DeckDetailState extends State<DeckDetail> {
     }
   }
 
-  void deleteCard(CardInfoEntity card) {
+  void deleteCard(CardV2 card) {
     if (isExtraDeck(card)) {
       setState(() {
         extraCards.remove(card);

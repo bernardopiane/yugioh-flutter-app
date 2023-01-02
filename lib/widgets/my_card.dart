@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 import 'package:yugi_deck/pages/card_detail.dart';
 
 class MyCard extends StatelessWidget {
-  final CardInfoEntity cardInfo;
+  final CardV2 cardInfo;
   final bool fullImage;
   final bool noTap;
   final longPress;

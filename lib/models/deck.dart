@@ -1,4 +1,5 @@
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 import 'package:yugi_deck/utils.dart';
 
 import '../generated/json/base/json_field.dart';
@@ -10,8 +11,8 @@ class Deck {
   String? description;
 
   // List<CardInDeck>? cards;
-  List<CardInfoEntity>? cards;
-  List<CardInfoEntity>? extra;
+  List<CardV2>? cards;
+  List<CardV2>? extra;
 
 
   Deck.withId(this.name, this.id);
@@ -53,7 +54,7 @@ class Deck {
     description = desc;
   }
 
-  addCard(CardInfoEntity card) {
+  addCard(CardV2 card) {
     // CardInDeck cardInDeck = CardInDeck(card);
     // if(cards.contains(cardInDeck)){
     //   cards.firstWhere((element) => element == cardInDeck).quantity = ;
@@ -63,11 +64,11 @@ class Deck {
     }
   }
 
-  setCards(List<CardInfoEntity> cardList) {
+  setCards(List<CardV2> cardList) {
     cards = cardList;
   }
 
-  addExtra(CardInfoEntity card) {
+  addExtra(CardV2 card) {
     if (extra!.length <= 15) {
       extra!.add(card);
     } else {
@@ -75,16 +76,16 @@ class Deck {
     }
   }
 
-  setExtra(List<CardInfoEntity> cardList) {
+  setExtra(List<CardV2> cardList) {
     extra = cardList;
   }
 
-  removeCard(CardInfoEntity card) {
+  removeCard(CardV2 card) {
     // CardInDeck cardInDeck = CardInDeck(card);
     cards!.remove(card);
   }
 
-  removeExtra(CardInfoEntity card) {
+  removeExtra(CardV2 card) {
     // CardInDeck cardInDeck = CardInDeck(card);
     extra!.remove(card);
   }

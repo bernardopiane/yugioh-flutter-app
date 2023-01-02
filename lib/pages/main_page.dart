@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 import 'package:yugi_deck/widgets/search_filter.dart';
 import '../utils.dart';
 import '../widgets/card_grid_view.dart';
@@ -18,7 +19,7 @@ class _MainPageState extends State<MainPage>
   @override
   bool get wantKeepAlive => true;
 
-  late Future<List<CardInfoEntity>> data;
+  late Future<List<CardV2>> data;
 
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey();
   //TODO: remove adv search, move settings to filter
@@ -86,7 +87,7 @@ class _MainPageState extends State<MainPage>
       ),
       body: SafeArea(
         minimum: const EdgeInsets.all(8),
-        child: FutureBuilder<List<CardInfoEntity>>(
+        child: FutureBuilder<List<CardV2>>(
           future: data,
           builder: (context, snapshot) {
             Widget child;

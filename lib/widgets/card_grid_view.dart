@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 import 'package:yugi_deck/variables.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
 
 class CardGridView extends StatelessWidget {
   const CardGridView({Key? key, required this.cardList}) : super(key: key);
-  final List<CardInfoEntity> cardList;
+  final List<CardV2> cardList;
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +24,9 @@ class CardGridView extends StatelessWidget {
             cardInfo: cardList.elementAt(index),
           ));
         });
-
-    //Old
-    return GridView(
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200,
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 12,
-        childAspectRatio: cardAspRatio,
-      ),
-      children: _buildList(cardList),
-    );
   }
 
-  List<Widget> _buildList(List<CardInfoEntity> data) {
+  List<Widget> _buildList(List<CardV2> data) {
     List<Widget> widgets = [];
 
     for (var element in data) {

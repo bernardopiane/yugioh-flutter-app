@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/globals.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 
 import 'card_info_entity.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<List<CardInfoEntity>> fetchCardList(
+Future<List<CardV2>> fetchCardList(
     String url, BuildContext context) async {
   var response = await http.post(Uri.parse(url));
 
   List<CardInfoEntity> cardList = [];
+  List<CardV2> cardV2List = [];
 
   var json = jsonDecode(response.body);
 
@@ -20,20 +22,25 @@ Future<List<CardInfoEntity>> fetchCardList(
     snackbarKey.currentState?.showSnackBar(snackBar);
 
     // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    return cardList;
+    return cardV2List;
   }
 
   var lista = json["data"] as List;
 
+
   for (var element in lista) {
     CardInfoEntity cardInfo = CardInfoEntity.fromJson(element);
+    CardV2 card = CardV2.fromJson(element);
+    cardV2List.add(card);
     cardList.add(cardInfo);
   }
 
-  return cardList;
+  debugPrint(cardV2List.elementAt(0).name);
+
+  return cardV2List;
 }
 
-bool isExtraDeck(CardInfoEntity card) {
+bool isExtraDeck(CardV2 card) {
   if ((card.type!.contains("Fusion Monster") ||
       card.type!.contains("Link Monster") ||
       card.type!.contains("Pendulum Effect Fusion Monster") ||
@@ -48,7 +55,7 @@ bool isExtraDeck(CardInfoEntity card) {
 }
 
 
-bool isBelowDeckLimit(List<CardInfoEntity> cards, bool isExtraDeck){
+bool isBelowDeckLimit(List<CardV2> cards, bool isExtraDeck){
   if(isExtraDeck){
     if(cards.length < 15){
       return true;

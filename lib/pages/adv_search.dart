@@ -1,6 +1,7 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 import 'package:yugi_deck/models/card_attributes.dart';
 import 'package:yugi_deck/models/card_link_marker.dart';
 import 'package:yugi_deck/utils.dart';
@@ -23,7 +24,7 @@ class _AdvSearchState extends State<AdvSearch> {
 
   Map<String, String>? query;
 
-  Future<List<CardInfoEntity>>? data;
+  Future<List<CardV2>>? data;
 
   ExpandableController expandableController = ExpandableController();
 

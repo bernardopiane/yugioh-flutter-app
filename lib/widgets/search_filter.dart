@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 import 'package:yugi_deck/models/card_attributes.dart';
 import 'package:yugi_deck/models/card_banlist.dart';
 import 'package:yugi_deck/models/card_link_marker.dart';
@@ -36,7 +37,7 @@ class _SearchFilterState extends State<SearchFilter> {
 
   Map<String, String>? query;
 
-  Future<List<CardInfoEntity>>? data;
+  Future<List<CardV2>>? data;
 
   final GlobalKey dataKey = GlobalKey();
 

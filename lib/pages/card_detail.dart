@@ -5,13 +5,14 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:yugi_deck/card_info_entity.dart';
+import 'package:yugi_deck/models/cardV2.dart';
 import 'package:yugi_deck/pages/card_set_page.dart';
 import 'package:yugi_deck/widgets/card_attribute.dart';
 import 'package:yugi_deck/widgets/card_level.dart';
 
 class CardDetail extends StatelessWidget {
   const CardDetail({Key? key, required this.card}) : super(key: key);
-  final CardInfoEntity card;
+  final CardV2 card;
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +165,7 @@ class CardDetail extends StatelessWidget {
     );
   }
 
-  _buildCardSet(context, List<CardInfoCardSets> cardSets) {
+  _buildCardSet(context, List<CardSets> cardSets) {
     List<Widget> widgets = [];
 
     for (var element in cardSets) {
