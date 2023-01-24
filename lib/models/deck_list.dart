@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:yugi_deck/card_info_entity.dart';
-import 'package:yugi_deck/models/cardV2.dart';
+import 'package:yugi_deck/models/card_v2.dart';
 
 import 'deck.dart';
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yugi_deck/card_info_entity.dart';
-import 'package:yugi_deck/models/cardV2.dart';
+import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/variables.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
 
@@ -26,13 +25,13 @@ class CardGridView extends StatelessWidget {
         });
   }
 
-  List<Widget> _buildList(List<CardV2> data) {
-    List<Widget> widgets = [];
-
-    for (var element in data) {
-      widgets.add(GridTile(child: MyCard(cardInfo: element)));
-    }
-
-    return widgets;
-  }
+  // List<Widget> _buildList(List<CardV2> data) {
+  //   List<Widget> widgets = [];
+  //
+  //   for (var element in data) {
+  //     widgets.add(GridTile(child: MyCard(cardInfo: element)));
+  //   }
+  //
+  //   return widgets;
+  // }
 }

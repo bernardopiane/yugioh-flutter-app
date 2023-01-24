@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CardWidthSlider extends StatefulWidget {
-  final notifyParent;
+  final Function notifyParent;
   final double currentWidth;
   const CardWidthSlider(
       {Key? key, required this.notifyParent, this.currentWidth = 100})
@@ -14,7 +14,7 @@ class CardWidthSlider extends StatefulWidget {
 
 class CardWidthSliderState extends State<CardWidthSlider> {
   double? cardWidth;
-  late final prefs;
+  late final SharedPreferences prefs;
 
   final double minWidth = 100.0;
   final double maxWidth = 400.0;

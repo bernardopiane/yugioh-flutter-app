@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class DropdownSelector extends StatelessWidget {
-  final handleChange;
-  final selector;
+  final Function handleChange;
+  final String? selector;
   final String query;
   final List<String> list;
   const DropdownSelector(
       {Key? key,
-      this.handleChange,
+      required this.handleChange,
       required this.list,
       this.selector,
       required this.query})

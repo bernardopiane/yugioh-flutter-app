@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yugi_deck/globals.dart';
-import 'package:yugi_deck/models/cardV2.dart';
+import 'package:yugi_deck/models/card_v2.dart';
 
 import 'card_info_entity.dart';
 import 'package:http/http.dart' as http;

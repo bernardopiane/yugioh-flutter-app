@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:yugi_deck/card_info_entity.dart';
-import 'package:yugi_deck/models/cardV2.dart';
+import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/widgets/search_filter.dart';
 import '../utils.dart';
 import '../widgets/card_grid_view.dart';
@@ -22,7 +21,6 @@ class _MainPageState extends State<MainPage>
   late Future<List<CardV2>> data;
 
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey();
-  //TODO: remove adv search, move settings to filter
 
   String searchTerm = "";
 

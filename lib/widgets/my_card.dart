@@ -1,26 +1,29 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:yugi_deck/card_info_entity.dart';
-import 'package:yugi_deck/models/cardV2.dart';
+import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/pages/card_detail.dart';
 
 class MyCard extends StatelessWidget {
   final CardV2 cardInfo;
   final bool fullImage;
   final bool noTap;
-  final longPress;
-  const MyCard({Key? key, required this.cardInfo, this.fullImage = false, this.noTap = false, this.longPress = null})
+  // final longPress;
+  const MyCard({Key? key, required this.cardInfo, this.fullImage = false, this.noTap = false})
       : super(key: key);
+  // const MyCard({Key? key, required this.cardInfo, this.fullImage = false, this.noTap = false, this.longPress})
+  //     : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Uri imageUrl;
     if (fullImage) {
-      imageUrl = Uri.parse(
-          "https://images.ygoprodeck.com/images/cards/${cardInfo.id.toString()}.jpg");
+      // imageUrl = Uri.parse(
+      //     "https://images.ygoprodeck.com/images/cards/${cardInfo.id.toString()}.jpg");
+      imageUrl = Uri.parse(cardInfo.cardImages?.elementAt(0).imageUrl as String);
     } else {
-      imageUrl = Uri.parse(
-          "https://images.ygoprodeck.com/images/cards_small/${cardInfo.id.toString()}.jpg");
+      // imageUrl = Uri.parse(
+      //     "https://images.ygoprodeck.com/images/cards_small/${cardInfo.id.toString()}.jpg");
+      imageUrl = Uri.parse(cardInfo.cardImages?.elementAt(0).imageUrlSmall as String);
     }
     // return InkWell(
     //   onTap: () {
@@ -60,7 +63,6 @@ class MyCard extends StatelessWidget {
           child: IgnorePointer(
             ignoring: noTap ? true : false,
             child: InkWell(
-              onLongPress: longPress,
               onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
