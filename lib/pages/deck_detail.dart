@@ -36,9 +36,6 @@ class _DeckDetailState extends State<DeckDetail> {
 
   int howManyInDeck = 0;
 
-  //TODO Only replace cards if user saves the deck
-  //Currently it saves after every card removed
-
   @override
   void initState() {
     super.initState();
@@ -104,7 +101,7 @@ class _DeckDetailState extends State<DeckDetail> {
               labelColor: Theme.of(context).textTheme.bodyMedium?.color,
               tabs: [
                 Tab(
-                  child: Text("Normal - ${deckCards.length.toString()}"),
+                  child: Text("Main - ${deckCards.length.toString()}"),
                 ),
                 Tab(
                   child: Text("Extra - ${extraCards.length.toString()}"),
@@ -172,8 +169,6 @@ class _DeckDetailState extends State<DeckDetail> {
                       childAspectRatio: cardAspRatio,
                     ),
                     itemBuilder: (BuildContext ctx, index) {
-                      //TODO fix selecting all same name cards BEFORE saving
-                      //TODO remove multiselect, keep only single
                       if (deleteView) {
                         return Stack(
                           children: [
@@ -665,12 +660,6 @@ class _DeckDetailState extends State<DeckDetail> {
         .setExtra(widget.deck, extraCards);
     Provider.of<DeckList>(context, listen: false).saveToFile(widget.deck);
     hasChanged = false;
-    //TODO Fix double saving
-    // final directory = await getApplicationDocumentsDirectory();
-    // debugPrint("Dir: ${directory.toString()}");
-    // final File file = File('${directory.path}/decks/${widget.deck.name}.txt');
-    // await file.writeAsString(jsonEncode(selectedCards));
-    // file.readAsString().then((value) => debugPrint(value));
   }
 
   void changeWidth(double value) {
@@ -700,80 +689,4 @@ class _DeckDetailState extends State<DeckDetail> {
       _saveDeck();
     }
   }
-
-  // _buildExtra() {
-  //   List<Widget> widgets = [];
-  //
-  //   //TODO create proper extra deck display
-  //   for (var element in extraCards) {
-  //     if (deleteView) {
-  //       if (selectedCards.contains(element)) {
-  //         widgets.add(
-  //           Stack(
-  //             children: [
-  //               MyCard(
-  //                 cardInfo: element,
-  //                 fullImage: true,
-  //                 noTap: true,
-  //               ),
-  //               Material(
-  //                 color: Colors.grey.withOpacity(0.60),
-  //                 child: InkWell(
-  //                   onTap: () {
-  //                     handleSelectedCards(element);
-  //                   },
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                 top: -10,
-  //                 right: -10,
-  //                 child: IconButton(
-  //                   icon: const Icon(Icons.remove_circle_outline),
-  //                   onPressed: () {},
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       } else {
-  //         widgets.add(
-  //           Stack(
-  //             children: [
-  //               MyCard(
-  //                 cardInfo: element,
-  //                 fullImage: true,
-  //                 noTap: true,
-  //               ),
-  //               Material(
-  //                 color: Colors.transparent,
-  //                 child: InkWell(
-  //                   onTap: () {
-  //                     handleSelectedCards(element);
-  //                   },
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                 top: -10,
-  //                 right: -10,
-  //                 child: IconButton(
-  //                   icon: const Icon(Icons.remove_circle_outline),
-  //                   onPressed: () {
-  //                     deleteCard(element);
-  //                   },
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       }
-  //     } else {
-  //       widgets.add(MyCard(
-  //         cardInfo: element,
-  //         fullImage: true,
-  //       ));
-  //     }
-  //   }
-  //
-  //   return widgets;
-  // }
 }
