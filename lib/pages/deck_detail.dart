@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,11 +32,12 @@ class _DeckDetailState extends State<DeckDetail> {
 
   bool deleteView = false;
 
-  HashSet selectedCards = HashSet();
-
   bool hasChanged = false;
 
   int howManyInDeck = 0;
+
+  //TODO Only replace cards if user saves the deck
+  //Currently it saves after every card removed
 
   @override
   void initState() {
@@ -63,7 +62,7 @@ class _DeckDetailState extends State<DeckDetail> {
   }
 
   Future<bool> _onWillPop() async {
-    if (!hasChanged) {
+    if (!hasChanged && !deleteView) {
       Navigator.of(context).pop(true);
       return false;
     }
@@ -115,20 +114,13 @@ class _DeckDetailState extends State<DeckDetail> {
           ),
           appBar: deleteView
               ? AppBar(
-                  title: Text("Selected: ${selectedCards.length}"),
+                  title: const Text("Remove card(s)"),
                   actions: [
                     IconButton(
                       onPressed: () {
                         toggleDeleteView();
                       },
-                      icon: const Icon(Icons.cancel),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        handleDeleteCards();
-                        toggleDeleteView();
-                      },
-                      icon: const Icon(Icons.delete_forever),
+                      icon: const Icon(Icons.check),
                     ),
                   ],
                 )
@@ -183,65 +175,26 @@ class _DeckDetailState extends State<DeckDetail> {
                       //TODO fix selecting all same name cards BEFORE saving
                       //TODO remove multiselect, keep only single
                       if (deleteView) {
-                        if (selectedCards
-                            .contains(deckCards.elementAt(index))) {
-                          return Stack(
-                            children: [
-                              MyCard(
-                                cardInfo: deckCards.elementAt(index),
-                                fullImage: true,
-                                noTap: true,
-                              ),
-                              Material(
-                                color: Colors.grey.withOpacity(0.60),
-                                child: InkWell(
-                                  onTap: () {
-                                    handleSelectedCards(
-                                        deckCards.elementAt(index));
+                        return Stack(
+                          children: [
+                            MyCard(
+                              cardInfo: deckCards.elementAt(index),
+                              fullImage: true,
+                              noTap: true,
+                            ),
+                            Positioned(
+                                top: 0,
+                                right: 0,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    deleteCard(deckCards.elementAt(index));
                                   },
-                                ),
-                              ),
-                              Positioned(
-                                top: -10,
-                                right: -10,
-                                child: IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return Stack(
-                            children: [
-                              MyCard(
-                                cardInfo: deckCards.elementAt(index),
-                                fullImage: true,
-                                noTap: true,
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () {
-                                    handleSelectedCards(
-                                        deckCards.elementAt(index));
-                                  },
-                                ),
-                              ),
-                              Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  child: FloatingActionButton(
-                                    onPressed: () {
-                                      deleteCard(deckCards.elementAt(index));
-                                    },
-                                    backgroundColor: Colors.red,
-                                    mini: true,
-                                    child: const Icon(Icons.close),
-                                  )),
-                            ],
-                          );
-                        }
+                                  backgroundColor: Colors.red,
+                                  mini: true,
+                                  child: const Icon(Icons.close),
+                                )),
+                          ],
+                        );
                       } else {
                         return MyCard(
                           cardInfo: deckCards.elementAt(index),
@@ -249,15 +202,6 @@ class _DeckDetailState extends State<DeckDetail> {
                         );
                       }
                     }),
-                // child: GridView(
-                //   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                //     maxCrossAxisExtent: cardWidth,
-                //     mainAxisSpacing: 12,
-                //     crossAxisSpacing: 12,
-                //     childAspectRatio: cardAspRatio,
-                //   ),
-                //   children: _buildCards(),
-                // ),
               ),
               SafeArea(
                 minimum: const EdgeInsets.all(8),
@@ -271,65 +215,35 @@ class _DeckDetailState extends State<DeckDetail> {
                     ),
                     itemBuilder: (BuildContext ctx, index) {
                       if (deleteView) {
-                        if (selectedCards
-                            .contains(extraCards.elementAt(index))) {
-                          return Stack(
-                            children: [
-                              MyCard(
-                                cardInfo: extraCards.elementAt(index),
-                                fullImage: true,
-                                noTap: true,
-                              ),
-                              // Material(
-                              //   color: Colors.grey.withOpacity(0.60),
-                              //   child: InkWell(
-                              //     onTap: () {
-                              //       handleSelectedCards(
-                              //           extraCards.elementAt(index));
-                              //     },
-                              //   ),
-                              // ),
-                              Positioned(
-                                top: -10,
-                                right: -10,
-                                child: IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return Stack(
-                            children: [
-                              MyCard(
-                                cardInfo: extraCards.elementAt(index),
-                                fullImage: true,
-                                noTap: true,
-                              ),
-                              // Material(
-                              //   color: Colors.transparent,
-                              //   child: InkWell(
-                              //     onTap: () {
-                              //       handleSelectedCards(
-                              //           extraCards.elementAt(index));
-                              //     },
-                              //   ),
-                              // ),
-                              Positioned(
-                                  top: 0,
-                                  right: 0,
-                                  child: FloatingActionButton(
-                                    onPressed: () {
-                                      deleteCard(extraCards.elementAt(index));
-                                    },
-                                    backgroundColor: Colors.red,
-                                    mini: true,
-                                    child: const Icon(Icons.close),
-                                  )),
-                            ],
-                          );
-                        }
+                        return Stack(
+                          children: [
+                            MyCard(
+                              cardInfo: extraCards.elementAt(index),
+                              fullImage: true,
+                              noTap: true,
+                            ),
+                            // Material(
+                            //   color: Colors.transparent,
+                            //   child: InkWell(
+                            //     onTap: () {
+                            //       handleSelectedCards(
+                            //           extraCards.elementAt(index));
+                            //     },
+                            //   ),
+                            // ),
+                            Positioned(
+                                top: 0,
+                                right: 0,
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    deleteCard(extraCards.elementAt(index));
+                                  },
+                                  backgroundColor: Colors.red,
+                                  mini: true,
+                                  child: const Icon(Icons.close),
+                                )),
+                          ],
+                        );
                       } else {
                         return MyCard(
                           cardInfo: extraCards.elementAt(index),
@@ -430,22 +344,7 @@ class _DeckDetailState extends State<DeckDetail> {
   //   return widgets;
   // }
 
-  void handleSelectedCards(CardV2 element) {
-    if (selectedCards.contains(element)) {
-      setState(() {
-        selectedCards.remove(element);
-        hasChanged = true;
-      });
-    } else {
-      setState(() {
-        selectedCards.add(element);
-        hasChanged = true;
-      });
-    }
-  }
-
   void _openSearchCardDialog(BuildContext context) {
-    selectedCards.clear();
     showDialog<void>(
         context: context,
         builder: (BuildContext context) {
@@ -610,6 +509,7 @@ class _DeckDetailState extends State<DeckDetail> {
           extraCards.sort((a, b) => a.name!.compareTo(b.name!));
           hasChanged = true;
         });
+        _saveDeck();
       }
     } else {
       if (deckCards.length <= 60) {
@@ -618,6 +518,7 @@ class _DeckDetailState extends State<DeckDetail> {
           deckCards.sort((a, b) => a.name!.compareTo(b.name!));
           hasChanged = true;
         });
+        _saveDeck();
       }
     }
   }
@@ -763,6 +664,7 @@ class _DeckDetailState extends State<DeckDetail> {
     Provider.of<DeckList>(context, listen: false)
         .setExtra(widget.deck, extraCards);
     Provider.of<DeckList>(context, listen: false).saveToFile(widget.deck);
+    hasChanged = false;
     //TODO Fix double saving
     // final directory = await getApplicationDocumentsDirectory();
     // debugPrint("Dir: ${directory.toString()}");
@@ -783,23 +685,19 @@ class _DeckDetailState extends State<DeckDetail> {
     });
   }
 
-  void handleDeleteCards() {
-    for (var element in selectedCards) {
-      deleteCard(element);
-    }
-  }
-
   void deleteCard(CardV2 card) {
     if (isExtraDeck(card)) {
       setState(() {
         extraCards.remove(card);
         hasChanged = true;
       });
+      _saveDeck();
     } else {
       setState(() {
         deckCards.remove(card);
         hasChanged = true;
       });
+      _saveDeck();
     }
   }
 
