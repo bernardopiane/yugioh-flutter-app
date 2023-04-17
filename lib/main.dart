@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:yugi_deck/globals.dart';
 import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/models/query_results.dart';
+import 'package:yugi_deck/models/search_tags.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 
 void main() {
@@ -23,6 +24,9 @@ void main() {
             ChangeNotifierProvider<QueryResults>(
               create: (_) => QueryResults([]),
             ),
+            ChangeNotifierProvider<SearchTags>(
+              create: (_) => SearchTags(),
+            )
           ],
           child: const MyApp(),
         ),
