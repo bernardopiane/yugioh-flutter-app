@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +9,8 @@ import 'package:yugi_deck/utils.dart';
 import 'package:yugi_deck/variables.dart';
 import 'package:yugi_deck/widgets/card_width_slider.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
+
+import '../globals.dart';
 
 class DeckDetail extends StatefulWidget {
   const DeckDetail({Key? key, required this.deck}) : super(key: key);
@@ -131,6 +133,12 @@ class _DeckDetailState extends State<DeckDetail> {
                         icon: const Icon(Icons.add)),
                     IconButton(
                         onPressed: () {
+                          if (deckCards.length < 40) {
+                            var snackBar = const SnackBar(
+                              content: Text("Your deck has less than 40 cards"),
+                            );
+                            snackbarKey.currentState?.showSnackBar(snackBar);
+                          }
                           _saveDeck();
                           hasChanged = false;
                         },
@@ -574,7 +582,7 @@ class _DeckDetailState extends State<DeckDetail> {
                       Positioned(
                         top: 0,
                         right: 0,
-                        child: Badge(
+                        child: badges.Badge(
                           badgeContent: Text(deckCards
                               .where((card) => element.id == card.id)
                               .length
@@ -587,7 +595,7 @@ class _DeckDetailState extends State<DeckDetail> {
                       Positioned(
                         top: 0,
                         right: 0,
-                        child: Badge(
+                        child: badges.Badge(
                           badgeContent: Text(extraCards
                               .where((card) => element.id == card.id)
                               .length
