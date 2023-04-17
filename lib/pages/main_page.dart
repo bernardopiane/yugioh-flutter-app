@@ -50,7 +50,7 @@ class _MainPageState extends State<MainPage>
           width: double.infinity,
           height: 40,
           decoration: BoxDecoration(
-            color: Theme.of(context).backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Center(
@@ -88,40 +88,65 @@ class _MainPageState extends State<MainPage>
         child: FutureBuilder<List<CardV2>>(
           future: data,
           builder: (context, snapshot) {
-            Widget child;
-            if (snapshot.connectionState != ConnectionState.done) {
-              child = SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
-            if (snapshot.hasError) {
-              debugPrint(snapshot.error.toString());
-              child = const Text("Failed to load data");
-            } else if (snapshot.hasData) {
-              child = CardGridView(cardList: snapshot.data!);
-              // return GridView(
-              //   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              //     maxCrossAxisExtent: 200,
-              //     mainAxisSpacing: 12,
-              //     crossAxisSpacing: 12,
-              //     childAspectRatio: 59 / 86,
-              //   ),
-              //   children: _buildList(snapshot.data!),
-              // );
-            } else {
-              child = const CircularProgressIndicator();
-            }
+            //
+              if (snapshot.connectionState == ConnectionState.none &&
+                  snapshot.hasData == null) {
+                // If the Future is null or hasn't been initialized, show a loading spinner
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                // If the Future is waiting, show a loading spinner
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.connectionState == ConnectionState.active) {
+                // If the Future is active, show a progress indicator
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.connectionState == ConnectionState.done) {
+                // If the Future is done, display the data
+                if (snapshot.hasError) {
+                  // If there's an error, show the error message
+                  return Center(child: Text(snapshot.error.toString()));
+                }
+                // If there's no error, display the data
+                return CardGridView(cardList: snapshot.data!);
+              }
+              return Container(); // unreachable
+            //
 
-            return Center(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 225),
-                child: child,
-              ),
-            );
+            // if (snapshot.connectionState != ConnectionState.done) {
+            //   child = SizedBox(
+            //     height: MediaQuery.of(context).size.height,
+            //     width: MediaQuery.of(context).size.width,
+            //     child: const Center(
+            //       child: CircularProgressIndicator(),
+            //     ),
+            //   );
+            // }
+            // if (snapshot.hasError) {
+            //   debugPrint(snapshot.error.toString());
+            //   child = const Text("Failed to load data");
+            // } else if (snapshot.hasData) {
+            //   child = CardGridView(cardList: snapshot.data!);
+            //   // return GridView(
+            //   //   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            //   //     maxCrossAxisExtent: 200,
+            //   //     mainAxisSpacing: 12,
+            //   //     crossAxisSpacing: 12,
+            //   //     childAspectRatio: 59 / 86,
+            //   //   ),
+            //   //   children: _buildList(snapshot.data!),
+            //   // );
+            // } else {
+            //   child = const CircularProgressIndicator();
+            // }
+            //
+            // return Center(
+            //   child: AnimatedSwitcher(
+            //     duration: const Duration(milliseconds: 225),
+            //     child: child,
+            //   ),
+            // );
           },
         ),
       ),
@@ -158,6 +183,7 @@ class _MainPageState extends State<MainPage>
 
     // var response = await http.post(uri);
 
+    //TODO display to user loading status
     setState(() {
       data = fetchCardList(uri.toString(), context);
     });
