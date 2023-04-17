@@ -26,12 +26,14 @@ class DeckList extends ChangeNotifier {
   setCards(Deck deck, List<CardV2> cards) {
     Deck curDeck = decks.firstWhere((element) => deck.id == element.id);
     curDeck.cards = cards;
+    curDeck.sortDeck();
     notifyListeners();
   }
 
   setExtra(Deck deck, List<CardV2> cards) {
     Deck curDeck = decks.firstWhere((element) => deck.id == element.id);
     curDeck.extra = cards;
+    curDeck.sortDeck();
     notifyListeners();
   }
 
