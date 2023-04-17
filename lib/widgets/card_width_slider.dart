@@ -4,9 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CardWidthSlider extends StatefulWidget {
   final Function notifyParent;
   final double currentWidth;
-  const CardWidthSlider(
-      {Key? key, required this.notifyParent, this.currentWidth = 100})
-      : super(key: key);
+  const CardWidthSlider({
+    Key? key,
+    required this.notifyParent,
+    this.currentWidth = 100,
+  }) : super(key: key);
 
   @override
   CardWidthSliderState createState() => CardWidthSliderState();
@@ -21,15 +23,15 @@ class CardWidthSliderState extends State<CardWidthSlider> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    SharedPreferences.getInstance().then((value) => setState(() {
+    SharedPreferences.getInstance().then((value) {
+      if (mounted) {
+        setState(() {
           prefs = value;
-          if (prefs.getDouble("cardWidth") == null) {
-            prefs.setDouble("cardWidth", 100.0);
-          }
-          cardWidth = prefs.getDouble("cardWidth");
-        }));
+          cardWidth = prefs.getDouble("cardWidth") ?? 100.0;
+        });
+      }
+    });
   }
 
   @override
