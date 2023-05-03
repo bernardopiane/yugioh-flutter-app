@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/globals.dart';
 import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/models/query_results.dart';
 import 'package:yugi_deck/models/search_tags.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
 
   // Lock vertical only
 
@@ -23,6 +28,9 @@ void main() {
             ),
             ChangeNotifierProvider<QueryResults>(
               create: (_) => QueryResults([]),
+            ),
+            ChangeNotifierProvider<DataProvider>(
+              create: (_) => DataProvider([]),
             ),
             ChangeNotifierProvider<SearchTags>(
               create: (_) => SearchTags(),
@@ -54,6 +62,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<DeckList>(context, listen: false).loadFromFile(context);
+
+    Provider.of<DataProvider>(context, listen: false).loadData();
 
     return MaterialApp(
         title: 'MD Deck',
