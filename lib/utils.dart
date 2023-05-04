@@ -119,3 +119,18 @@ bool isBelowDeckLimit(List<CardV2> cards, bool isExtraDeck) {
   }
   return false;
 }
+
+Future<List<CardV2>> searchCards(List<CardV2> cards, String searchPhrase) {
+  final Completer<List<CardV2>> completer = Completer<List<CardV2>>();
+  final List<CardV2> searchResults = [];
+
+  for (var card in cards) {
+    if (card.name!.toLowerCase().contains(searchPhrase.toLowerCase()) ||
+        card.desc!.toLowerCase().contains(searchPhrase.toLowerCase())) {
+      searchResults.add(card);
+    }
+  }
+
+  completer.complete(searchResults);
+  return completer.future;
+}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/widgets/search_filter.dart';
 import '../utils.dart';
@@ -166,10 +168,13 @@ class _MainPageState extends State<MainPage>
   _search(String value) {
     // var url =
     //     Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value");
+    // setState(() {
+    //   data = fetchCardList(
+    //       "https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value",
+    //       context);
+    // });
     setState(() {
-      data = fetchCardList(
-          "https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value",
-          context);
+      data = searchCards(Provider.of<DataProvider>(context, listen: false).cards, value);
     });
     FocusManager.instance.primaryFocus?.unfocus();
   }

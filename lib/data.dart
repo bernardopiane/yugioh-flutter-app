@@ -38,21 +38,32 @@ class DataProvider extends ChangeNotifier {
       final lastUpdate = json[0]['last_update'];
 
       var box = await Hive.openBox("database");
+      debugPrint("Box Database Version : ${box.get("database_version")}");
+      debugPrint("API Database Version : $databaseVersion");
+      debugPrint("Box Update Date : ${box.get("last_update")}");
+      debugPrint("API Update Data : $lastUpdate");
 
       if (box.get("database_version") != databaseVersion ||
           box.get("last_update") != lastUpdate) {
         fetchNewData().then((newData) {
+          box.put("database_version", databaseVersion);
+          box.put("last_update", lastUpdate);
           setResult(newData);
         //  TODO: add data to Hive box
+          var jsonData = jsonEncode(newData);
+          box.put("json_data", jsonData);
         });
       } else {
-        List<CardV2> list = [];
+        List list = [];
 
-        list = box.get("cards_json");
+        var jsonData = box.get("json_data");
+
+        list = jsonDecode(jsonData);
+
 
         //TODO: handle data from hive to object
 
-        setResult(list);
+        setResult(list.cast<CardV2>());
       }
     } else {
       debugPrint("Error fetching API database version");
