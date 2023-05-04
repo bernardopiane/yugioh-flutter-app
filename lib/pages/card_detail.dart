@@ -8,6 +8,9 @@ import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/pages/card_set_page.dart';
 import 'package:yugi_deck/widgets/card_attribute.dart';
 import 'package:yugi_deck/widgets/card_level.dart';
+import 'package:yugi_deck/widgets/highlighted_text.dart';
+
+import '../variables.dart';
 
 class CardDetail extends StatelessWidget {
   const CardDetail({Key? key, required this.card}) : super(key: key);
@@ -68,7 +71,7 @@ class CardDetail extends StatelessWidget {
                   //TODO: Create race widget
                   Text("[${card.race} / ${card.type}]"),
                 const SizedBox(height: 8),
-                Text(card.desc!),
+                HighlightedText(text: card.desc!, highlightedWords: highlightedWords),
                 const SizedBox(height: 8),
                 if (card.level != null)
                   Text("ATK/ ${card.atk} DEF/ ${card.def}"),
