@@ -4,10 +4,10 @@ class FilterTypes extends StatefulWidget {
   const FilterTypes({Key? key}) : super(key: key);
 
   @override
-  _FilterTypesState createState() => _FilterTypesState();
+  FilterTypesState createState() => FilterTypesState();
 }
 
-class _FilterTypesState extends State<FilterTypes> {
+class FilterTypesState extends State<FilterTypes> {
   final List<String> cardTypes = [
     'Normal',
     'Effect',

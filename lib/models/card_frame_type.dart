@@ -1,4 +1,4 @@
-List<String> CardFrameType = [
+List<String> cardFrameType = [
   "Monster",
   "Spell",
   "Trap",

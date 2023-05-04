@@ -91,8 +91,7 @@ class _MainPageState extends State<MainPage>
           future: data,
           builder: (context, snapshot) {
             //
-              if (snapshot.connectionState == ConnectionState.none &&
-                  snapshot.hasData == null) {
+              if (snapshot.connectionState == ConnectionState.none) {
                 // If the Future is null or hasn't been initialized, show a loading spinner
                 return const Center(child: CircularProgressIndicator());
               }
