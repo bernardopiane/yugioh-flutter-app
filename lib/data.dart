@@ -60,10 +60,13 @@ class DataProvider extends ChangeNotifier {
 
         list = jsonDecode(jsonData);
 
+        List<CardV2> cardList = [];
+        for (var card in list) {
+          CardV2 cardV2 = CardV2.fromJson(card);
+          cardList.add(cardV2);
+        }
 
-        //TODO: handle data from hive to object
-
-        setResult(list.cast<CardV2>());
+        setResult(cardList);
       }
     } else {
       debugPrint("Error fetching API database version");
