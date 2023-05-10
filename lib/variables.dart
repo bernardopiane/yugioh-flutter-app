@@ -1,2 +1,2 @@
 const double cardAspRatio = 59 / 86;
-const highlightedWords = ["When", "If", "Once per turn", "(Quick Effect)"];
+const highlightedWords = ["(Quick Effect)", "When", "If", "Once per turn"];

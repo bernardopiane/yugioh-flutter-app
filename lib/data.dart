@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive/hive.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:http/http.dart' as http;
@@ -15,10 +16,10 @@ class DataProvider extends ChangeNotifier {
   loadData() async {
     //  Check if already exists
     if (cards.isEmpty) {
-      var box = await Hive.openBox("database");
-      debugPrint("API Version stored: ${box.get("api_version")}");
       fetchDataAndStoreInHive();
     }
+
+    FlutterNativeSplash.remove();
     //  Compare version with API
     //  Update if needed
   }

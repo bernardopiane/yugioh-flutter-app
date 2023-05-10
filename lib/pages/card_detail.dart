@@ -71,7 +71,8 @@ class CardDetail extends StatelessWidget {
                   //TODO: Create race widget
                   Text("[${card.race} / ${card.type}]"),
                 const SizedBox(height: 8),
-                HighlightedText(text: card.desc!, highlightedWords: highlightedWords),
+                HighlightedText(
+                    text: card.desc!, highlightedWords: highlightedWords),
                 const SizedBox(height: 8),
                 if (card.level != null)
                   Text("ATK/ ${card.atk} DEF/ ${card.def}"),
@@ -133,7 +134,7 @@ class CardDetail extends StatelessWidget {
             children: card.desc!
                 .split('\n')
                 .map((line) => Text(
-                      line,
+                      "$line \n",
                       style: line.startsWith(RegExp(r'[0-9]'))
                           ? const TextStyle(fontStyle: FontStyle.italic)
                           : null,
