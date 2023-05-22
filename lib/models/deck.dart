@@ -12,21 +12,18 @@ class Deck {
   List<CardV2>? cards;
   List<CardV2>? extra;
 
-
   Deck.withId(this.name, this.id);
 
   Deck(this.name) {
-    id = DateTime
-        .now()
-        .millisecondsSinceEpoch.toString();
+    id = DateTime.now().millisecondsSinceEpoch.toString();
   }
 
   Map toJson() => {
-    'name': name,
-    'cards': cards,
-    'extra': extra,
-    'id': id,
-  };
+        'name': name,
+        'cards': cards,
+        'extra': extra,
+        'id': id,
+      };
 
   int getCardsLength() {
     int len = 0;
@@ -52,24 +49,28 @@ class Deck {
     description = desc;
   }
 
-  addCard(CardV2 card) {
-    if(cards!.length <= 60){
-      cards!.add(card);
+  void addCard(CardV2 card) {
+    if (isExtraDeck(card)) {
+      if (extra!.length >= 15) {
+        throw Exception('Extra deck can have a maximum of 15 cards');
+      }
+      if (hasThreeCopies(extra!, card)) {
+        throw Exception('Deck already contains 3 copies of the card');
+      }
+      extra!.add(card);
     } else {
-      throw Exception('Deck can have a maximum of 60 cards');
+      if (cards!.length >= 60) {
+        throw Exception('Deck can have a maximum of 60 cards');
+      }
+      if (hasThreeCopies(cards!, card)) {
+        throw Exception('Deck already contains 3 copies of the card');
+      }
+      cards!.add(card);
     }
   }
 
   setCards(List<CardV2> cardList) {
     cards = cardList;
-  }
-
-  addExtra(CardV2 card) {
-    if (extra!.length <= 15) {
-      extra!.add(card);
-    } else {
-      throw Exception('Extra deck can have a maximum of 15 cards');
-    }
   }
 
   setExtra(List<CardV2> cardList) {
@@ -86,11 +87,20 @@ class Deck {
     extra!.remove(card);
   }
 
-  rename(String newName){
+  rename(String newName) {
     name = newName;
   }
 
-  sortDeck(){
+  bool hasThreeCopies(List<CardV2> array, CardV2 card) {
+    // Filter the array based on the ID
+    List<CardV2> filtered =
+        array.where((element) => element.id == card.id).toList();
+
+    // Check if the filtered result has at least 3 copies
+    return filtered.length >= 3;
+  }
+
+  sortDeck() {
     // cards?.sort(compareCards);
     cards?.sort((a, b) {
       // First, sort by type (monster > spell > trap)
@@ -109,5 +119,3 @@ class Deck {
     });
   }
 }
-
-

@@ -9,6 +9,7 @@ import 'package:yugi_deck/utils.dart';
 import 'package:yugi_deck/variables.dart';
 import 'package:yugi_deck/widgets/card_width_slider.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
+import 'package:yugi_deck/widgets/search_results.dart';
 
 import '../globals.dart';
 
@@ -128,7 +129,15 @@ class _DeckDetailState extends State<DeckDetail> {
                   actions: [
                     IconButton(
                         onPressed: () {
-                          _openSearchCardDialog(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CardAddPage(
+                                      deck: widget.deck,
+                                      addCard: _addCard,
+                                    )),
+                          );
+                          // _openSearchCardDialog(context);
                         },
                         icon: const Icon(Icons.add)),
                     IconButton(
@@ -348,159 +357,164 @@ class _DeckDetailState extends State<DeckDetail> {
   // }
 
   void _openSearchCardDialog(BuildContext context) {
-    showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return OrientationBuilder(
-            builder: (context, orientation) {
-              if (orientation == Orientation.portrait) {
-                debugPrint("Portrait");
-                return SingleChildScrollView(
-                  child: AlertDialog(
-                    insetPadding: const EdgeInsets.all(8),
-                    title: TextFormField(
-                      onFieldSubmitted: (value) {
-                        _searchAPI();
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          inputCardName = value.toString();
-                        });
-                      },
-                      decoration:
-                          const InputDecoration(label: Text("Search...")),
-                    ),
-                    content: SizedBox(
-                        height: MediaQuery.of(context).size.height - 240,
-                        width: MediaQuery.of(context).size.width,
-                        child: FutureBuilder<List<CardV2>>(
-                          future: data,
-                          builder: (context, snapshot) {
-                            Widget child;
-                            if (snapshot.hasData &&
-                                snapshot.connectionState ==
-                                    ConnectionState.done) {
-                              child = GridView(
-                                  key: Key(deckCards.length.toString()),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 200,
-                                    mainAxisSpacing: 12,
-                                    crossAxisSpacing: 12,
-                                    childAspectRatio: cardAspRatio,
-                                  ),
-                                  children:
-                                      _buildSearchResults(snapshot.data!));
-                            } else {
-                              child = const SizedBox(
-                                height: 100,
-                                width: 100,
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-
-                            return Center(
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 225),
-                                child: child,
-                              ),
-                            );
-                          },
-                        )),
-                    actions: [
-                      SizedBox(
-                        height: 32,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Ok"),
-                        ),
-                      ),
-                    ],
-                    // actions: [
-                    //   TextButton(
-                    //       onPressed: () {
-                    //         Navigator.of(context).pop();
-                    //       },
-                    //       child: const Text("Ok"))
-                    // ],
-                  ),
-                );
-              } else {
-                debugPrint("Landscape");
-                return SingleChildScrollView(
-                  child: AlertDialog(
-                    insetPadding: const EdgeInsets.all(8),
-                    content: Column(
-                      children: [
-                        TextFormField(
-                          onFieldSubmitted: (value) {
-                            _searchAPI();
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              inputCardName = value.toString();
-                            });
-                          },
-                          decoration:
-                              const InputDecoration(label: Text("Search...")),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.6,
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              child: FutureBuilder<List<CardV2>>(
-                                future: data,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData &&
-                                      snapshot.connectionState ==
-                                          ConnectionState.done) {
-                                    return GridView(
-                                        key: Key(deckCards.length.toString()),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithMaxCrossAxisExtent(
-                                          maxCrossAxisExtent: 200,
-                                          mainAxisSpacing: 12,
-                                          crossAxisSpacing: 12,
-                                          childAspectRatio: cardAspRatio,
-                                        ),
-                                        children: _buildSearchResults(
-                                            snapshot.data!));
-                                  } else {
-                                    return const CircularProgressIndicator();
-                                  }
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              height: 32,
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text("Ok"),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    // actions: [
-                    //   TextButton(
-                    //       onPressed: () {
-                    //         Navigator.of(context).pop();
-                    //       },
-                    //       child: const Text("Ok"))
-                    // ],
-                  ),
-                );
-              }
-            },
-          );
-        });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CardAddPage(deck: widget.deck, addCard: _addCard)),
+    );
+    // showDialog<void>(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return CardAddPage(deck: widget.deck, addCard: _addCard);
+    //       // return OrientationBuilder(
+    //       //   builder: (context, orientation) {
+    //       //     if (orientation == Orientation.portrait) {
+    //       //       debugPrint("Portrait");
+    //       //       return SingleChildScrollView(
+    //       //         child: AlertDialog(
+    //       //           insetPadding: const EdgeInsets.all(8),
+    //       //           title: TextFormField(
+    //       //             onFieldSubmitted: (value) {
+    //       //               _searchAPI();
+    //       //             },
+    //       //             onChanged: (value) {
+    //       //               setState(() {
+    //       //                 inputCardName = value.toString();
+    //       //               });
+    //       //             },
+    //       //             decoration:
+    //       //                 const InputDecoration(label: Text("Search...")),
+    //       //           ),
+    //       //           content: SizedBox(
+    //       //               height: MediaQuery.of(context).size.height - 240,
+    //       //               width: MediaQuery.of(context).size.width,
+    //       //               child: FutureBuilder<List<CardV2>>(
+    //       //                 future: data,
+    //       //                 builder: (context, snapshot) {
+    //       //                   Widget child;
+    //       //                   if (snapshot.hasData &&
+    //       //                       snapshot.connectionState ==
+    //       //                           ConnectionState.done) {
+    //       //                     child = GridView(
+    //       //                         key: Key(deckCards.length.toString()),
+    //       //                         gridDelegate:
+    //       //                             const SliverGridDelegateWithMaxCrossAxisExtent(
+    //       //                           maxCrossAxisExtent: 200,
+    //       //                           mainAxisSpacing: 12,
+    //       //                           crossAxisSpacing: 12,
+    //       //                           childAspectRatio: cardAspRatio,
+    //       //                         ),
+    //       //                         children:
+    //       //                             _buildSearchResults(snapshot.data!));
+    //       //                   } else {
+    //       //                     child = const SizedBox(
+    //       //                       height: 100,
+    //       //                       width: 100,
+    //       //                       child: CircularProgressIndicator(),
+    //       //                     );
+    //       //                   }
+    //       //
+    //       //                   return Center(
+    //       //                     child: AnimatedSwitcher(
+    //       //                       duration: const Duration(milliseconds: 225),
+    //       //                       child: child,
+    //       //                     ),
+    //       //                   );
+    //       //                 },
+    //       //               )),
+    //       //           actions: [
+    //       //             SizedBox(
+    //       //               height: 32,
+    //       //               child: TextButton(
+    //       //                 onPressed: () {
+    //       //                   Navigator.of(context).pop();
+    //       //                 },
+    //       //                 child: const Text("Ok"),
+    //       //               ),
+    //       //             ),
+    //       //           ],
+    //       //           // actions: [
+    //       //           //   TextButton(
+    //       //           //       onPressed: () {
+    //       //           //         Navigator.of(context).pop();
+    //       //           //       },
+    //       //           //       child: const Text("Ok"))
+    //       //           // ],
+    //       //         ),
+    //       //       );
+    //       //     } else {
+    //       //       debugPrint("Landscape");
+    //       //       return SingleChildScrollView(
+    //       //         child: AlertDialog(
+    //       //           insetPadding: const EdgeInsets.all(8),
+    //       //           content: Column(
+    //       //             children: [
+    //       //               TextFormField(
+    //       //                 onFieldSubmitted: (value) {
+    //       //                   _searchAPI();
+    //       //                 },
+    //       //                 onChanged: (value) {
+    //       //                   setState(() {
+    //       //                     inputCardName = value.toString();
+    //       //                   });
+    //       //                 },
+    //       //                 decoration:
+    //       //                     const InputDecoration(label: Text("Search...")),
+    //       //               ),
+    //       //               Row(
+    //       //                 crossAxisAlignment: CrossAxisAlignment.end,
+    //       //                 children: [
+    //       //                   SizedBox(
+    //       //                     height: MediaQuery.of(context).size.height * 0.6,
+    //       //                     width: MediaQuery.of(context).size.width * 0.8,
+    //       //                     child: FutureBuilder<List<CardV2>>(
+    //       //                       future: data,
+    //       //                       builder: (context, snapshot) {
+    //       //                         if (snapshot.hasData &&
+    //       //                             snapshot.connectionState ==
+    //       //                                 ConnectionState.done) {
+    //       //                           return GridView(
+    //       //                               key: Key(deckCards.length.toString()),
+    //       //                               gridDelegate:
+    //       //                                   const SliverGridDelegateWithMaxCrossAxisExtent(
+    //       //                                 maxCrossAxisExtent: 200,
+    //       //                                 mainAxisSpacing: 12,
+    //       //                                 crossAxisSpacing: 12,
+    //       //                                 childAspectRatio: cardAspRatio,
+    //       //                               ),
+    //       //                               children: _buildSearchResults(
+    //       //                                   snapshot.data!));
+    //       //                         } else {
+    //       //                           return const CircularProgressIndicator();
+    //       //                         }
+    //       //                       },
+    //       //                     ),
+    //       //                   ),
+    //       //                   SizedBox(
+    //       //                     height: 32,
+    //       //                     child: TextButton(
+    //       //                       onPressed: () {
+    //       //                         Navigator.of(context).pop();
+    //       //                       },
+    //       //                       child: const Text("Ok"),
+    //       //                     ),
+    //       //                   ),
+    //       //                 ],
+    //       //               ),
+    //       //             ],
+    //       //           ),
+    //       //           // actions: [
+    //       //           //   TextButton(
+    //       //           //       onPressed: () {
+    //       //           //         Navigator.of(context).pop();
+    //       //           //       },
+    //       //           //       child: const Text("Ok"))
+    //       //           // ],
+    //       //         ),
+    //       //       );
+    //       //     }
+    //       //   },
+    //       // );
+    //     });
   }
 
   addToState(CardV2 element) {
@@ -695,6 +709,23 @@ class _DeckDetailState extends State<DeckDetail> {
         hasChanged = true;
       });
       _saveDeck();
+    }
+  }
+
+  _addCard(CardV2 card) {
+    debugPrint("_addCard called from child");
+    try {
+      setState(() {
+        widget.deck.addCard(card);
+      });
+    } catch (e) {
+      SnackBar snackBar = SnackBar(
+        content: Text(e.toString()),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } finally {
+      widget.deck.sortDeck();
+      hasChanged = true;
     }
   }
 }

@@ -116,4 +116,9 @@ class DeckList extends ChangeNotifier {
     decks.removeWhere((element) => element.id == id);
     notifyListeners();
   }
+
+  Deck getDeckById(String id){
+    Deck deck = decks.firstWhere((element) => element.id == id);
+    return deck;
+  }
 }
