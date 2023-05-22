@@ -9,7 +9,7 @@ import 'package:yugi_deck/utils.dart';
 import 'package:yugi_deck/variables.dart';
 import 'package:yugi_deck/widgets/card_width_slider.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
-import 'package:yugi_deck/widgets/search_results.dart';
+import 'package:yugi_deck/pages/card_add_page.dart';
 
 import '../globals.dart';
 
