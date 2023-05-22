@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/utils.dart';
+import 'package:yugi_deck/widgets/app_bar_search.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
 import 'package:badges/badges.dart' as badges;
 
@@ -35,21 +36,8 @@ class CardAddPageState extends State<CardAddPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: TextField(
-          autofocus: true,
-          controller: _controller,
-          decoration: InputDecoration(
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () {
-                _controller.clear();
-              },
-            ),
-          ),
-          onSubmitted: (value) {
-            _searchQuery(value);
-          },
-        ),
+        title:
+            AppBarSearch(searchController: _controller, search: _searchQuery),
       ),
       body: FutureBuilder<List<CardV2>>(
         future: cardResult,

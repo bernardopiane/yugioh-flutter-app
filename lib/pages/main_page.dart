@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/models/card_v2.dart';
+import 'package:yugi_deck/widgets/app_bar_search.dart';
 import 'package:yugi_deck/widgets/search_filter.dart';
 import '../utils.dart';
 import '../widgets/card_grid_view.dart';
@@ -48,35 +49,7 @@ class _MainPageState extends State<MainPage>
         child: SearchFilter(search: _advSearch),
       ),
       appBar: AppBar(
-        title: Container(
-          width: double.infinity,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Center(
-            child: TextField(
-              autofocus: false,
-              //TODO stop autofocus on navigation pop
-              controller: searchController,
-              decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      searchController.clear();
-                    },
-                  ),
-                  hintText: 'Search...',
-                  border: InputBorder.none),
-              onEditingComplete: () {
-                _search(searchController.value.text);
-                FocusScope.of(context).unfocus();
-              },
-            ),
-          ),
-        ),
+        title: AppBarSearch(searchController: searchController, search: _search),
         actions: [
           IconButton(
               onPressed: () {
