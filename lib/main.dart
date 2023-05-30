@@ -9,6 +9,20 @@ import 'package:yugi_deck/models/query_results.dart';
 import 'package:yugi_deck/models/search_tags.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:yugi_deck/widgets/ThemeNotifier.dart';
+
+// Light theme
+final lightTheme = ThemeData(
+  brightness: Brightness.light,
+  // Add other light theme properties
+);
+
+// Dark theme
+final darkTheme = ThemeData(
+  brightness: Brightness.dark,
+  // Add other dark theme properties
+);
+
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -33,7 +47,10 @@ Future<void> main() async {
             ),
             ChangeNotifierProvider<SearchTags>(
               create: (_) => SearchTags(),
-            )
+            ),
+            ChangeNotifierProvider<ThemeNotifier>(
+              create: (_) => ThemeNotifier(),
+            ),
           ],
           child: const MyApp(),
         ),
@@ -64,23 +81,18 @@ class MyApp extends StatelessWidget {
 
     Provider.of<DataProvider>(context, listen: false).loadData();
 
-    return MaterialApp(
-        title: 'MD Deck',
-        scaffoldMessengerKey: snackbarKey,
-        theme: ThemeData(
-          brightness: Brightness.light,
-          /* light theme settings */
-        ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-          /* dark theme settings */
-        ),
-        themeMode: ThemeMode.system,
-        /* ThemeMode.system to follow system theme,
-         ThemeMode.light for light theme,
-         ThemeMode.dark for dark theme
-      */
-        debugShowCheckedModeBanner: false,
-        home: const MyHomePage());
+    return Consumer<ThemeNotifier>(
+      builder: (context, themeNotifier, _) {
+        return MaterialApp(
+            title: 'MD Deck',
+            scaffoldMessengerKey: snackbarKey,
+            theme: lightTheme, // Set the light theme
+            darkTheme: darkTheme, // Set the dark theme
+            themeMode: themeNotifier.currentTheme, // Set the current theme mode
+            debugShowCheckedModeBanner: false,
+            home: const MyHomePage());
+      },
+    );
+
   }
 }

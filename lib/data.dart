@@ -16,7 +16,7 @@ class DataProvider extends ChangeNotifier {
   loadData() async {
     //  Check if already exists
     if (cards.isEmpty) {
-      fetchDataAndStoreInHive();
+      await fetchDataAndStoreInHive();
     }
 
     FlutterNativeSplash.remove();
@@ -50,7 +50,6 @@ class DataProvider extends ChangeNotifier {
           box.put("database_version", databaseVersion);
           box.put("last_update", lastUpdate);
           setResult(newData);
-        //  TODO: add data to Hive box
           var jsonData = jsonEncode(newData);
           box.put("json_data", jsonData);
         });
