@@ -46,31 +46,29 @@ class DataProvider extends ChangeNotifier {
 
       if (box.get("database_version") != databaseVersion ||
           box.get("last_update") != lastUpdate) {
-        fetchNewData().then((newData) {
+        try {
+          final newData = await fetchNewData();
           box.put("database_version", databaseVersion);
           box.put("last_update", lastUpdate);
           setResult(newData);
           var jsonData = jsonEncode(newData);
           box.put("json_data", jsonData);
-        });
-      } else {
-        List list = [];
-
-        var jsonData = box.get("json_data");
-
-        list = jsonDecode(jsonData);
-
-        List<CardV2> cardList = [];
-        for (var card in list) {
-          CardV2 cardV2 = CardV2.fromJson(card);
-          cardList.add(cardV2);
+        } catch (e) {
+          debugPrint("Error fetching new data: $e");
+          // Handle the error
         }
+      } else {
+        var jsonData = box.get("json_data");
+        List<dynamic> list = jsonData != null ? jsonDecode(jsonData) : [];
+
+        List<CardV2> cardList =
+            list.map((card) => CardV2.fromJson(card)).toList();
 
         setResult(cardList);
       }
     } else {
       debugPrint("Error fetching API database version");
-      // Handle API call failure
+      // TODO: Handle API call failure
     }
   }
 
@@ -81,22 +79,24 @@ class DataProvider extends ChangeNotifier {
           .post(Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php"))
           .timeout(const Duration(seconds: 30));
 
-      List<CardV2> cardV2List = [];
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
 
-      var json = jsonDecode(response.body);
+        if (json["error"] != null) {
+          return [];
+        }
 
-      if (json["error"] != null) {
+        var lista = json["data"] as List;
+
+        List<CardV2> cardV2List =
+            lista.map((element) => CardV2.fromJson(element)).toList();
+
         return cardV2List;
+      } else {
+        debugPrint(
+            "Error fetching new data. Status Code: ${response.statusCode}");
+        return [];
       }
-
-      var lista = json["data"] as List;
-
-      for (var element in lista) {
-        CardV2 card = CardV2.fromJson(element);
-        cardV2List.add(card);
-      }
-
-      return cardV2List;
     } on TimeoutException catch (_) {
       debugPrint("Request timed out. Please check your internet connection.");
       return [];
@@ -104,7 +104,7 @@ class DataProvider extends ChangeNotifier {
       debugPrint("No internet connection");
       return [];
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("An error occurred: $e");
       return [];
     }
   }
