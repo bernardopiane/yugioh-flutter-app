@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppBarSearch extends StatelessWidget {
-  const AppBarSearch({Key? key, required this.searchController, required this.search}) : super(key: key);
+  const AppBarSearch(
+      {Key? key, required this.searchController, required this.search})
+      : super(key: key);
   final TextEditingController searchController;
   final Function search;
 

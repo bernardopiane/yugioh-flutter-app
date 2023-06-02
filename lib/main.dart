@@ -55,20 +55,6 @@ Future<void> main() async {
           child: const MyApp(),
         ),
       ));
-
-  // runApp(
-  //   MultiProvider(
-  //     providers: [
-  //       ChangeNotifierProvider<DeckList>(
-  //         create: (_) => DeckList([]),
-  //       ),
-  //       ChangeNotifierProvider<QueryResults>(
-  //         create: (_) => QueryResults([]),
-  //       ),
-  //     ],
-  //     child: const MyApp(),
-  //   ),
-  // );
 }
 
 class MyApp extends StatelessWidget {
@@ -93,6 +79,5 @@ class MyApp extends StatelessWidget {
             home: const MyHomePage());
       },
     );
-
   }
 }

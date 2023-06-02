@@ -64,75 +64,59 @@ class CardAddPageState extends State<CardAddPage> {
             // If the future completed successfully and data is available
             List<CardV2> cardList = snapshot.data!;
             return GridView.builder(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: cardAspRatio,
-                ),
-                itemCount: cardList.length,
-                itemBuilder: (BuildContext ctx, index) {
-                  int quantity = 0;
-                  if (isExtraDeck(cardList[index])) {
-                    quantity = widget.deck.extra!
-                        .where((card) => cardList[index].id == card.id)
-                        .length;
-                  } else {
-                    quantity = widget.deck.cards!
-                        .where((card) => cardList[index].id == card.id)
-                        .length;
-                  }
-                  return Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          try {
-                            widget.addCard(cardList[index]);
-                          } catch (e) {
-                            debugPrint(e.toString());
-                          } finally {
-                            setState(() {
-                              quantity++;
-                            });
-                          }
-                          // try {
-                          //   setState(() {
-                          //     widget.deck.addCard(cardList[index]);
-                          //   });
-                          // } catch (e) {
-                          //   SnackBar snackBar = SnackBar(
-                          //     content: Text(e.toString()),
-                          //   );
-                          //   ScaffoldMessenger.of(context)
-                          //       .showSnackBar(snackBar);
-                          // }
-                        },
-                        onLongPress: () {
-                          //  TODO Navigate to card page
-                        },
-                        child: MyCard(
-                          cardInfo: cardList[index],
-                          noTap: true,
-                        ),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: cardAspRatio,
+              ),
+              itemCount: cardList.length,
+              itemBuilder: (BuildContext ctx, index) {
+                int quantity = 0;
+                if (isExtraDeck(cardList[index])) {
+                  quantity = widget.deck.extra
+                          ?.where((card) => cardList[index].id == card.id)
+                          ?.length ??
+                      0;
+                } else {
+                  quantity = widget.deck.cards
+                          ?.where((card) => cardList[index].id == card.id)
+                          ?.length ??
+                      0;
+                }
+                return Stack(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        try {
+                          widget.addCard(cardList[index]);
+                        } catch (e) {
+                          debugPrint(e.toString());
+                        } finally {
+                          setState(() {
+                            quantity++;
+                          });
+                        }
+                      },
+                      onLongPress: () {
+                        // TODO: Navigate to card page
+                      },
+                      child: MyCard(
+                        cardInfo: cardList[index],
+                        noTap: true,
                       ),
-                      isExtraDeck(cardList[index])
-                          ? Positioned(
-                              top: 0,
-                              right: 0,
-                              child: badges.Badge(
-                                badgeContent: Text(quantity.toString()),
-                              ),
-                            )
-                          : Positioned(
-                              top: 0,
-                              right: 0,
-                              child: badges.Badge(
-                                badgeContent: Text(quantity.toString()),
-                              ),
-                            ),
-                    ],
-                  );
-                });
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: badges.Badge(
+                        badgeContent: Text(quantity.toString()),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
           }
         },
       ),
