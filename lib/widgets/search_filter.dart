@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:yugi_deck/models/card_frame_type.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/models/card_attributes.dart';
@@ -8,7 +8,7 @@ import 'package:yugi_deck/models/card_banlist.dart';
 import 'package:yugi_deck/models/card_link_marker.dart';
 import 'package:yugi_deck/models/card_race.dart';
 import 'package:yugi_deck/models/card_type.dart';
-import 'package:yugi_deck/models/search_tags.dart';
+// import 'package:yugi_deck/models/search_tags.dart';
 import 'package:yugi_deck/models/sort.dart';
 import 'package:yugi_deck/widgets/dropdown_selector.dart';
 
@@ -494,25 +494,25 @@ class _SearchFilterState extends State<SearchFilter>
                     ],
                   ),
                 ),
-                ListTile(
-                  title: TextFormField(
-                    onChanged: (value) {
-                      if (value != "") {
-                        queryBuilder("level", value);
-                        Provider.of<SearchTags>(context, listen: false)
-                            .setLevel(value);
-                      } else {
-                        removeQuery("level");
-                      }
-                    },
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      label: const Text("Level"),
-                      suffix:
-                          Text("${Provider.of<SearchTags>(context).cardLevel}"),
-                    ),
-                  ),
-                ),
+                // ListTile(
+                //   title: TextFormField(
+                //     onChanged: (value) {
+                //       if (value != "") {
+                //         queryBuilder("level", value);
+                //         Provider.of<SearchTags>(context, listen: false)
+                //             .setLevel(value);
+                //       } else {
+                //         removeQuery("level");
+                //       }
+                //     },
+                //     keyboardType: TextInputType.number,
+                //     decoration: InputDecoration(
+                //       label: const Text("Level"),
+                //       suffix:
+                //           Text("${Provider.of<SearchTags>(context).cardLevel}"),
+                //     ),
+                //   ),
+                // ),
                 // Race(filter: raceSelector),
                 //TODO Implement race filter
                 ListTile(
