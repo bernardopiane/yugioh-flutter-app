@@ -16,6 +16,8 @@ class Deck {
 
   Deck(this.name) {
     id = DateTime.now().millisecondsSinceEpoch.toString();
+    cards = [];
+    extra = [];
   }
 
   Map toJson() => {
@@ -51,21 +53,25 @@ class Deck {
 
   void addCard(CardV2 card) {
     if (isExtraDeck(card)) {
-      if (extra!.length >= 15) {
+      if (extra != null && extra!.length >= 15) {
         throw Exception('Extra deck can have a maximum of 15 cards');
       }
-      if (hasThreeCopies(extra!, card)) {
+      if (extra != null && hasThreeCopies(extra!, card)) {
         throw Exception('Deck already contains 3 copies of the card');
       }
-      extra!.add(card);
+      if (extra != null) {
+        extra!.add(card);
+      }
     } else {
-      if (cards!.length >= 60) {
+      if (cards != null && cards!.length >= 60) {
         throw Exception('Deck can have a maximum of 60 cards');
       }
-      if (hasThreeCopies(cards!, card)) {
+      if (cards != null && hasThreeCopies(cards!, card)) {
         throw Exception('Deck already contains 3 copies of the card');
       }
-      cards!.add(card);
+      if (cards != null) {
+        cards!.add(card);
+      }
     }
   }
 

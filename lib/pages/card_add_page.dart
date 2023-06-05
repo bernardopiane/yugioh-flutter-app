@@ -76,12 +76,12 @@ class CardAddPageState extends State<CardAddPage> {
                 if (isExtraDeck(cardList[index])) {
                   quantity = widget.deck.extra
                           ?.where((card) => cardList[index].id == card.id)
-                          ?.length ??
+                          .length ??
                       0;
                 } else {
                   quantity = widget.deck.cards
                           ?.where((card) => cardList[index].id == card.id)
-                          ?.length ??
+                          .length ??
                       0;
                 }
                 return Stack(
@@ -91,7 +91,7 @@ class CardAddPageState extends State<CardAddPage> {
                         try {
                           widget.addCard(cardList[index]);
                         } catch (e) {
-                          debugPrint(e.toString());
+                          debugPrint("Error: ${e.toString()}");
                         } finally {
                           setState(() {
                             quantity++;

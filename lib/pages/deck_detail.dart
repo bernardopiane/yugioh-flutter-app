@@ -355,7 +355,6 @@ class _DeckDetailState extends State<DeckDetail> {
   //   return widgets;
   // }
 
-
   addToState(CardV2 element) {
     //TODO: Check if api returns extra deck type - remove hardcoded
     if (isExtraDeck(element)) {
@@ -379,15 +378,13 @@ class _DeckDetailState extends State<DeckDetail> {
     }
   }
 
+  void _saveDeck() async {
+    final deckListProvider = Provider.of<DeckList>(context, listen: false);
 
+    deckListProvider.setCards(widget.deck, deckCards);
+    deckListProvider.setExtra(widget.deck, extraCards);
+    await deckListProvider.saveToFile(widget.deck);
 
-  void _saveDeck() {
-    // Provider.of<DeckList>(context, listen: false).decks.add(widget.deck);
-    Provider.of<DeckList>(context, listen: false)
-        .setCards(widget.deck, deckCards);
-    Provider.of<DeckList>(context, listen: false)
-        .setExtra(widget.deck, extraCards);
-    Provider.of<DeckList>(context, listen: false).saveToFile(widget.deck);
     hasChanged = false;
   }
 
@@ -419,19 +416,24 @@ class _DeckDetailState extends State<DeckDetail> {
     }
   }
 
-  _addCard(CardV2 card) {
-    debugPrint("_addCard called from child");
+  void _addCard(CardV2 card) {
     try {
-      setState(() {
-        widget.deck.addCard(card);
-      });
+      if (widget.deck != null) {
+        setState(() {
+          widget.deck!.addCard(card);
+        });
+      }
     } catch (e) {
+      debugPrint("Error: ${e.toString()}");
       SnackBar snackBar = SnackBar(
         content: Text(e.toString()),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return; // Add a return statement here to exit the method
     } finally {
-      widget.deck.sortDeck();
+      if (widget.deck != null) {
+        widget.deck!.sortDeck();
+      }
       hasChanged = true;
     }
   }
