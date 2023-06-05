@@ -6,7 +6,7 @@ import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/globals.dart';
 import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/models/query_results.dart';
-import 'package:yugi_deck/models/search_tags.dart';
+// import 'package:yugi_deck/models/search_tags.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:yugi_deck/widgets/ThemeNotifier.dart';
@@ -45,9 +45,9 @@ Future<void> main() async {
             ChangeNotifierProvider<DataProvider>(
               create: (_) => DataProvider([]),
             ),
-            ChangeNotifierProvider<SearchTags>(
-              create: (_) => SearchTags(),
-            ),
+            // ChangeNotifierProvider<SearchTags>(
+            //   create: (_) => SearchTags(),
+            // ),
             ChangeNotifierProvider<ThemeNotifier>(
               create: (_) => ThemeNotifier(),
             ),
