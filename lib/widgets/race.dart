@@ -23,8 +23,6 @@ class Race extends StatelessWidget {
         break;
     }
 
-    return Container(
-      child: Text("Race Widget: ${tempVar.toString()}"),
-    );
+    return Text("Race Widget: ${tempVar.toString()}");
   }
 }

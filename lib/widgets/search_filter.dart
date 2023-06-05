@@ -10,10 +10,7 @@ import 'package:yugi_deck/models/card_race.dart';
 import 'package:yugi_deck/models/card_type.dart';
 import 'package:yugi_deck/models/search_tags.dart';
 import 'package:yugi_deck/models/sort.dart';
-import 'package:yugi_deck/widgets/filter_attributes.dart';
-import 'package:yugi_deck/widgets/filter_types.dart';
 import 'package:yugi_deck/widgets/dropdown_selector.dart';
-import 'package:yugi_deck/widgets/race.dart';
 
 import '../utils.dart';
 
@@ -510,7 +507,7 @@ class _SearchFilterState extends State<SearchFilter>
                     },
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      label: Text("Level"),
+                      label: const Text("Level"),
                       suffix:
                           Text("${Provider.of<SearchTags>(context).cardLevel}"),
                     ),
@@ -541,7 +538,7 @@ class _SearchFilterState extends State<SearchFilter>
                           break;
                       }
                     },
-                    items: CardFrameType.map<DropdownMenuItem<String>>(
+                    items: cardFrameType.map<DropdownMenuItem<String>>(
                         (String value) {
                       return DropdownMenuItem<String>(
                         value: value,

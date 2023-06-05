@@ -37,16 +37,7 @@ class DeckList extends ChangeNotifier {
     notifyListeners();
   }
 
-  saveToFile(Deck deck) async {
-    //  Iterate over the deck list and saveToFile
-    // for (var deck in decks) {
-    //   final directory = await getApplicationDocumentsDirectory();
-    //   final File file = File('${directory.path}/decks/${deck.id}');
-    //   List<CardInfoEntity> cards = deck.cards!;
-    //   cards.addAll(deck.extra!);
-    //   await file.writeAsString(jsonEncode(cards));
-    // }
-
+  Future<void> saveToFile(Deck deck) async {
     final directory = await getApplicationDocumentsDirectory();
     final File file = File('${directory.path}/decks/${deck.id}');
     await file.writeAsString(jsonEncode(deck));
@@ -115,5 +106,10 @@ class DeckList extends ChangeNotifier {
     file.delete();
     decks.removeWhere((element) => element.id == id);
     notifyListeners();
+  }
+
+  Deck getDeckById(String id) {
+    Deck deck = decks.firstWhere((element) => element.id == id);
+    return deck;
   }
 }
