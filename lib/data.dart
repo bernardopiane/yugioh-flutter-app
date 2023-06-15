@@ -8,6 +8,8 @@ import 'package:hive/hive.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:http/http.dart' as http;
 
+import 'globals.dart';
+
 class DataProvider extends ChangeNotifier {
   List<CardV2> cards = [];
 
@@ -54,6 +56,10 @@ class DataProvider extends ChangeNotifier {
           var jsonData = jsonEncode(newData);
           box.put("json_data", jsonData);
         } catch (e) {
+          var snackBar = const SnackBar(
+            content: Text("Failed to fetch latest cards from API"),
+          );
+          snackbarKey.currentState?.showSnackBar(snackBar);
           debugPrint("Error fetching new data: $e");
           // Handle the error
         }
@@ -68,6 +74,12 @@ class DataProvider extends ChangeNotifier {
       }
     } else {
       debugPrint("Error fetching API database version");
+      var snackBar = const SnackBar(
+        content: Text("Failed to connect to the API. Please restart the app"),
+      );
+      snackbarKey.currentState?.showSnackBar(snackBar);
+
+
       // TODO: Handle API call failure
     }
   }
