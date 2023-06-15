@@ -10,3 +10,5 @@ class ThemeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+//TODO: Load last set theme on app startup
