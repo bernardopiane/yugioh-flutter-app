@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set current time
+        id: set_time
+        run: echo "TIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+    
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -57,10 +61,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ formatTime(now(), 'yyyyMMddHHmmss') }} 
-          release_name: Release v${{ formatTime(now(), 'yyyyMMddHHmmss') }} 
+          tag_name: ${{ env.TIME }}
+          release_name: Release ${{ env.TIME }}
           body: |
-            Release notes for v${{ formatTime(now(), 'yyyyMMddHHmmss') }}
+            Release notes for ${{ env.TIME }}
           draft: false
           prerelease: false
 
