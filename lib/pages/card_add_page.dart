@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/models/card_v2.dart';
+import 'package:yugi_deck/pages/filter_page.dart';
 import 'package:yugi_deck/utils.dart';
 import 'package:yugi_deck/widgets/app_bar_search.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
@@ -38,6 +39,14 @@ class CardAddPageState extends State<CardAddPage> {
       appBar: AppBar(
         title:
             AppBarSearch(searchController: _controller, search: _searchQuery),
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FilterPage()),
+                );
+              }, icon: const Icon(Icons.filter))
+        ],
       ),
       body: FutureBuilder<List<CardV2>>(
         future: cardResult,
