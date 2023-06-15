@@ -57,10 +57,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v0.1.0  # Change this to your desired tag/version name
-          release_name: Release v0.1.0  # Change this to your desired release name
+          tag_name: v0.1.1  # Change this to your desired tag/version name
+          release_name: Release v0.1.1  # Change this to your desired release name
           body: |
-            Release notes for v0.1.0  # Customize the release notes here
+            Release notes for v0.1.1  # Customize the release notes here
           draft: false
           prerelease: false
 
