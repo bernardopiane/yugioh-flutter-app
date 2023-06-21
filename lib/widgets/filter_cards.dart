@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:yugi_deck/models/filter_options.dart';
 
 class FilterCards extends StatefulWidget {
-  const FilterCards({Key? key}) : super(key: key);
+  final Function(FilterOptions) selectedFilters;
+
+  const FilterCards({Key? key, required this.selectedFilters}) : super(key: key);
 
   @override
   FilterCardsState createState() => FilterCardsState();
@@ -217,6 +219,8 @@ class FilterCardsState extends State<FilterCards> {
                   // Apply the filter options
                   // Call a method or navigate back with the selected filter options
                   debugPrint(filterOptions.toString());
+                  widget.selectedFilters(filterOptions); // Invoke the callback with the data
+                  Navigator.pop(context); // Close the child page
                 },
                 child: const Text('Apply Filters'),
               ),

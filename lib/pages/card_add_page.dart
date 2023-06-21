@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/models/card_v2.dart';
+import 'package:yugi_deck/models/filter_options.dart';
 import 'package:yugi_deck/pages/filter_page.dart';
 import 'package:yugi_deck/utils.dart';
 import 'package:yugi_deck/widgets/app_bar_search.dart';
@@ -40,12 +41,17 @@ class CardAddPageState extends State<CardAddPage> {
         title:
             AppBarSearch(searchController: _controller, search: _searchQuery),
         actions: [
-          IconButton(onPressed: (){
-            Navigator.push(
+          IconButton(
+              onPressed: () {
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const FilterPage()),
+                  MaterialPageRoute(
+                      builder: (context) => FilterPage(
+                            applyFilter: applyFilter,
+                          )),
                 );
-              }, icon: const Icon(Icons.filter))
+              },
+              icon: const Icon(Icons.filter))
         ],
       ),
       body: FutureBuilder<List<CardV2>>(
@@ -136,6 +142,57 @@ class CardAddPageState extends State<CardAddPage> {
     setState(() {
       cardResult = searchCards(
           Provider.of<DataProvider>(context, listen: false).cards, query);
+    });
+  }
+
+  Future<List<CardV2>> filterCards(FilterOptions filterOptions) {
+    List<CardV2> cardList =
+        Provider.of<DataProvider>(context, listen: false).cards;
+
+    List<CardV2> filtered = cardList.where((card) {
+      if (filterOptions.cardTypes.contains(card.type)) {
+        debugPrint("Matched at ${card.name}");
+        return false;
+      }
+
+      if (filterOptions.cardTypes.isNotEmpty) {
+        List<String> types = card.type!.toUpperCase().split(" ");
+        for (var type in filterOptions.cardTypes) {
+          if (types.contains(type.toUpperCase())) {
+            debugPrint("Matched at ${card.name}");
+            return true;
+          }
+        }
+      }
+
+      // Filter based on card type
+      if (filterOptions.cardTypes.isNotEmpty &&
+          !filterOptions.cardTypes.contains(card.type)) {
+        return false;
+      }
+
+      // Filter based on attribute
+      if (filterOptions.attributes.isNotEmpty &&
+          !filterOptions.attributes.contains(card.attribute)) {
+        return false;
+      }
+
+      // Filter based on level
+      if (filterOptions.levels.isNotEmpty &&
+          !filterOptions.levels.contains(card.level)) {
+        return false;
+      }
+
+      return true; // Include the card if it passes all the filters
+    }).toList();
+
+    return convertToFuture(filtered);
+  }
+
+  applyFilter(FilterOptions filterOptions) {
+    Future<List<CardV2>> cardList = filterCards(filterOptions);
+    setState(() {
+      cardResult = cardList;
     });
   }
 }

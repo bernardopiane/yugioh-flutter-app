@@ -135,3 +135,7 @@ Future<List<CardV2>> searchCards(List<CardV2> cards, String searchPhrase) {
   completer.complete(searchResults);
   return completer.future;
 }
+
+Future<List<CardV2>> convertToFuture(List<CardV2> cardList) {
+  return Future.value(cardList);
+}
