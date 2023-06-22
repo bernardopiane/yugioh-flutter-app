@@ -149,41 +149,32 @@ class CardAddPageState extends State<CardAddPage> {
     List<CardV2> cardList =
         Provider.of<DataProvider>(context, listen: false).cards;
 
-    List<CardV2> filtered = cardList.where((card) {
-      if (filterOptions.cardTypes.contains(card.type)) {
-        debugPrint("Matched at ${card.name}");
-        return false;
-      }
+    debugPrint(filterOptions.spellTrapTypes.toString());
 
+    List<CardV2> filtered = cardList.where((card) {
       if (filterOptions.cardTypes.isNotEmpty) {
-        List<String> types = card.type!.toUpperCase().split(" ");
-        for (var type in filterOptions.cardTypes) {
-          if (types.contains(type.toUpperCase())) {
-            debugPrint("Matched at ${card.name}");
-            return true;
-          }
+        List<String> types = card.type?.toUpperCase().split(" ") ?? [];
+        if (!filterOptions.cardTypes
+            .any((type) => types.contains(type.toUpperCase()))) {
+          return false;
         }
       }
 
-      // Filter based on card type
-      if (filterOptions.cardTypes.isNotEmpty &&
-          !filterOptions.cardTypes.contains(card.type)) {
-        return false;
-      }
-
-      // Filter based on attribute
       if (filterOptions.attributes.isNotEmpty &&
           !filterOptions.attributes.contains(card.attribute)) {
         return false;
       }
 
-      // Filter based on level
       if (filterOptions.levels.isNotEmpty &&
           !filterOptions.levels.contains(card.level)) {
         return false;
       }
 
-      return true; // Include the card if it passes all the filters
+      //TODO: Spell/trap, monster type filter
+
+      // Add more filters here based on your requirements
+
+      return true;
     }).toList();
 
     return convertToFuture(filtered);
