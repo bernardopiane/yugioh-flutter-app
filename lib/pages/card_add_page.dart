@@ -25,7 +25,10 @@ class CardAddPage extends StatefulWidget {
 class CardAddPageState extends State<CardAddPage> {
   Future<List<CardV2>> cardResult = Future<List<CardV2>>.value([]);
 
+  FilterOptions activeFilters = FilterOptions();
+
   final TextEditingController _controller = TextEditingController();
+  bool isFiltered = false;
 
   @override
   void dispose() {
@@ -47,8 +50,8 @@ class CardAddPageState extends State<CardAddPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => FilterPage(
-                            applyFilter: applyFilter,
-                          )),
+                          applyFilter: applyFilter,
+                          activeFilters: activeFilters)),
                 );
               },
               icon: const Icon(Icons.filter))
@@ -138,7 +141,15 @@ class CardAddPageState extends State<CardAddPage> {
     );
   }
 
-  _searchQuery(String query) {
+  _searchQuery(String query, {bool withFilter = false}) async {
+    //TODO
+    if (withFilter) {
+      List<CardV2> cards = await cardResult;
+      debugPrint("isFiltered");
+      setState(() {
+        cardResult = searchCards(cards, query);
+      });
+    }
     setState(() {
       cardResult = searchCards(
           Provider.of<DataProvider>(context, listen: false).cards, query);
@@ -146,10 +157,11 @@ class CardAddPageState extends State<CardAddPage> {
   }
 
   Future<List<CardV2>> filterCards(FilterOptions filterOptions) {
+    setState(() {
+      activeFilters = filterOptions;
+    });
     List<CardV2> cardList =
         Provider.of<DataProvider>(context, listen: false).cards;
-
-    debugPrint(filterOptions.spellTrapTypes.toString());
 
     List<CardV2> filtered = cardList.where((card) {
       if (filterOptions.cardTypes.isNotEmpty) {
@@ -170,7 +182,25 @@ class CardAddPageState extends State<CardAddPage> {
         return false;
       }
 
-      //TODO: Spell/trap, monster type filter
+      if (filterOptions.monsterTypes.isNotEmpty &&
+          !filterOptions.monsterTypes.contains(card.race!.toUpperCase())) {
+        return false;
+      }
+
+      //TODO: Fix mismatch "Solemn"
+      if (filterOptions.spellTrapTypes.isNotEmpty) {
+        for (var type in filterOptions.spellTrapTypes) {
+          String typeName = type.split(" ").elementAt(0);
+          String frameType = type.split(" ").elementAt(1);
+          String cardFrameType = card.type!.split(" ").elementAt(0);
+          if (frameType.toUpperCase() != cardFrameType.toUpperCase()) {
+            return false;
+          }
+          if (typeName.toUpperCase() != card.race!.toUpperCase()) {
+            return false;
+          }
+        }
+      }
 
       // Add more filters here based on your requirements
 
@@ -183,7 +213,13 @@ class CardAddPageState extends State<CardAddPage> {
   applyFilter(FilterOptions filterOptions) {
     Future<List<CardV2>> cardList = filterCards(filterOptions);
     setState(() {
+      isFiltered = true;
       cardResult = cardList;
     });
+  }
+
+  clearSearch() {
+    _controller.clear();
+    searchCards(Provider.of<DataProvider>(context, listen: false).cards, "");
   }
 }

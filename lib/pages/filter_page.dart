@@ -8,8 +8,9 @@ import '../data.dart';
 
 class FilterPage extends StatefulWidget {
   final Function(FilterOptions) applyFilter;
+  final FilterOptions activeFilters;
 
-  const FilterPage({Key? key, required this.applyFilter}) : super(key: key);
+  const FilterPage({Key? key, required this.applyFilter, required this.activeFilters}) : super(key: key);
 
   @override
   State<FilterPage> createState() => _FilterPageState();
@@ -27,6 +28,6 @@ class _FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FilterCards(selectedFilters: selectedFilters);
+    return FilterCards(selectedFilters: selectedFilters, preselectedFilters: widget.activeFilters);
   }
 }

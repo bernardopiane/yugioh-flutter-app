@@ -3,8 +3,9 @@ import 'package:yugi_deck/models/filter_options.dart';
 
 class FilterCards extends StatefulWidget {
   final Function(FilterOptions) selectedFilters;
+  final FilterOptions preselectedFilters;
 
-  const FilterCards({Key? key, required this.selectedFilters}) : super(key: key);
+  const FilterCards({Key? key, required this.selectedFilters, required this.preselectedFilters}) : super(key: key);
 
   @override
   FilterCardsState createState() => FilterCardsState();
@@ -13,6 +14,13 @@ class FilterCards extends StatefulWidget {
 class FilterCardsState extends State<FilterCards> {
   //TODO: move filterOptions up to keep state on search Screen
   FilterOptions filterOptions = FilterOptions();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    filterOptions = widget.preselectedFilters;
+  }
 
   final List<String> cardTypes = [
     'MONSTER',
