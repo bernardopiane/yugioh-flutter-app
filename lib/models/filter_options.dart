@@ -9,4 +9,12 @@ class FilterOptions {
   toString() {
     return "Current: ${cardTypes.toString()} - ${attributes.toString()} - ${spellTrapTypes.toString()} - ${monsterTypes.toString()} - ${levels.toString()} - ";
   }
+
+  bool isDefaultFilter() {
+    return cardTypes.isEmpty &&
+        attributes.isEmpty &&
+        levels.isEmpty &&
+        monsterTypes.isEmpty &&
+        spellTrapTypes.isEmpty;
+  }
 }

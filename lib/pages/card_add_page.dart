@@ -42,7 +42,7 @@ class CardAddPageState extends State<CardAddPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title:
-            AppBarSearch(searchController: _controller, search: _searchQuery),
+            AppBarSearch(searchController: _controller, search: _searchQuery, clear: _clearSearch),
         actions: [
           IconButton(
               onPressed: () {
@@ -143,17 +143,19 @@ class CardAddPageState extends State<CardAddPage> {
 
   _searchQuery(String query, {bool withFilter = false}) async {
     //TODO
-    if (withFilter) {
+    if (isFiltered) {
       List<CardV2> cards = await cardResult;
       debugPrint("isFiltered");
+      List<CardV2> filtered = await searchCards(cards, query);
       setState(() {
-        cardResult = searchCards(cards, query);
+        cardResult = convertToFuture(filtered);
+      });
+    } else {
+      setState(() {
+        cardResult = searchCards(
+            Provider.of<DataProvider>(context, listen: false).cards, query);
       });
     }
-    setState(() {
-      cardResult = searchCards(
-          Provider.of<DataProvider>(context, listen: false).cards, query);
-    });
   }
 
   Future<List<CardV2>> filterCards(FilterOptions filterOptions) {
@@ -187,22 +189,21 @@ class CardAddPageState extends State<CardAddPage> {
         return false;
       }
 
-      //TODO: Fix mismatch "Solemn"
       if (filterOptions.spellTrapTypes.isNotEmpty) {
         for (var type in filterOptions.spellTrapTypes) {
           String typeName = type.split(" ").elementAt(0);
           String frameType = type.split(" ").elementAt(1);
           String cardFrameType = card.type!.split(" ").elementAt(0);
+          //Match card type
           if (frameType.toUpperCase() != cardFrameType.toUpperCase()) {
             return false;
           }
+          //Match card name
           if (typeName.toUpperCase() != card.race!.toUpperCase()) {
             return false;
           }
         }
       }
-
-      // Add more filters here based on your requirements
 
       return true;
     }).toList();
@@ -210,16 +211,29 @@ class CardAddPageState extends State<CardAddPage> {
     return convertToFuture(filtered);
   }
 
-  applyFilter(FilterOptions filterOptions) {
-    Future<List<CardV2>> cardList = filterCards(filterOptions);
-    setState(() {
-      isFiltered = true;
-      cardResult = cardList;
-    });
+  void applyFilter(FilterOptions filterOptions) {
+    // Only apply if FilterOptions is not default
+    if (!filterOptions.isDefaultFilter()) {
+      Future<List<CardV2>> cardList = filterCards(filterOptions);
+      setState(() {
+        isFiltered = true;
+        cardResult = cardList;
+      });
+    } else {
+      List<CardV2> allCards = Provider.of<DataProvider>(context, listen: false).cards;
+      setState(() {
+        isFiltered = false;
+        cardResult = convertToFuture(allCards);
+      });
+    }
   }
 
-  clearSearch() {
+
+  _clearSearch() {
     _controller.clear();
-    searchCards(Provider.of<DataProvider>(context, listen: false).cards, "");
+    setState(() {
+      isFiltered = false;
+      cardResult = convertToFuture(Provider.of<DataProvider>(context, listen: false).cards);
+    });
   }
 }

@@ -51,7 +51,7 @@ class _MainPageState extends State<MainPage>
       ),
       appBar: AppBar(
         title:
-            AppBarSearch(searchController: searchController, search: _search),
+            AppBarSearch(searchController: searchController, search: _search, clear: _clearSearch,),
         actions: [
           IconButton(
               onPressed: () {
@@ -176,5 +176,11 @@ class _MainPageState extends State<MainPage>
       data = fetchCardList(uri.toString(), context);
     });
     FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  _clearSearch() {
+    setState(() {
+      data = convertToFuture(Provider.of<DataProvider>(context, listen: false).cards);
+    });
   }
 }

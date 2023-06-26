@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class AppBarSearch extends StatelessWidget {
   const AppBarSearch(
-      {Key? key, required this.searchController, required this.search})
+      {Key? key, required this.searchController, required this.search, required this.clear})
       : super(key: key);
   final TextEditingController searchController;
   final Function search;
+  final Function clear;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class AppBarSearch extends StatelessWidget {
                 icon: const Icon(Icons.clear),
                 onPressed: () {
                   searchController.clear();
-                  search("");
+                  clear();
                 },
               ),
               hintText: 'Search...',
