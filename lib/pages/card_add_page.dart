@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/models/card_v2.dart';
+import 'package:yugi_deck/models/filter_options.dart';
+import 'package:yugi_deck/pages/filter_page.dart';
 import 'package:yugi_deck/utils.dart';
 import 'package:yugi_deck/widgets/app_bar_search.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
@@ -23,7 +25,10 @@ class CardAddPage extends StatefulWidget {
 class CardAddPageState extends State<CardAddPage> {
   Future<List<CardV2>> cardResult = Future<List<CardV2>>.value([]);
 
+  FilterOptions activeFilters = FilterOptions();
+
   final TextEditingController _controller = TextEditingController();
+  bool isFiltered = false;
 
   @override
   void dispose() {
@@ -37,7 +42,20 @@ class CardAddPageState extends State<CardAddPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title:
-            AppBarSearch(searchController: _controller, search: _searchQuery),
+            AppBarSearch(searchController: _controller, search: _searchQuery, clear: _clearSearch),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FilterPage(
+                          applyFilter: applyFilter,
+                          activeFilters: activeFilters)),
+                );
+              },
+              icon: const Icon(Icons.filter))
+        ],
       ),
       body: FutureBuilder<List<CardV2>>(
         future: cardResult,
@@ -123,10 +141,99 @@ class CardAddPageState extends State<CardAddPage> {
     );
   }
 
-  _searchQuery(String query) {
+  _searchQuery(String query, {bool withFilter = false}) async {
+    //TODO
+    if (isFiltered) {
+      List<CardV2> cards = await cardResult;
+      debugPrint("isFiltered");
+      List<CardV2> filtered = await searchCards(cards, query);
+      setState(() {
+        cardResult = convertToFuture(filtered);
+      });
+    } else {
+      setState(() {
+        cardResult = searchCards(
+            Provider.of<DataProvider>(context, listen: false).cards, query);
+      });
+    }
+  }
+
+  Future<List<CardV2>> filterCards(FilterOptions filterOptions) {
     setState(() {
-      cardResult = searchCards(
-          Provider.of<DataProvider>(context, listen: false).cards, query);
+      activeFilters = filterOptions;
+    });
+    List<CardV2> cardList =
+        Provider.of<DataProvider>(context, listen: false).cards;
+
+    List<CardV2> filtered = cardList.where((card) {
+      if (filterOptions.cardTypes.isNotEmpty) {
+        List<String> types = card.type?.toUpperCase().split(" ") ?? [];
+        if (!filterOptions.cardTypes
+            .any((type) => types.contains(type.toUpperCase()))) {
+          return false;
+        }
+      }
+
+      if (filterOptions.attributes.isNotEmpty &&
+          !filterOptions.attributes.contains(card.attribute)) {
+        return false;
+      }
+
+      if (filterOptions.levels.isNotEmpty &&
+          !filterOptions.levels.contains(card.level)) {
+        return false;
+      }
+
+      if (filterOptions.monsterTypes.isNotEmpty &&
+          !filterOptions.monsterTypes.contains(card.race!.toUpperCase())) {
+        return false;
+      }
+
+      if (filterOptions.spellTrapTypes.isNotEmpty) {
+        for (var type in filterOptions.spellTrapTypes) {
+          String typeName = type.split(" ").elementAt(0);
+          String frameType = type.split(" ").elementAt(1);
+          String cardFrameType = card.type!.split(" ").elementAt(0);
+          //Match card type
+          if (frameType.toUpperCase() != cardFrameType.toUpperCase()) {
+            return false;
+          }
+          //Match card name
+          if (typeName.toUpperCase() != card.race!.toUpperCase()) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }).toList();
+
+    return convertToFuture(filtered);
+  }
+
+  void applyFilter(FilterOptions filterOptions) {
+    // Only apply if FilterOptions is not default
+    if (!filterOptions.isDefaultFilter()) {
+      Future<List<CardV2>> cardList = filterCards(filterOptions);
+      setState(() {
+        isFiltered = true;
+        cardResult = cardList;
+      });
+    } else {
+      List<CardV2> allCards = Provider.of<DataProvider>(context, listen: false).cards;
+      setState(() {
+        isFiltered = false;
+        cardResult = convertToFuture(allCards);
+      });
+    }
+  }
+
+
+  _clearSearch() {
+    _controller.clear();
+    setState(() {
+      isFiltered = false;
+      cardResult = convertToFuture(Provider.of<DataProvider>(context, listen: false).cards);
     });
   }
 }
