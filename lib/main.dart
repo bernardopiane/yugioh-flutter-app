@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/globals.dart';
 import 'package:yugi_deck/models/deck_list.dart';
@@ -28,6 +29,8 @@ Future<void> main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await Hive.initFlutter();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   // Lock vertical only
 
   SystemChrome.setPreferredOrientations([
@@ -49,16 +52,17 @@ Future<void> main() async {
             //   create: (_) => SearchTags(),
             // ),
             ChangeNotifierProvider<ThemeNotifier>(
-              create: (_) => ThemeNotifier(),
+              create: (_) => ThemeNotifier(prefs),
             ),
           ],
-          child: const MyApp(),
+          child: MyApp(prefs: prefs,),
         ),
       ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final SharedPreferences prefs;
+  const MyApp({Key? key, required this.prefs}) : super(key: key);
 
   // This widget is the root of your application.
   @override
