@@ -9,7 +9,7 @@ import 'package:yugi_deck/models/query_results.dart';
 // import 'package:yugi_deck/models/search_tags.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:yugi_deck/widgets/ThemeNotifier.dart';
+import 'package:yugi_deck/widgets/theme_notifier.dart';
 
 // Light theme
 final lightTheme = ThemeData(

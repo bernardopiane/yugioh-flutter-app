@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/models/card_v2.dart';
-import 'package:yugi_deck/widgets/ThemeNotifier.dart';
+import 'package:yugi_deck/widgets/theme_notifier.dart';
 import 'package:yugi_deck/widgets/app_bar_search.dart';
-import 'package:yugi_deck/widgets/search_filter.dart';
 import '../models/filter_options.dart';
 import '../utils.dart';
 import '../widgets/card_grid_view.dart';
@@ -167,22 +166,6 @@ class _MainPageState extends State<MainPage>
     setState(() {
       data = searchCards(
           Provider.of<DataProvider>(context, listen: false).cards, value);
-    });
-    FocusManager.instance.primaryFocus?.unfocus();
-  }
-
-  _advSearch(Map<String, String>? query) {
-    Uri uri = Uri(
-        scheme: "https",
-        host: "db.ygoprodeck.com",
-        path: "/api/v7/cardinfo.php",
-        queryParameters: query);
-
-    // var response = await http.post(uri);
-
-    //TODO display to user loading status
-    setState(() {
-      data = fetchCardList(uri.toString(), context);
     });
     FocusManager.instance.primaryFocus?.unfocus();
   }

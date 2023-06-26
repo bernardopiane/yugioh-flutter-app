@@ -418,11 +418,9 @@ class _DeckDetailState extends State<DeckDetail> {
 
   void _addCard(CardV2 card) {
     try {
-      if (widget.deck != null) {
-        setState(() {
-          widget.deck!.addCard(card);
-        });
-      }
+      setState(() {
+        widget.deck.addCard(card);
+      });
     } catch (e) {
       debugPrint("Error: ${e.toString()}");
       SnackBar snackBar = SnackBar(
@@ -431,9 +429,7 @@ class _DeckDetailState extends State<DeckDetail> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return; // Add a return statement here to exit the method
     } finally {
-      if (widget.deck != null) {
-        widget.deck!.sortDeck();
-      }
+      widget.deck.sortDeck();
       hasChanged = true;
     }
   }
