@@ -5,8 +5,10 @@ import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/widgets/ThemeNotifier.dart';
 import 'package:yugi_deck/widgets/app_bar_search.dart';
 import 'package:yugi_deck/widgets/search_filter.dart';
+import '../models/filter_options.dart';
 import '../utils.dart';
 import '../widgets/card_grid_view.dart';
+import 'filter_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -21,6 +23,11 @@ class _MainPageState extends State<MainPage>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
+  FilterOptions activeFilters = FilterOptions();
+
+  bool isFiltered = false;
+
 
   late Future<List<CardV2>> data;
 
@@ -47,7 +54,9 @@ class _MainPageState extends State<MainPage>
         width: MediaQuery.of(context).size.width / 1.5,
         height: MediaQuery.of(context).size.height,
         color: Theme.of(context).dialogBackgroundColor,
-        child: SearchFilter(search: _advSearch),
+        child: FilterPage(
+            applyFilter: applyFilter,
+            activeFilters: activeFilters)
       ),
       appBar: AppBar(
         title:
@@ -183,4 +192,76 @@ class _MainPageState extends State<MainPage>
       data = convertToFuture(Provider.of<DataProvider>(context, listen: false).cards);
     });
   }
+
+
+  void applyFilter(FilterOptions filterOptions) {
+    // Only apply if FilterOptions is not default
+    if (!filterOptions.isDefaultFilter()) {
+      Future<List<CardV2>> cardList = filterCards(filterOptions);
+      setState(() {
+        isFiltered = true;
+        data = cardList;
+      });
+    } else {
+      List<CardV2> allCards = Provider.of<DataProvider>(context, listen: false).cards;
+      setState(() {
+        isFiltered = false;
+        data = convertToFuture(allCards);
+      });
+    }
+  }
+
+  Future<List<CardV2>> filterCards(FilterOptions filterOptions) {
+    setState(() {
+      activeFilters = filterOptions;
+    });
+    List<CardV2> cardList =
+        Provider.of<DataProvider>(context, listen: false).cards;
+
+    List<CardV2> filtered = cardList.where((card) {
+      if (filterOptions.cardTypes.isNotEmpty) {
+        List<String> types = card.type?.toUpperCase().split(" ") ?? [];
+        if (!filterOptions.cardTypes
+            .any((type) => types.contains(type.toUpperCase()))) {
+          return false;
+        }
+      }
+
+      if (filterOptions.attributes.isNotEmpty &&
+          !filterOptions.attributes.contains(card.attribute)) {
+        return false;
+      }
+
+      if (filterOptions.levels.isNotEmpty &&
+          !filterOptions.levels.contains(card.level)) {
+        return false;
+      }
+
+      if (filterOptions.monsterTypes.isNotEmpty &&
+          !filterOptions.monsterTypes.contains(card.race!.toUpperCase())) {
+        return false;
+      }
+
+      if (filterOptions.spellTrapTypes.isNotEmpty) {
+        for (var type in filterOptions.spellTrapTypes) {
+          String typeName = type.split(" ").elementAt(0);
+          String frameType = type.split(" ").elementAt(1);
+          String cardFrameType = card.type!.split(" ").elementAt(0);
+          //Match card type
+          if (frameType.toUpperCase() != cardFrameType.toUpperCase()) {
+            return false;
+          }
+          //Match card name
+          if (typeName.toUpperCase() != card.race!.toUpperCase()) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }).toList();
+
+    return convertToFuture(filtered);
+  }
+
 }
