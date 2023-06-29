@@ -172,6 +172,7 @@ class _MainPageState extends State<MainPage>
 
   _clearSearch() {
     setState(() {
+      activeFilters = FilterOptions();
       data = convertToFuture(Provider.of<DataProvider>(context, listen: false).cards);
     });
   }

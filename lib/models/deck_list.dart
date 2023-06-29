@@ -45,7 +45,7 @@ class DeckList extends ChangeNotifier {
     notifyListeners();
   }
 
-  loadFromFile(BuildContext context) async {
+  Future<void> loadFromFile(BuildContext context) async {
     decks = [];
     final directory = await getApplicationDocumentsDirectory();
     Directory("${directory.path}/decks").exists().then((directoryExists) {
