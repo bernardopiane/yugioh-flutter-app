@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CardWidthSlider extends StatefulWidget {
-  final Function notifyParent;
+  final Function(double) notifyParent;
   final double currentWidth;
+
   const CardWidthSlider({
     Key? key,
     required this.notifyParent,
@@ -15,22 +16,21 @@ class CardWidthSlider extends StatefulWidget {
 }
 
 class CardWidthSliderState extends State<CardWidthSlider> {
-  double? cardWidth;
-  late final SharedPreferences prefs;
-
+  late SharedPreferences prefs;
+  double cardWidth = 100.0;
   final double minWidth = 100.0;
   final double maxWidth = 400.0;
 
   @override
   void initState() {
     super.initState();
-    SharedPreferences.getInstance().then((value) {
-      if (mounted) {
-        setState(() {
-          prefs = value;
-          cardWidth = prefs.getDouble("cardWidth") ?? 100.0;
-        });
-      }
+    initSharedPreferences();
+  }
+
+  Future<void> initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      cardWidth = prefs.getDouble("cardWidth") ?? widget.currentWidth;
     });
   }
 
@@ -43,25 +43,23 @@ class CardWidthSliderState extends State<CardWidthSlider> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("Card width"),
-          cardWidth == null
-              ? const CircularProgressIndicator()
-              : Slider.adaptive(
-                  value: cardWidth!,
-                  min: minWidth,
-                  max: maxWidth,
-                  // divisions: 4,
-                  label: "Card Width: ",
-                  onChanged: (double value) {
-                    setState(() {
-                      cardWidth = value;
-                    });
-                    widget.notifyParent(value);
-                  },
-                  onChangeEnd: (value) {
-                    prefs.setDouble("cardWidth", value);
-                  },
-                ),
+          Text("Card Width: ${cardWidth.toStringAsFixed(0)}"),
+          Slider.adaptive(
+            value: cardWidth,
+            min: minWidth,
+            max: maxWidth,
+            // divisions: 4,
+            label: "Card Width: ${cardWidth.toStringAsFixed(2)}",
+            onChanged: (double value) {
+              setState(() {
+                cardWidth = value;
+              });
+              widget.notifyParent(value);
+            },
+            onChangeEnd: (value) {
+              prefs.setDouble("cardWidth", value);
+            },
+          ),
         ],
       ),
     );
