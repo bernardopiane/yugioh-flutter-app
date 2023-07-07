@@ -10,9 +10,9 @@ class SplashPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(),
+          Center(child: CircularProgressIndicator()),
           SizedBox(height: 32),
-          Text("Updating database..."),
+          Center(child: Text("Updating database...")),
         ],
       ),
     );

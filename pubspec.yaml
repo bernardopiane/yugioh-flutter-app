@@ -85,6 +85,19 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+     - family: Matrix Regular Small Caps
+       fonts:
+         - asset: fonts/Yu-Gi-Oh! Matrix Regular Small Caps 1.ttf
+     - family: Matrix Book
+       fonts:
+         - asset: fonts/Yu-Gi-Oh! Matrix Book.ttf
+     - family: ITC Stone Serif Small Caps Bold
+       fonts:
+         - asset: fonts/Yu-Gi-Oh! ITC Stone Serif Small Caps Bold.ttf
+     - family: Matrix Bold Small Caps
+       fonts:
+         - asset: fonts/MatrixSmallCaps Bold.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
