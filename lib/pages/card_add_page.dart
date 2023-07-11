@@ -233,6 +233,7 @@ class CardAddPageState extends State<CardAddPage> {
     _controller.clear();
     setState(() {
       isFiltered = false;
+      activeFilters = FilterOptions();
       cardResult = convertToFuture(Provider.of<DataProvider>(context, listen: false).cards);
     });
   }

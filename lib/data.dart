@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hive/hive.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:http/http.dart' as http;
@@ -15,13 +14,13 @@ class DataProvider extends ChangeNotifier {
 
   DataProvider(this.cards);
 
-  loadData() async {
+  Future<void> loadData() async {
     //  Check if already exists
     if (cards.isEmpty) {
       await fetchDataAndStoreInHive();
     }
 
-    FlutterNativeSplash.remove();
+    // FlutterNativeSplash.remove();
     //  Compare version with API
     //  Update if needed
   }
@@ -79,7 +78,6 @@ class DataProvider extends ChangeNotifier {
       );
       snackbarKey.currentState?.showSnackBar(snackBar);
 
-
       // TODO: Handle API call failure
     }
   }
@@ -87,20 +85,20 @@ class DataProvider extends ChangeNotifier {
   Future<List<CardV2>> fetchNewData() async {
     debugPrint("Fetch new data");
     try {
-      var response = await http
+      final response = await http
           .post(Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php"))
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
+        final json = jsonDecode(response.body);
 
         if (json["error"] != null) {
           return [];
         }
 
-        var lista = json["data"] as List;
+        final lista = json["data"] as List;
 
-        List<CardV2> cardV2List =
+        final cardV2List =
             lista.map((element) => CardV2.fromJson(element)).toList();
 
         return cardV2List;
@@ -118,6 +116,24 @@ class DataProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint("An error occurred: $e");
       return [];
+    }
+  }
+
+  Future<void> forceUpdate() async {
+    var box = await Hive.openBox("database");
+
+    try {
+      final newData = await fetchNewData();
+      setResult(newData);
+      var jsonData = jsonEncode(newData);
+      box.put("json_data", jsonData);
+    } catch (e) {
+      var snackBar = const SnackBar(
+        content: Text("Failed to fetch latest cards from API"),
+      );
+      snackbarKey.currentState?.showSnackBar(snackBar);
+      debugPrint("Error fetching new data: $e");
+      // Handle the error
     }
   }
 }

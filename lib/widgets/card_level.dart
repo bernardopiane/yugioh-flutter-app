@@ -17,6 +17,9 @@ class CardLevel extends StatelessWidget {
         ),
         Text(
           level.toString(),
+          style: const TextStyle(
+            fontFamily: "ITC Stone Serif Small Caps Bold"
+          ),
         ),
       ],
     );

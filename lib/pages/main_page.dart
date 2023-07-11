@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/models/card_v2.dart';
+import 'package:yugi_deck/pages/about_page.dart';
 import 'package:yugi_deck/widgets/theme_notifier.dart';
 import 'package:yugi_deck/widgets/app_bar_search.dart';
 import '../models/filter_options.dart';
@@ -27,7 +28,6 @@ class _MainPageState extends State<MainPage>
 
   bool isFiltered = false;
 
-
   late Future<List<CardV2>> data;
 
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey();
@@ -50,30 +50,62 @@ class _MainPageState extends State<MainPage>
     return Scaffold(
       key: _scaffoldkey,
       endDrawer: Container(
-        width: MediaQuery.of(context).size.width / 1.5,
-        height: MediaQuery.of(context).size.height,
-        color: Theme.of(context).dialogBackgroundColor,
-        child: FilterPage(
-            applyFilter: applyFilter,
-            activeFilters: activeFilters)
-      ),
+          width: MediaQuery.of(context).size.width / 1.5,
+          height: MediaQuery.of(context).size.height,
+          color: Theme.of(context).dialogBackgroundColor,
+          child: FilterPage(
+              applyFilter: applyFilter, activeFilters: activeFilters)),
       appBar: AppBar(
-        title:
-            AppBarSearch(searchController: searchController, search: _search, clear: _clearSearch,),
+        title: AppBarSearch(
+          searchController: searchController,
+          search: _search,
+          clear: _clearSearch,
+        ),
         actions: [
           IconButton(
               onPressed: () {
                 _scaffoldkey.currentState!.openEndDrawer();
               },
               icon: const Icon(Icons.filter_list)),
-          Consumer<ThemeNotifier>(builder: (context, themeNotifier, _) {
-            return Switch(
-              value: themeNotifier.currentTheme == ThemeMode.dark,
-              onChanged: (value) {
-                themeNotifier.toggleTheme(); // Toggle the theme
-              },
-            );
-          }),
+          // Consumer<ThemeNotifier>(builder: (context, themeNotifier, _) {
+          //   return Switch(
+          //     value: themeNotifier.currentTheme == ThemeMode.dark,
+          //     onChanged: (value) {
+          //       themeNotifier.toggleTheme(); // Toggle the theme
+          //     },
+          //   );
+          // }),
+          PopupMenuButton<int>(
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+              const PopupMenuItem<int>(
+                value: 0,
+                child: Text("About"),
+              ),
+              const PopupMenuItem<int>(
+                value: 1,
+                child: Text("Toggle Theme"),
+              ),
+              const PopupMenuItem<int>(
+                value: 2,
+                child: Text("Force refresh"),
+              )
+            ],
+            onSelected: (int value) {
+              if (value == 0) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AboutPage()),
+                );
+              }
+              if (value == 1) {
+                Provider.of<ThemeNotifier>(context, listen: false)
+                    .toggleTheme();
+              }
+              if (value == 2) {
+                Provider.of<DataProvider>(context, listen: false).forceUpdate();
+              }
+            },
+          )
         ],
       ),
       body: SafeArea(
@@ -155,27 +187,31 @@ class _MainPageState extends State<MainPage>
   //   return widgets;
   // }
 
-  _search(String value) {
-    // var url =
-    //     Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value");
-    // setState(() {
-    //   data = fetchCardList(
-    //       "https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value",
-    //       context);
-    // });
-    setState(() {
-      data = searchCards(
-          Provider.of<DataProvider>(context, listen: false).cards, value);
-    });
+  _search(String value) async {
+    List<CardV2> tempCards = await data;
+
+    if (!isFiltered) {
+      setState(() {
+        data = searchCards(
+            Provider.of<DataProvider>(context, listen: false).cards, value);
+      });
+    } else {
+      setState(() {
+        data = searchCards(tempCards, value);
+      });
+    }
+
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
   _clearSearch() {
     setState(() {
-      data = convertToFuture(Provider.of<DataProvider>(context, listen: false).cards);
+      activeFilters = FilterOptions();
+      isFiltered = false;
+      data = convertToFuture(
+          Provider.of<DataProvider>(context, listen: false).cards);
     });
   }
-
 
   void applyFilter(FilterOptions filterOptions) {
     // Only apply if FilterOptions is not default
@@ -186,7 +222,8 @@ class _MainPageState extends State<MainPage>
         data = cardList;
       });
     } else {
-      List<CardV2> allCards = Provider.of<DataProvider>(context, listen: false).cards;
+      List<CardV2> allCards =
+          Provider.of<DataProvider>(context, listen: false).cards;
       setState(() {
         isFiltered = false;
         data = convertToFuture(allCards);
@@ -246,5 +283,4 @@ class _MainPageState extends State<MainPage>
 
     return convertToFuture(filtered);
   }
-
 }

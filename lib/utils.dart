@@ -48,50 +48,53 @@ Future<List<CardV2>> fetchCardList(String url, BuildContext context) async {
     var response =
         await http.post(Uri.parse(url)).timeout(const Duration(seconds: 30));
 
-    List<CardInfoEntity> cardList = [];
-    List<CardV2> cardV2List = [];
+    if (response.statusCode == 200) {
+      List<CardV2> cardV2List = [];
+      var jsonData = jsonDecode(response.body);
 
-    var json = jsonDecode(response.body);
+      if (jsonData["error"] != null) {
+        var snackBar = SnackBar(
+          content: Text(jsonData["error"].toString()),
+        );
+        snackbarKey.currentState?.showSnackBar(snackBar);
 
-    if (json["error"] != null) {
-      var snackBar = SnackBar(
-        content: Text(json["error"].toString()),
-      );
-      snackbarKey.currentState?.showSnackBar(snackBar);
+        return cardV2List;
+      }
+
+      var data = jsonData["data"] as List<dynamic>;
+
+      for (var element in data) {
+        CardV2 card = CardV2.fromJson(element);
+        cardV2List.add(card);
+      }
 
       return cardV2List;
+    } else {
+      var snackBar = SnackBar(
+        content: Text(
+            'Failed to fetch card data. Status code: ${response.statusCode}'),
+      );
+      snackbarKey.currentState?.showSnackBar(snackBar);
+      return [];
     }
-
-    var lista = json["data"] as List;
-
-    for (var element in lista) {
-      CardInfoEntity cardInfo = CardInfoEntity.fromJson(element);
-      CardV2 card = CardV2.fromJson(element);
-      cardV2List.add(card);
-      cardList.add(cardInfo);
-    }
-
-    debugPrint(cardV2List.elementAt(0).name);
-
-    return cardV2List;
-  } on TimeoutException catch (_) {
+  } on TimeoutException {
     var snackBar = const SnackBar(
       content:
-          Text("Request timed out. Please check your internet connection."),
+          Text('Request timed out. Please check your internet connection.'),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    snackbarKey.currentState?.showSnackBar(snackBar);
     return [];
-  } on SocketException catch (_) {
+  } on SocketException {
     var snackBar = const SnackBar(
-      content: Text('No internet connection'),
+      content: Text('No internet connection.'),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    snackbarKey.currentState?.showSnackBar(snackBar);
     return [];
   } catch (e) {
     var snackBar = const SnackBar(
-      content: Text("An error occurred. Please try again later."),
+      content: Text('An error occurred. Please try again later.'),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    snackbarKey.currentState?.showSnackBar(snackBar);
     return [];
   }
 }
@@ -123,7 +126,6 @@ bool isBelowDeckLimit(List<CardV2> cards, bool isExtraDeck) {
 Future<List<CardV2>> searchCards(List<CardV2> cards, String searchPhrase) {
   final Completer<List<CardV2>> completer = Completer<List<CardV2>>();
   final List<CardV2> searchResults = [];
-
 
   for (var card in cards) {
     if (card.name!.toLowerCase().contains(searchPhrase.toLowerCase()) ||

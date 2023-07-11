@@ -8,6 +8,7 @@ import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/pages/card_set_page.dart';
 import 'package:yugi_deck/widgets/card_attribute.dart';
 import 'package:yugi_deck/widgets/card_level.dart';
+import 'package:yugi_deck/widgets/card_title.dart';
 import 'package:yugi_deck/widgets/highlighted_text.dart';
 
 import '../variables.dart';
@@ -18,13 +19,14 @@ class CardDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Export iamges url to new file
     Uri imageUrl = Uri.parse(
         "https://images.ygoprodeck.com/images/cards/${card.id.toString()}.jpg");
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("${card.name}"),
+        title: CardTitle(
+          title: card.name!,
+        ),
         // toolbarHeight: 0,
       ),
       body: Container(
@@ -113,14 +115,16 @@ class CardDetail extends StatelessWidget {
                 if (card.level != null) CardLevel(level: card.level!),
               ],
             ),
-          const SizedBox(height: 8),
-          if (card.attribute == null) Text("[${card.type}]"),
+          // const SizedBox(height: 8),
+          // if (card.attribute == null) Text("[${card.type}]", style: const TextStyle(fontFamily: "ITC Stone Serif Small Caps Bold"),),
           const SizedBox(height: 8),
           if (card.race != null)
             //TODO: Create race widget
             Text(
               "[${card.race} / ${card.type}]",
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "ITC Stone Serif Small Caps Bold"),
             ),
           const SizedBox(height: 8),
           // Text(
@@ -136,16 +140,26 @@ class CardDetail extends StatelessWidget {
                 .map((line) => Text(
                       "$line \n",
                       style: line.startsWith(RegExp(r'[0-9]'))
-                          ? const TextStyle(fontStyle: FontStyle.italic)
-                          : null,
+                          ? const TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontFamily: "Matrix Book")
+                          : const TextStyle(fontFamily: "Matrix Book"),
                     ))
                 .toList(),
           ),
           const SizedBox(height: 8),
           Row(
             children: [
-              if (card.atk != null) Text("ATK/ ${card.atk}"),
-              if (card.def != null) Text(" DEF/ ${card.def}")
+              if (card.atk != null)
+                Text(
+                  "ATK/ ${card.atk}",
+                  style: const TextStyle(fontFamily: "Matrix Bold Small Caps"),
+                ),
+              if (card.def != null)
+                Text(
+                  " DEF/ ${card.def}",
+                  style: const TextStyle(fontFamily: "Matrix Bold Small Caps"),
+                )
             ],
           ),
           const SizedBox(height: 8),
