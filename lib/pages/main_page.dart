@@ -195,18 +195,19 @@ class _MainPageState extends State<MainPage>
         data = searchCards(
             Provider.of<DataProvider>(context, listen: false).cards, value);
       });
-      FocusManager.instance.primaryFocus?.unfocus();
     } else {
       setState(() {
         data = searchCards(tempCards, value);
       });
-      FocusManager.instance.primaryFocus?.unfocus();
     }
+
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   _clearSearch() {
     setState(() {
       activeFilters = FilterOptions();
+      isFiltered = false;
       data = convertToFuture(
           Provider.of<DataProvider>(context, listen: false).cards);
     });
