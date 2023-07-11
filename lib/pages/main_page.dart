@@ -187,19 +187,21 @@ class _MainPageState extends State<MainPage>
   //   return widgets;
   // }
 
-  _search(String value) {
-    // var url =
-    //     Uri.parse("https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value");
-    // setState(() {
-    //   data = fetchCardList(
-    //       "https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=$value",
-    //       context);
-    // });
-    setState(() {
-      data = searchCards(
-          Provider.of<DataProvider>(context, listen: false).cards, value);
-    });
-    FocusManager.instance.primaryFocus?.unfocus();
+  _search(String value) async {
+    List<CardV2> tempCards = await data;
+
+    if (!isFiltered) {
+      setState(() {
+        data = searchCards(
+            Provider.of<DataProvider>(context, listen: false).cards, value);
+      });
+      FocusManager.instance.primaryFocus?.unfocus();
+    } else {
+      setState(() {
+        data = searchCards(tempCards, value);
+      });
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
   }
 
   _clearSearch() {

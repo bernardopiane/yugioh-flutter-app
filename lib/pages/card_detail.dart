@@ -19,7 +19,6 @@ class CardDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: Export iamges url to new file
     Uri imageUrl = Uri.parse(
         "https://images.ygoprodeck.com/images/cards/${card.id.toString()}.jpg");
 
