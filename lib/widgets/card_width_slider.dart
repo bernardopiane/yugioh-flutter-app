@@ -19,7 +19,8 @@ class CardWidthSliderState extends State<CardWidthSlider> {
   late SharedPreferences prefs;
   double cardWidth = 100.0;
   final double minWidth = 100.0;
-  final double maxWidth = 400.0;
+  final double maxWidth = 500.0;
+  final double stepSizeMultiplier = 1.4;
 
   @override
   void initState() {
@@ -36,6 +37,8 @@ class CardWidthSliderState extends State<CardWidthSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final divisions = calculateDivisions();
+
     return SizedBox(
       width: double.maxFinite,
       height: 100,
@@ -48,11 +51,11 @@ class CardWidthSliderState extends State<CardWidthSlider> {
             value: cardWidth,
             min: minWidth,
             max: maxWidth,
-            // divisions: 4,
+            divisions: divisions,
             label: "Card Width: ${cardWidth.toStringAsFixed(2)}",
             onChanged: (double value) {
               setState(() {
-                cardWidth = value;
+                cardWidth = value.roundToDouble();
               });
               widget.notifyParent(value);
             },
@@ -63,5 +66,17 @@ class CardWidthSliderState extends State<CardWidthSlider> {
         ],
       ),
     );
+  }
+
+  int calculateDivisions() {
+    int divisions = 0;
+    double currentWidth = minWidth;
+
+    while (currentWidth < maxWidth) {
+      currentWidth *= stepSizeMultiplier;
+      divisions++;
+    }
+
+    return divisions;
   }
 }

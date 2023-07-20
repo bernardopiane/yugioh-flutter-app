@@ -133,14 +133,17 @@ class FilterCardsState extends State<FilterCards> {
   }
 
   Widget buildToggleButton(String text, bool selected, Function() onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: selected ? Colors.blue : Colors.grey,
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(color: Colors.white),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: selected ? Colors.blue : Colors.grey,
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
     );
   }
