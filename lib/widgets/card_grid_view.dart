@@ -24,14 +24,4 @@ class CardGridView extends StatelessWidget {
           ));
         });
   }
-
-  // List<Widget> _buildList(List<CardV2> data) {
-  //   List<Widget> widgets = [];
-  //
-  //   for (var element in data) {
-  //     widgets.add(GridTile(child: MyCard(cardInfo: element)));
-  //   }
-  //
-  //   return widgets;
-  // }
 }
