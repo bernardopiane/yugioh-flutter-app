@@ -21,7 +21,7 @@ class Assets {
   static const String imagesLevel = 'assets/images/Level.webp';
   static const String imagesWATER = 'assets/images/WATER.png';
   static const String imagesWIND = 'assets/images/WIND.png';
-  static const String imagesYugioh star = 'assets/images/yugioh star.png';
+  static const String imagesSTAR = 'assets/images/STAR.png';
   static const String typesAquaMD = 'assets/images/types/Aqua-MD.webp';
   static const String typesBeastMD = 'assets/images/types/Beast-MD.webp';
   static const String typesBeastWarriorMD = 'assets/images/types/Beast-Warrior-MD.webp';
