@@ -41,8 +41,10 @@ class CardAddPageState extends State<CardAddPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title:
-            AppBarSearch(searchController: _controller, search: _searchQuery, clear: _clearSearch),
+        title: AppBarSearch(
+            searchController: _controller,
+            search: _searchQuery,
+            clear: _clearSearch),
         actions: [
           IconButton(
               onPressed: () {
@@ -82,6 +84,7 @@ class CardAddPageState extends State<CardAddPage> {
             // If the future completed successfully and data is available
             List<CardV2> cardList = snapshot.data!;
             return GridView.builder(
+              padding: const EdgeInsets.all(8.0),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
                 crossAxisSpacing: 12,
@@ -220,7 +223,8 @@ class CardAddPageState extends State<CardAddPage> {
         cardResult = cardList;
       });
     } else {
-      List<CardV2> allCards = Provider.of<DataProvider>(context, listen: false).cards;
+      List<CardV2> allCards =
+          Provider.of<DataProvider>(context, listen: false).cards;
       setState(() {
         isFiltered = false;
         cardResult = convertToFuture(allCards);
@@ -228,13 +232,13 @@ class CardAddPageState extends State<CardAddPage> {
     }
   }
 
-
   _clearSearch() {
     _controller.clear();
     setState(() {
       isFiltered = false;
       activeFilters = FilterOptions();
-      cardResult = convertToFuture(Provider.of<DataProvider>(context, listen: false).cards);
+      cardResult = convertToFuture(
+          Provider.of<DataProvider>(context, listen: false).cards);
     });
   }
 }

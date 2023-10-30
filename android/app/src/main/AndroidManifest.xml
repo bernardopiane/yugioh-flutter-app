@@ -2,7 +2,7 @@
     package="com.bernardopiane.yugi_deck">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="yugi_deck"
+        android:label="YGO Deck Builder"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

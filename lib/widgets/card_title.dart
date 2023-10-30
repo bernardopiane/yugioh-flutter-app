@@ -10,9 +10,9 @@ class CardTitle extends StatelessWidget {
       title,
       textAlign: TextAlign.start,
       style: const TextStyle(
-        fontSize: 32,
-        letterSpacing: 1.2,
-        height: 1.5,
+        // fontSize: 32,
+        // letterSpacing: 1.2,
+        // height: 1.5,
         fontFamily: 'Matrix Regular Small Caps',
       ),
     );

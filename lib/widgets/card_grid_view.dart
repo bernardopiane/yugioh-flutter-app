@@ -10,7 +10,8 @@ class CardGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      itemCount: cardList.length,
+        padding: const EdgeInsets.all(8.0),
+        itemCount: cardList.length,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 200,
           mainAxisSpacing: 12,
