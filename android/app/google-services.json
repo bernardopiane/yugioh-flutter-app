@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "183865338046",
+    "project_id": "yugioh-deck-67dd9",
+    "storage_bucket": "yugioh-deck-67dd9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183865338046:android:3a86221d30f3b3836856ef",
+        "android_client_info": {
+          "package_name": "com.bernardopiane.yugi_deck"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCytm5VRmbDwpsAqOVejV_SEXNgcdy99l8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -9,7 +9,13 @@ import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/models/query_results.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 import 'package:yugi_deck/pages/splash_page.dart';
+import 'package:yugi_deck/pages/user_page.dart';
 import 'package:yugi_deck/widgets/theme_notifier.dart';
+
+// Firebase
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+//
 
 // Light theme
 final lightTheme = ThemeData(
@@ -31,6 +37,10 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MultiProvider(
       providers: [
@@ -51,7 +61,6 @@ Future<void> main() async {
     ),
   );
 }
-
 
 class MyApp extends StatefulWidget {
   final SharedPreferences prefs;
@@ -109,7 +118,7 @@ class _MyAppState extends State<MyApp> {
               );
             },
             duration: const Duration(milliseconds: 500),
-            child: isLoading ? const SplashPage() : const MyHomePage(),
+            child: isLoading ? const SplashPage() : const UserPage(),
           ),
         );
       },
