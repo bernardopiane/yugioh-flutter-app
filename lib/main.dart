@@ -7,6 +7,7 @@ import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/globals.dart';
 import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/models/query_results.dart';
+import 'package:yugi_deck/pages/login_or_user_page.dart';
 import 'package:yugi_deck/pages/main_page.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 import 'package:yugi_deck/pages/splash_page.dart';
@@ -111,6 +112,11 @@ class _MyAppState extends State<MyApp> {
           darkTheme: darkTheme,
           themeMode: themeNotifier.currentTheme,
           debugShowCheckedModeBanner: false,
+          initialRoute: '/',
+          routes: {
+            // Define the named routes
+            '/login': (context) => const LoginOrUserPage(),
+          },
           home: AnimatedSwitcher(
             transitionBuilder: (Widget child, Animation<double> animation) {
               return FadeTransition(

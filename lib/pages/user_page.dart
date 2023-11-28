@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:yugi_deck/database.dart';
 import 'package:yugi_deck/models/deck.dart';
 import 'package:yugi_deck/models/deck_list.dart';
+import 'package:yugi_deck/pages/login_page.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -19,7 +20,6 @@ class _UserPageState extends State<UserPage> {
 
   @override
   Widget build(BuildContext context) {
-
     List<Deck> deck = Provider.of<DeckList>(context).decks;
 
     // TODO ask to login if not authed, keep track as a Provider
@@ -33,6 +33,15 @@ class _UserPageState extends State<UserPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              },
+              child: const Text("Login Page"),
+            ),
             // Display User Profile Picture
             const CircleAvatar(
               radius: 50,

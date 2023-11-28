@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/pages/about_page.dart';
+import 'package:yugi_deck/pages/login_or_user_page.dart';
 import 'package:yugi_deck/pages/user_page.dart';
 import 'package:yugi_deck/widgets/theme_notifier.dart';
 import 'package:yugi_deck/widgets/app_bar_search.dart';
@@ -113,7 +114,7 @@ class _MainPageState extends State<MainPage>
               if (value == 3) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const UserPage()),
+                  MaterialPageRoute(builder: (context) => const LoginOrUserPage()),
                 );
               }
             },
