@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yugi_deck/widgets/login_widget.dart';
 
+import '../database.dart';
+
 class LoginOrUserPage extends StatefulWidget {
   const LoginOrUserPage({super.key});
 
@@ -16,7 +18,7 @@ class LoginOrUserPageState extends State<LoginOrUserPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: const Text("Login"),
       ),
       body: StreamBuilder<User?>(
         stream: _auth.authStateChanges(),
@@ -29,12 +31,12 @@ class LoginOrUserPageState extends State<LoginOrUserPage> {
               return UserInfo(user: user);
             } else {
               // User is not logged in, display LoginUser widget
-              return LoginUser();
+              return const LoginUser();
             }
           }
 
           // Handle loading state if needed
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         },
       ),
     );
@@ -44,7 +46,7 @@ class LoginOrUserPageState extends State<LoginOrUserPage> {
 class UserInfo extends StatelessWidget {
   final User user;
 
-  UserInfo({required this.user});
+  const UserInfo({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,9 @@ class UserInfo extends StatelessWidget {
         Text('Welcome, ${user.email}!'),
         // Add user-specific content here
         LogoutWidget(),
+        ElevatedButton(onPressed: (){
+          saveToDatabase(context);
+        }, child: Text("Save to DB"))
       ],
     );
   }
@@ -78,11 +83,13 @@ class LoginUser extends StatelessWidget {
 class LogoutWidget extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  LogoutWidget({super.key});
+
   Future<void> _logoutUser(BuildContext context) async {
     try {
       await _auth.signOut();
     } catch (e) {
-      print('Error during logout: $e');
+      debugPrint('Error during logout: $e');
     }
   }
 
@@ -90,7 +97,7 @@ class LogoutWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => _logoutUser(context),
-      child: Text('Log Out'),
+      child: const Text('Log Out'),
     );
   }
 }

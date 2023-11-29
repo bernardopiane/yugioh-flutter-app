@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/models/deck_list.dart';
@@ -8,7 +9,7 @@ import 'package:yugi_deck/models/deck_list.dart';
 import 'models/deck.dart';
 
 Future<void> saveToDatabase(BuildContext context) async {
-  FirebaseFirestore db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   List<Deck> deckList = Provider.of<DeckList>(context, listen: false).decks;
 
@@ -23,18 +24,19 @@ Future<void> saveToDatabase(BuildContext context) async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   // Reference to the 'user_deck' collection
-  CollectionReference userDeckCollection = firestore.collection('user_deck');
+  CollectionReference userDeckCollection = firestore.collection('users');
 
   // Add data to Firestore
   try {
-    await userDeckCollection.doc("Bernardo").set({
-      'user_id': 'Bernardo', //TODO Use user id from AUTH
+    await userDeckCollection.doc(_auth.currentUser?.uid).set({
+      'user_id': _auth.currentUser?.uid,
       'deck_list': jsonEncode(deckList),
-      //   TODO experiment with saving only card ID;
+      "email": _auth.currentUser?.email,
+      "last_updated": DateTime.now()
     });
 
-    print('Data added successfully');
+    debugPrint('Data added successfully');
   } catch (error) {
-    print('Failed to add data: $error');
+    debugPrint('Failed to add data: $error');
   }
 }
