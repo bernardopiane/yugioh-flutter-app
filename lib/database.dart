@@ -9,34 +9,38 @@ import 'package:yugi_deck/models/deck_list.dart';
 import 'models/deck.dart';
 
 Future<void> saveToDatabase(BuildContext context) async {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  List<Deck> deckList = Provider.of<DeckList>(context, listen: false).decks;
-
-  // Map<String, dynamic> data = {
-  //   'user_id': 'Bernardo', //Use user id from AUTH
-  //   'user_decks': {jsonEncode(deckList)},
-  // };
-  //
-  // db.collection("user_deck").add(data).then((DocumentReference doc) =>
-  //     debugPrint('DocumentSnapshot added with ID: ${doc.id}'));
-
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  // Reference to the 'user_deck' collection
-  CollectionReference userDeckCollection = firestore.collection('users');
-
-  // Add data to Firestore
   try {
-    await userDeckCollection.doc(_auth.currentUser?.uid).set({
-      'user_id': _auth.currentUser?.uid,
-      'deck_list': jsonEncode(deckList),
-      "email": _auth.currentUser?.email,
-      "last_updated": DateTime.now()
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    List<Deck> deckList = Provider.of<DeckList>(context, listen: false).decks;
+
+    // Ensure the user is authenticated before proceeding
+    User? currentUser = _auth.currentUser;
+    if (currentUser == null) {
+      debugPrint('User not authenticated. Cannot save to the database.');
+      return;
+    }
+
+    // Reference to the 'user_deck' collection
+    CollectionReference userDeckCollection = firestore.collection('users');
+
+    // Serialize the deckList to JSON
+    String deckListJson = jsonEncode(deckList);
+
+    // Add data to Firestore
+    await userDeckCollection.doc(currentUser.uid).set({
+      'user_id': currentUser.uid,
+      'deck_list': deckListJson,
+      'email': currentUser.email,
+      // Use server time instead of client
+      'last_updated': FieldValue.serverTimestamp(),
     });
 
     debugPrint('Data added successfully');
   } catch (error) {
     debugPrint('Failed to add data: $error');
+    // Handle the error or throw it to be caught by an upper layer
+    rethrow;
   }
 }
