@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 class LogoutWidget extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  LogoutWidget({super.key});
+
   Future<void> _logoutUser(BuildContext context) async {
     try {
       await _auth.signOut();

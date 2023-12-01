@@ -54,11 +54,12 @@ class UserInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text('Welcome, ${user.email}!'),
-        // Add user-specific content here
         LogoutWidget(),
-        ElevatedButton(onPressed: (){
-          saveToDatabase(context);
-        }, child: Text("Save to DB"))
+        ElevatedButton(
+            onPressed: () {
+              saveToDatabase(context);
+            },
+            child: const Text("Save to DB"))
       ],
     );
   }
@@ -69,11 +70,10 @@ class LoginUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('Please log in to continue.'),
-        // Add your login UI components here
+        Text('Please log in to continue.'),
         LoginWidget(),
       ],
     );

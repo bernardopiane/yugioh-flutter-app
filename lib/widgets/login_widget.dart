@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginWidget extends StatefulWidget {
+  const LoginWidget({super.key});
+
   @override
-  _LoginWidgetState createState() => _LoginWidgetState();
+  LoginWidgetState createState() => LoginWidgetState();
 }
 
-class _LoginWidgetState extends State<LoginWidget> {
+class LoginWidgetState extends State<LoginWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -20,18 +22,18 @@ class _LoginWidgetState extends State<LoginWidget> {
         password: _passwordController.text,
       );
 
-      print('User logged in: ${userCredential.user!.email}');
+      debugPrint('User logged in: ${userCredential.user!.email}');
       // You can handle the logged-in user as needed
     } on FirebaseAuthException catch (e) {
       setState(() {
         _error = e.message;
       });
-      print('Error: ${e.message}');
+      debugPrint('Error: ${e.message}');
     } catch (e) {
       setState(() {
         _error = 'An unexpected error occurred.';
       });
-      print('Error: $e');
+      debugPrint('Error: $e');
     }
   }
 
@@ -43,23 +45,23 @@ class _LoginWidgetState extends State<LoginWidget> {
         if (_error != null)
           Text(
             _error!,
-            style: TextStyle(color: Colors.red),
+            style: const TextStyle(color: Colors.red),
           ),
         TextField(
           controller: _emailController,
-          decoration: InputDecoration(labelText: 'Email'),
+          decoration: const InputDecoration(labelText: 'Email'),
           keyboardType: TextInputType.emailAddress,
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         TextField(
           controller: _passwordController,
-          decoration: InputDecoration(labelText: 'Password'),
+          decoration: const InputDecoration(labelText: 'Password'),
           obscureText: true,
         ),
-        SizedBox(height: 24.0),
+        const SizedBox(height: 24.0),
         ElevatedButton(
           onPressed: _loginUser,
-          child: Text('Login'),
+          child: const Text('Login'),
         ),
       ],
     );

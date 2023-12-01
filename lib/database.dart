@@ -10,13 +10,13 @@ import 'models/deck.dart';
 
 Future<void> saveToDatabase(BuildContext context) async {
   try {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     List<Deck> deckList = Provider.of<DeckList>(context, listen: false).decks;
 
     // Ensure the user is authenticated before proceeding
-    User? currentUser = _auth.currentUser;
+    User? currentUser = auth.currentUser;
     if (currentUser == null) {
       debugPrint('User not authenticated. Cannot save to the database.');
       return;

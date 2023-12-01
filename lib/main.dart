@@ -8,10 +8,8 @@ import 'package:yugi_deck/globals.dart';
 import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/models/query_results.dart';
 import 'package:yugi_deck/pages/login_or_user_page.dart';
-import 'package:yugi_deck/pages/main_page.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 import 'package:yugi_deck/pages/splash_page.dart';
-import 'package:yugi_deck/pages/user_page.dart';
 import 'package:yugi_deck/widgets/theme_notifier.dart';
 
 // Firebase
