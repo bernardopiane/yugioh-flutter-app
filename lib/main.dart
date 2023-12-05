@@ -9,6 +9,7 @@ import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/models/query_results.dart';
 import 'package:yugi_deck/pages/login_or_user_page.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
+import 'package:yugi_deck/pages/register_page.dart';
 import 'package:yugi_deck/pages/splash_page.dart';
 import 'package:yugi_deck/widgets/theme_notifier.dart';
 
@@ -91,7 +92,7 @@ class _MyAppState extends State<MyApp> {
       debugPrint('Error loading data: $error');
       // Show error message to the user
       const snackBar = SnackBar(content: Text('Failed to load data'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      snackbarKey.currentState?.showSnackBar(snackBar);
     } finally {
       setState(() {
         isLoading = false;
@@ -114,6 +115,7 @@ class _MyAppState extends State<MyApp> {
           routes: {
             // Define the named routes
             '/login': (context) => const LoginOrUserPage(),
+            '/register': (context) => const RegisterPage(),
           },
           home: AnimatedSwitcher(
             transitionBuilder: (Widget child, Animation<double> animation) {

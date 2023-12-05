@@ -12,7 +12,20 @@
           "package_name": "com.bernardopiane.yugi_deck"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "183865338046-c2rtb8ugu579s93i0u33q90ma2to7r3j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bernardopiane.yugi_deck",
+            "certificate_hash": "2b0050a1b4277a86b558fd0b6cd0d77b1c92c63a"
+          }
+        },
+        {
+          "client_id": "183865338046-1bfiojaki5pgdt0kqgel88r5i86poccd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCytm5VRmbDwpsAqOVejV_SEXNgcdy99l8"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "183865338046-1bfiojaki5pgdt0kqgel88r5i86poccd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "183865338046-73d1svv0jdunrbnnd8h02k4hf3mr6oa2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bernardopiane.yugiDeck"
+              }
+            }
+          ]
         }
       }
     }

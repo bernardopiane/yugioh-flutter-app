@@ -59,10 +59,24 @@ class LoginWidgetState extends State<LoginWidget> {
           obscureText: true,
         ),
         const SizedBox(height: 24.0),
-        ElevatedButton(
-          onPressed: _loginUser,
-          child: const Text('Login'),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: _loginUser,
+              child: const Text('Login'),
+            ),
+            const SizedBox(width: 24.0,),
+            ElevatedButton(
+              onPressed: (){
+                Navigator.pushNamed(context, "/register");
+              },
+              child: const Text('Register'),
+            ),
+          ],
         ),
+
       ],
     );
   }

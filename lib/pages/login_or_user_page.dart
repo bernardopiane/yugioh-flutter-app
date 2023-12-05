@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:yugi_deck/widgets/google_sign_in_widget.dart';
 import 'package:yugi_deck/widgets/login_widget.dart';
 
 import '../database.dart';
@@ -75,6 +76,7 @@ class LoginUser extends StatelessWidget {
       children: [
         Text('Please log in to continue.'),
         LoginWidget(),
+        GoogleSignInWidget()
       ],
     );
   }

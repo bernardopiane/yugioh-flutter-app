@@ -33,10 +33,10 @@ class HighlightedText extends StatelessWidget {
     );
   }
 
-  BoxDecoration _buildBackgroundBoxDecoration(Color color) {
-    return BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(4),
-    );
-  }
+  // BoxDecoration _buildBackgroundBoxDecoration(Color color) {
+  //   return BoxDecoration(
+  //     color: color,
+  //     borderRadius: BorderRadius.circular(4),
+  //   );
+  // }
 }
