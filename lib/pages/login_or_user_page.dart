@@ -37,7 +37,7 @@ class LoginOrUserPageState extends State<LoginOrUserPage> {
           }
 
           // Handle loading state if needed
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
@@ -54,13 +54,15 @@ class UserInfo extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Welcome, ${user.email}!'),
+        Text('Welcome, ${user.email}!',
+            style: Theme.of(context).textTheme.titleLarge),
         LogoutWidget(),
         ElevatedButton(
-            onPressed: () {
-              saveToDatabase(context);
-            },
-            child: const Text("Save to DB"))
+          onPressed: () {
+            saveToDatabase(context);
+          },
+          child: const Text("Save to DB"),
+        )
       ],
     );
   }
@@ -71,12 +73,18 @@ class LoginUser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Please log in to continue.'),
-        LoginWidget(),
-        GoogleSignInWidget()
+        Text(
+          'Please log in to continue.',
+          style: Theme.of(context).textTheme.titleLarge,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 16),
+        const LoginWidget(),
+        const SizedBox(height: 16),
+        const GoogleSignInWidget(),
       ],
     );
   }
@@ -97,9 +105,13 @@ class LogoutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => _logoutUser(context),
-      child: const Text('Log Out'),
+    return Center(
+      child: ElevatedButton(
+        onPressed: () => _logoutUser(context),
+        child: const Text('Log Out'),
+      ),
     );
   }
 }
+
+//TODO Create proper User Page, with image options

@@ -27,7 +27,6 @@ class CardDetail extends StatelessWidget {
         title: CardTitle(
           title: card.name!,
         ),
-        // toolbarHeight: 0,
       ),
       body: Container(
         child: Platform.isWindows
@@ -69,12 +68,12 @@ class CardDetail extends StatelessWidget {
                     ],
                   ),
                 if (card.attribute == null) Text("[${card.type}]"),
-                if (card.race != null)
-                  //TODO: Create race widget
-                  Text("[${card.race} / ${card.type}]"),
+                if (card.race != null) Text("[${card.race} / ${card.type}]"),
                 const SizedBox(height: 8),
                 HighlightedText(
-                    text: card.desc!, highlightedWords: highlightedWords),
+                  text: card.desc!,
+                  highlightedWords: highlightedWords,
+                ),
                 const SizedBox(height: 8),
                 if (card.level != null)
                   Text("ATK/ ${card.atk} DEF/ ${card.def}"),
@@ -83,13 +82,9 @@ class CardDetail extends StatelessWidget {
                 if (card.scale != null) Text("Scale: ${card.scale.toString()}"),
                 if (card.linkmarkers != null)
                   Text("Points to: ${card.linkmarkers.toString()}"),
-                const SizedBox(height: 8),
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: _buildCardSet(card.cardSets!),
-                // ),
-                if (card.cardSets != null)
-                  _buildCardSet(context, card.cardSets!)
+                // const SizedBox(height: 8),
+                // if (card.cardSets != null)
+                //   _buildCardSet(context, card.cardSets!)
               ],
             ),
           ),
@@ -115,36 +110,31 @@ class CardDetail extends StatelessWidget {
                 if (card.level != null) CardLevel(level: card.level!),
               ],
             ),
-          // const SizedBox(height: 8),
-          // if (card.attribute == null) Text("[${card.type}]", style: const TextStyle(fontFamily: "ITC Stone Serif Small Caps Bold"),),
           const SizedBox(height: 8),
           if (card.race != null)
-            //TODO: Create race widget
             Text(
               "[${card.race} / ${card.type}]",
               style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "ITC Stone Serif Small Caps Bold"),
+                fontWeight: FontWeight.bold,
+                fontFamily: "ITC Stone Serif Small Caps Bold",
+              ),
             ),
           const SizedBox(height: 8),
-          // Text(
-          //   card.desc!,
-          //   style: const TextStyle(fontStyle: FontStyle.italic),
-          // ),
-
-          // If it starts with a number assume its Materials for summoning and make it italic
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: card.desc!
                 .split('\n')
-                .map((line) => Text(
-                      "$line \n",
-                      style: line.startsWith(RegExp(r'[0-9]'))
-                          ? const TextStyle(
-                              fontStyle: FontStyle.italic,
-                              fontFamily: "Matrix Book")
-                          : const TextStyle(fontFamily: "Matrix Book"),
-                    ))
+                .map(
+                  (line) => Text(
+                    "$line \n",
+                    style: line.startsWith(RegExp(r'[0-9]'))
+                        ? const TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontFamily: "Matrix Book",
+                          )
+                        : const TextStyle(fontFamily: "Matrix Book"),
+                  ),
+                )
                 .toList(),
           ),
           const SizedBox(height: 8),
@@ -165,18 +155,12 @@ class CardDetail extends StatelessWidget {
           const SizedBox(height: 8),
           if (card.linkval != null) Text("LINK-${card.linkval.toString()}"),
           const SizedBox(height: 8),
-
           if (card.scale != null) Text("Scale: ${card.scale.toString()}"),
           const SizedBox(height: 8),
-
           if (card.linkmarkers != null)
             Text("Points to: ${card.linkmarkers.toString()}"),
-          const SizedBox(height: 8),
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: _buildCardSet(card.cardSets!),
-          // ),
-          if (card.cardSets != null) _buildCardSet(context, card.cardSets!)
+          // const SizedBox(height: 8),
+          // if (card.cardSets != null) _buildCardSet(context, card.cardSets!)
         ],
       ),
     );
@@ -190,10 +174,11 @@ class CardDetail extends StatelessWidget {
         ListTile(
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        CardSetPage(setName: element.setName!)));
+              context,
+              MaterialPageRoute(
+                builder: (context) => CardSetPage(setName: element.setName!),
+              ),
+            );
           },
           style: ListTileStyle.list,
           title: Text("${element.setName} - ${element.setRarity}"),
@@ -203,7 +188,8 @@ class CardDetail extends StatelessWidget {
 
     return ExpandablePanel(
       theme: ExpandableThemeData(
-          iconColor: Theme.of(context).colorScheme.secondary),
+        iconColor: Theme.of(context).colorScheme.secondary,
+      ),
       header: const Text(
         "How to Obtain",
         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -225,7 +211,6 @@ class CardDetail extends StatelessWidget {
         showGeneralDialog(
           context: context,
           barrierDismissible: false,
-          //Dismiss on click: false
           pageBuilder: (context, animation, secondaryAnimation) {
             return Container(
               color: Colors.black,

@@ -16,7 +16,8 @@ class GoogleSignInWidgetState extends State<GoogleSignInWidget> {
   Future<User?> _handleSignIn() async {
     try {
       // Trigger Google sign-in process
-      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
       if (googleSignInAccount == null) {
         // User canceled the sign-in
         return null;
@@ -24,7 +25,7 @@ class GoogleSignInWidgetState extends State<GoogleSignInWidget> {
 
       // Obtain GoogleSignInAuthentication for Firebase
       final GoogleSignInAuthentication googleSignInAuthentication =
-      await googleSignInAccount.authentication;
+          await googleSignInAccount.authentication;
 
       // Authenticate with Firebase using GoogleSignInAuthentication
       final AuthCredential credential = GoogleAuthProvider.credential(
@@ -33,7 +34,8 @@ class GoogleSignInWidgetState extends State<GoogleSignInWidget> {
       );
 
       // Sign in to Firebase with the Google credentials
-      final UserCredential authResult = await _auth.signInWithCredential(credential);
+      final UserCredential authResult =
+          await _auth.signInWithCredential(credential);
 
       // Return the authenticated user
       return authResult.user;
@@ -56,7 +58,17 @@ class GoogleSignInWidgetState extends State<GoogleSignInWidget> {
           debugPrint('Google sign-in unsuccessful.');
         }
       },
-      child: const Text('Sign In with Google'),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black,
+        backgroundColor: Colors.white, // Text color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      child: const Text(
+        'Sign In with Google',
+        style: TextStyle(fontSize: 16.0),
+      ),
     );
   }
 }
