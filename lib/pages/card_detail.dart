@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:yugi_deck/models/card_v2.dart';
-import 'package:yugi_deck/pages/card_set_page.dart';
 import 'package:yugi_deck/widgets/card_attribute.dart';
 import 'package:yugi_deck/widgets/card_level.dart';
 import 'package:yugi_deck/widgets/card_title.dart';
@@ -95,12 +93,12 @@ class CardDetail extends StatelessWidget {
 
   SingleChildScrollView buildPortraitView(BuildContext context, Uri imageUrl) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildImage(context, imageUrl),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           if (card.attribute != null)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,16 +108,16 @@ class CardDetail extends StatelessWidget {
                 if (card.level != null) CardLevel(level: card.level!),
               ],
             ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           if (card.race != null)
             Text(
               "[${card.race} / ${card.type}]",
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontFamily: Theme.of(context).textTheme.titleLarge?.fontFamily,
+                fontSize: 18,
               ),
             ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: card.desc!
@@ -136,7 +134,7 @@ class CardDetail extends StatelessWidget {
                 )
                 .toList(),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Row(
             children: [
               if (card.atk != null)
@@ -151,58 +149,58 @@ class CardDetail extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           if (card.linkval != null) Text("LINK-${card.linkval.toString()}"),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           if (card.scale != null) Text("Scale: ${card.scale.toString()}"),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           if (card.linkmarkers != null)
             Text("Points to: ${card.linkmarkers.toString()}"),
-          // SizedBox(height: 8),
+          // SizedBox(height: 16),
           // if (card.cardSets != null) _buildCardSet(context, card.cardSets!)
         ],
       ),
     );
   }
 
-  _buildCardSet(context, List<CardSets> cardSets) {
-    List<Widget> widgets = [];
-
-    for (var element in cardSets) {
-      widgets.add(
-        ListTile(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CardSetPage(setName: element.setName!),
-              ),
-            );
-          },
-          style: ListTileStyle.list,
-          title: Text("${element.setName} - ${element.setRarity}"),
-        ),
-      );
-    }
-
-    return ExpandablePanel(
-      theme: ExpandableThemeData(
-        iconColor: Theme.of(context).colorScheme.secondary,
-      ),
-      header: const Text(
-        "How to Obtain",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
-      collapsed: Text("Available in ${widgets.length} packs"),
-      expanded: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: ListTile.divideTiles(
-          tiles: widgets,
-          color: Colors.grey.shade400,
-        ).toList(),
-      ),
-    );
-  }
+  // _buildCardSet(context, List<CardSets> cardSets) {
+  //   List<Widget> widgets = [];
+  //
+  //   for (var element in cardSets) {
+  //     widgets.add(
+  //       ListTile(
+  //         onTap: () {
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //               builder: (context) => CardSetPage(setName: element.setName!),
+  //             ),
+  //           );
+  //         },
+  //         style: ListTileStyle.list,
+  //         title: Text("${element.setName} - ${element.setRarity}"),
+  //       ),
+  //     );
+  //   }
+  //
+  //   return ExpandablePanel(
+  //     theme: ExpandableThemeData(
+  //       iconColor: Theme.of(context).colorScheme.secondary,
+  //     ),
+  //     header: const Text(
+  //       "How to Obtain",
+  //       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+  //     ),
+  //     collapsed: Text("Available in ${widgets.length} packs"),
+  //     expanded: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: ListTile.divideTiles(
+  //         tiles: widgets,
+  //         color: Colors.grey.shade400,
+  //       ).toList(),
+  //     ),
+  //   );
+  // }
 
   _buildImage(context, imageUrl) {
     return GestureDetector(

@@ -24,6 +24,15 @@ class Deck {
     extra = [];
   }
 
+  Deck.complete({
+    this.id,
+    required this.name,
+    this.description,
+    this.cards,
+    this.extra,
+    this.lastUpdated,
+  });
+
   Deck.fromDB(this.name, this.id, this.description, this.cards, this.extra,
       this.lastUpdated);
 
@@ -36,6 +45,23 @@ class Deck {
         'lastUpdated': lastUpdated
             ?.toIso8601String(), // Convert DateTime to ISO8601 string
       };
+
+  factory Deck.fromJson(Map<String, dynamic> json) {
+    return Deck.complete(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      cards: (json['cards'] as List<dynamic>?)
+          ?.map((cardJson) => CardV2.fromJson(cardJson))
+          .toList(),
+      extra: (json['extra'] as List<dynamic>?)
+          ?.map((cardJson) => CardV2.fromJson(cardJson))
+          .toList(),
+      lastUpdated: json['lastUpdated'] != null
+          ? DateTime.parse(json['lastUpdated'])
+          : null,
+    );
+  }
 
   int getCardsLength() {
     int len = 0;

@@ -145,7 +145,6 @@ class CardAddPageState extends State<CardAddPage> {
   }
 
   _searchQuery(String query, {bool withFilter = false}) async {
-    //TODO
     if (isFiltered) {
       List<CardV2> cards = await cardResult;
       debugPrint("isFiltered");

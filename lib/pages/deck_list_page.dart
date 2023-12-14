@@ -14,61 +14,46 @@ class DeckListPage extends StatefulWidget {
 class _DeckListPageState extends State<DeckListPage> {
   String? inputDeckName;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // _loadData();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  content: TextFormField(
-                    autofocus: true,
-                    decoration:
-                        const InputDecoration(label: Text("Deck name: ")),
-                    onFieldSubmitted: (value) {
-                      setState(() {
-                        inputDeckName = value;
-                      });
-                      Navigator.pop(context, true);
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: TextField(
+                  autofocus: true,
+                  decoration: const InputDecoration(labelText: "Deck name"),
+                  onChanged: (value) {
+                    setState(() {
+                      inputDeckName = value;
+                    });
+                  },
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
-                    onChanged: (value) {
-                      setState(() {
-                        inputDeckName = value;
-                      });
-                    },
+                    child: const Text("Cancel"),
                   ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
+                  TextButton(
+                    onPressed: () {
+                      if (inputDeckName != null && inputDeckName!.isNotEmpty) {
+                        Provider.of<DeckList>(context, listen: false)
+                            .addDeck(Deck(inputDeckName!));
+                        inputDeckName = "";
                         Navigator.pop(context);
-                      },
-                      child: const Text("Cancel"),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context, true);
-                      },
-                      child: const Text("Add"),
-                    ),
-                  ],
-                );
-              }).then((value) {
-            if (value != null) {
-              if (inputDeckName != "") {
-                Provider.of<DeckList>(context, listen: false)
-                    .addDeck(Deck(inputDeckName.toString()));
-                inputDeckName = "";
-              }
-            }
-          });
+                      }
+                    },
+                    child: const Text("Add"),
+                  ),
+                ],
+              );
+            },
+          );
         },
         backgroundColor: Colors.amber[800],
         child: const Icon(Icons.add),
@@ -77,99 +62,91 @@ class _DeckListPageState extends State<DeckListPage> {
         title: const Text("Deck List"),
       ),
       body: SafeArea(
-        // minimum: const EdgeInsets.all(8),
         child: ListView(
-          children: [..._buildDeckList(context)],
+          padding: const EdgeInsets.only(top: 8),
+          children: _buildDeckList(context),
         ),
       ),
     );
   }
 
   List<Widget> _buildDeckList(BuildContext context) {
-    List<Widget> widgets = [];
-
-    Provider.of<DeckList>(context).decks.forEach((element) {
-      widgets.add(
-        ListTile(
-          contentPadding: const EdgeInsets.all(8),
+    return Provider.of<DeckList>(context).decks.map((element) {
+      return Card(
+        elevation: 4.0,
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        child: ListTile(
           title: Text(element.name),
-          trailing: PopupMenuButton(
+          trailing: PopupMenuButton<String>(
             itemBuilder: (context) {
               return [
-                const PopupMenuItem(
+                const PopupMenuItem<String>(
                   value: 'rename',
                   child: Text('Rename'),
                 ),
-                const PopupMenuItem(
+                const PopupMenuItem<String>(
                   value: 'delete',
                   child: Text('Delete'),
-                )
+                ),
               ];
             },
             onSelected: (String value) {
               if (value == "delete") {
                 Provider.of<DeckList>(context, listen: false)
-                    .deleteDeck(element.id!.toString());
+                    .deleteDeck(element.id!);
               } else if (value == "rename") {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: TextFormField(
-                          autofocus: true,
-                          decoration:
-                              const InputDecoration(label: Text("Deck name: ")),
-                          onFieldSubmitted: (value) {
-                            setState(() {
-                              inputDeckName = value;
-                            });
-                            Navigator.pop(context, true);
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              inputDeckName = value;
-                            });
-                          },
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text("Cancel"),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context, true);
-                            },
-                            child: const Text("Add"),
-                          ),
-                        ],
-                      );
-                    }).then((value) {
-                  if (value != null) {
-                    if (inputDeckName != "") {
-                      Provider.of<DeckList>(context, listen: false)
-                          .renameDeck(element, inputDeckName!);
-                      inputDeckName = "";
-                    }
-                  }
-                });
-              } else {
-                debugPrintStack();
+                _showRenameDialog(context, element);
               }
             },
           ),
-          onTap: () => {
+          onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DeckDetail(deck: element)),
-            )
+                builder: (context) => DeckDetail(deck: element),
+              ),
+            );
           },
         ),
       );
-    });
-    return widgets;
+    }).toList();
+  }
+
+  void _showRenameDialog(BuildContext context, Deck deck) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: TextField(
+            autofocus: true,
+            decoration: const InputDecoration(labelText: "Deck name"),
+            onChanged: (value) {
+              setState(() {
+                inputDeckName = value;
+              });
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (inputDeckName != null && inputDeckName!.isNotEmpty) {
+                  Provider.of<DeckList>(context, listen: false)
+                      .renameDeck(deck, inputDeckName!);
+                  inputDeckName = "";
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text("Rename"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

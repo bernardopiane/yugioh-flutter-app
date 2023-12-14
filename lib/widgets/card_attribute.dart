@@ -13,9 +13,14 @@ class CardAttribute extends StatelessWidget {
           height: 32,
         ),
         const SizedBox(width: 4),
-        Text(attribute, style: const TextStyle(
-          fontFamily: "ITC Stone Serif Small Caps Bold"
-        ),)
+        Text(
+          attribute,
+          style: const TextStyle(
+            fontFamily: "ITC Stone Serif Small Caps Bold",
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        )
       ],
     );
   }

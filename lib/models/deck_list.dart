@@ -106,6 +106,8 @@ class DeckList extends ChangeNotifier {
     file.delete();
     decks.removeWhere((element) => element.id == id);
     notifyListeners();
+
+    //   TODO Delete from firestore
   }
 
   Deck getDeckById(String id) {

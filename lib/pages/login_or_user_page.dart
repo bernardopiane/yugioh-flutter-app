@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/widgets/google_sign_in_widget.dart';
 import 'package:yugi_deck/widgets/login_widget.dart';
 
@@ -67,7 +69,7 @@ class UserInfo extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            handleUserLogin(context);
+            handleUserLogin(Provider.of<DeckList>(context, listen: false));
           },
           child: const Text("Load from DB"),
         )

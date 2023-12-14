@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/models/deck_list.dart';
@@ -83,62 +80,50 @@ Future<Map<String, dynamic>?> getUserData() async {
   }
 }
 
-Future<void> handleUserLogin(BuildContext context) async {
+Future<void> handleUserLogin(DeckList deckListProvider) async {
   try {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
 
     if (user == null) {
       // No user is signed in
-      if (kDebugMode) {
-        print('No user is signed in');
-      }
+      debugPrint('No user is signed in');
       return;
     }
 
-    // Fetch the user from Firestore
+    // Fetch the user's decks from Firestore
     final userDocRef =
         FirebaseFirestore.instance.collection('users').doc(user.uid);
-    final userDocSnapshot = await userDocRef.get();
+    final decksCollection = userDocRef.collection('decks');
+    final decksQuerySnapshot = await decksCollection.get();
 
-    if (userDocSnapshot.exists) {
-      // Do something with the loaded user data (e.g., update UI or save to local storage)
-      if (kDebugMode) {
-        List<dynamic> json = jsonDecode(userDocSnapshot.data()?["deck_list"]);
+    if (decksQuerySnapshot.docs.isNotEmpty) {
+      // Convert each document in the 'decks' collection to a Deck object
+      List<Deck> deckList = decksQuerySnapshot.docs.map((deckDoc) {
+        Map<String, dynamic> deckData = deckDoc.data();
+        return Deck.fromJson(deckData);
+      }).toList();
 
-        DeckList deckList = DeckList(getUserDecks(json));
-
-        for (var deckEntry in deckList.decks) {
-          //   TODO compare DB deck lastUpdated with current Provider decklist by ID
-          Deck curDeck = Provider.of<DeckList>(context, listen: false)
-              .decks
-              .firstWhere((element) => element.id == deckEntry.id);
+      // Do something with the loaded deck data (e.g., update UI or save to local storage)
+      for (var deckEntry in deckList) {
+        Deck? curDeck = deckListProvider.decks
+            .where((element) => element.id == deckEntry.id)
+            .firstOrNull;
+        if (curDeck != null) {
           if (curDeck.lastUpdated!.isBefore(deckEntry.lastUpdated!)) {
-            // curDeck = deckEntry;
-            Provider.of<DeckList>(context, listen: false)
-                .decks
-                .firstWhere((element) => element.id == deckEntry.id)
-                .copyFrom(
-                  name: deckEntry.name,
-                  description: deckEntry.description,
-                  cards: deckEntry.cards,
-                  extra: deckEntry.extra,
-                  lastUpdated: deckEntry.lastUpdated,
-                );
-          } else {}
+            deckListProvider.addDeck(deckEntry);
+          }
+        } else {
+          deckListProvider.addDeck(deckEntry);
         }
       }
     } else {
-      // User document does not exist
-      if (kDebugMode) {
-        print('User document does not exist for user: ${user.uid}');
-      }
+      // User has no decks
+      debugPrint('User has no decks for user: ${user.uid}');
     }
   } catch (e, stackTrace) {
     // Handle errors (e.g., no internet connection, Firestore not reachable, etc.)
-    if (kDebugMode) {
-      print('Error handling user login: $e\n$stackTrace');
-    }
+    debugPrint('Error handling user login: $e\n$stackTrace');
   }
 }
 
@@ -162,9 +147,7 @@ List<Deck> getUserDecks(List<dynamic> data) {
       });
     }
 
-    if (kDebugMode) {
-      print(deckData.toString());
-    }
+    debugPrint(deckData.toString());
     Deck deck = Deck.fromDB(deckData["name"], deckData["id"],
         deckData["description"], cardList, extraList, deckData["lastUpdated"]);
 
@@ -181,9 +164,7 @@ Future<void> updateDeckInFirestore(Deck deck) async {
 
     if (user == null) {
       // No user is signed in
-      if (kDebugMode) {
-        print('No user is signed in');
-      }
+      debugPrint('No user is signed in');
       return;
     }
     CollectionReference usersCollection =
