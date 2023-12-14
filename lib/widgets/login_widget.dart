@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:yugi_deck/database.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({Key? key}) : super(key: key);
@@ -15,12 +16,14 @@ class LoginWidgetState extends State<LoginWidget> {
 
   String? _error;
 
-  Future<void> _loginUser() async {
+  Future<void> _loginUser(BuildContext context) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
+
+      handleUserLogin(context);
 
       debugPrint('User logged in: ${userCredential.user!.email}');
       // You can handle the logged-in user as needed
@@ -72,7 +75,7 @@ class LoginWidgetState extends State<LoginWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: _loginUser,
+                onPressed: () => _loginUser(context),
                 child: const Text('Login'),
               ),
               const SizedBox(width: 24.0),
@@ -81,7 +84,8 @@ class LoginWidgetState extends State<LoginWidget> {
                   Navigator.pushNamed(context, "/register");
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green, // Change the color for Register button
+                  backgroundColor:
+                      Colors.green, // Change the color for Register button
                 ),
                 child: const Text('Register'),
               ),

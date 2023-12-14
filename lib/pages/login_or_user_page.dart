@@ -4,6 +4,7 @@ import 'package:yugi_deck/widgets/google_sign_in_widget.dart';
 import 'package:yugi_deck/widgets/login_widget.dart';
 
 import '../database.dart';
+import '../widgets/logout_widget.dart';
 
 class LoginOrUserPage extends StatefulWidget {
   const LoginOrUserPage({super.key});
@@ -57,11 +58,18 @@ class UserInfo extends StatelessWidget {
         Text('Welcome, ${user.email}!',
             style: Theme.of(context).textTheme.titleLarge),
         LogoutWidget(),
+        // TODO remove testing buttons
         ElevatedButton(
           onPressed: () {
             saveToDatabase(context);
           },
           child: const Text("Save to DB"),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            handleUserLogin(context);
+          },
+          child: const Text("Load from DB"),
         )
       ],
     );
@@ -86,30 +94,6 @@ class LoginUser extends StatelessWidget {
         const SizedBox(height: 16),
         const GoogleSignInWidget(),
       ],
-    );
-  }
-}
-
-class LogoutWidget extends StatelessWidget {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  LogoutWidget({super.key});
-
-  Future<void> _logoutUser(BuildContext context) async {
-    try {
-      await _auth.signOut();
-    } catch (e) {
-      debugPrint('Error during logout: $e');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () => _logoutUser(context),
-        child: const Text('Log Out'),
-      ),
     );
   }
 }

@@ -114,9 +114,9 @@ class CardDetail extends StatelessWidget {
           if (card.race != null)
             Text(
               "[${card.race} / ${card.type}]",
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontFamily: "ITC Stone Serif Small Caps Bold",
+                fontFamily: Theme.of(context).textTheme.titleLarge?.fontFamily,
               ),
             ),
           const SizedBox(height: 8),
@@ -127,12 +127,11 @@ class CardDetail extends StatelessWidget {
                 .map(
                   (line) => Text(
                     "$line \n",
-                    style: line.startsWith(RegExp(r'[0-9]'))
-                        ? const TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontFamily: "Matrix Book",
-                          )
-                        : const TextStyle(fontFamily: "Matrix Book"),
+                    style: TextStyle(
+                      fontStyle: line.startsWith(RegExp(r'[0-9]'))
+                          ? FontStyle.italic
+                          : FontStyle.normal,
+                    ),
                   ),
                 )
                 .toList(),
@@ -143,13 +142,13 @@ class CardDetail extends StatelessWidget {
               if (card.atk != null)
                 Text(
                   "ATK/ ${card.atk}",
-                  style: const TextStyle(fontFamily: "Matrix Bold Small Caps"),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               if (card.def != null)
                 Text(
                   " DEF/ ${card.def}",
-                  style: const TextStyle(fontFamily: "Matrix Bold Small Caps"),
-                )
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
             ],
           ),
           const SizedBox(height: 8),
@@ -159,7 +158,7 @@ class CardDetail extends StatelessWidget {
           const SizedBox(height: 8),
           if (card.linkmarkers != null)
             Text("Points to: ${card.linkmarkers.toString()}"),
-          // const SizedBox(height: 8),
+          // SizedBox(height: 8),
           // if (card.cardSets != null) _buildCardSet(context, card.cardSets!)
         ],
       ),

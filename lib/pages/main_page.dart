@@ -88,33 +88,36 @@ class _MainPageState extends State<MainPage>
               ),
               const PopupMenuItem<int>(
                 value: 2,
-                child: Text("Force refresh"),
+                child: Text("Force Refresh"),
               ),
               const PopupMenuItem<int>(
                 value: 3,
                 child: Text("User Page"),
-              )
+              ),
             ],
             onSelected: (int value) {
-              if (value == 0) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AboutPage()),
-                );
-              }
-              if (value == 1) {
-                Provider.of<ThemeNotifier>(context, listen: false)
-                    .toggleTheme();
-              }
-              if (value == 2) {
-                Provider.of<DataProvider>(context, listen: false).forceUpdate();
-              }
-
-              if (value == 3) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginOrUserPage()),
-                );
+              switch (value) {
+                case 0:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AboutPage()),
+                  );
+                  break;
+                case 1:
+                  Provider.of<ThemeNotifier>(context, listen: false)
+                      .toggleTheme();
+                  break;
+                case 2:
+                  Provider.of<DataProvider>(context, listen: false)
+                      .forceUpdate();
+                  break;
+                case 3:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginOrUserPage()),
+                  );
+                  break;
               }
             },
           )

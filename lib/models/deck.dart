@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/utils.dart';
 
@@ -12,19 +13,28 @@ class Deck {
   List<CardV2>? cards;
   List<CardV2>? extra;
 
+  DateTime? lastUpdated;
+
   Deck.withId(this.name, this.id);
 
   Deck(this.name) {
     id = DateTime.now().millisecondsSinceEpoch.toString();
+    lastUpdated = DateTime.now(); // Set the savedDate when the deck is created
     cards = [];
     extra = [];
   }
 
-  Map toJson() => {
-        'name': name,
-        'cards': cards,
-        'extra': extra,
+  Deck.fromDB(this.name, this.id, this.description, this.cards, this.extra,
+      this.lastUpdated);
+
+  Map<String, dynamic> toJson() => {
         'id': id,
+        'name': name,
+        'description': description,
+        'cards': cards?.map((card) => card.toJson()).toList(),
+        'extra': extra?.map((card) => card.toJson()).toList(),
+        'lastUpdated': lastUpdated
+            ?.toIso8601String(), // Convert DateTime to ISO8601 string
       };
 
   int getCardsLength() {
@@ -49,6 +59,7 @@ class Deck {
 
   setDescription(String desc) {
     description = desc;
+    updateSavedDate();
   }
 
   void addCard(CardV2 card) {
@@ -73,28 +84,34 @@ class Deck {
         cards!.add(card);
       }
     }
+    updateSavedDate();
   }
 
   setCards(List<CardV2> cardList) {
     cards = cardList;
+    updateSavedDate();
   }
 
   setExtra(List<CardV2> cardList) {
     extra = cardList;
+    updateSavedDate();
   }
 
   removeCard(CardV2 card) {
     // CardInDeck cardInDeck = CardInDeck(card);
     cards!.remove(card);
+    updateSavedDate();
   }
 
   removeExtra(CardV2 card) {
     // CardInDeck cardInDeck = CardInDeck(card);
     extra!.remove(card);
+    updateSavedDate();
   }
 
   rename(String newName) {
     name = newName;
+    updateSavedDate();
   }
 
   bool hasThreeCopies(List<CardV2> array, CardV2 card) {
@@ -123,5 +140,48 @@ class Deck {
       // Then, sort by name
       return a.name!.compareTo(b.name!);
     });
+    lastUpdated = DateTime.now();
+  }
+
+  // Update savedDate to the current time
+  void updateSavedDate() {
+    lastUpdated = DateTime.now();
+  }
+
+  Future<void> loadDataFromDB(Map<String, dynamic> firestoreData) async {
+    try {
+      // Convert the savedDate from Firestore to DateTime
+      final dbSavedDate = DateTime.parse(firestoreData['savedDate']);
+
+      // Compare saved dates
+      if (dbSavedDate
+          .isAfter(lastUpdated ?? DateTime.fromMillisecondsSinceEpoch(0))) {
+        // Firestore data is newer, update local data
+        name = firestoreData['name'];
+        description = firestoreData['description'];
+        lastUpdated = dbSavedDate;
+
+        cards = firestoreData['cards'];
+        extra = firestoreData['extra'];
+      }
+    } catch (e) {
+      // TODO Handle errors (e.g., parsing error, invalid data, etc.)
+      if (kDebugMode) {
+        print('Error loading data from Firestore: $e');
+      }
+    }
+  }
+
+  void copyFrom(
+      {required String name,
+      String? description,
+      List<CardV2>? cards,
+      List<CardV2>? extra,
+      DateTime? lastUpdated}) {
+    this.name = name;
+    this.description = description;
+    this.cards = cards;
+    this.extra = extra;
+    this.lastUpdated = lastUpdated;
   }
 }
