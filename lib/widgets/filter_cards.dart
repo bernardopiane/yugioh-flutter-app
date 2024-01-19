@@ -5,7 +5,11 @@ class FilterCards extends StatefulWidget {
   final Function(FilterOptions) selectedFilters;
   final FilterOptions preselectedFilters;
 
-  const FilterCards({Key? key, required this.selectedFilters, required this.preselectedFilters}) : super(key: key);
+  const FilterCards(
+      {Key? key,
+      required this.selectedFilters,
+      required this.preselectedFilters})
+      : super(key: key);
 
   @override
   FilterCardsState createState() => FilterCardsState();
@@ -133,16 +137,23 @@ class FilterCardsState extends State<FilterCards> {
   }
 
   Widget buildToggleButton(String text, bool selected, Function() onPressed) {
+    ThemeData theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: ElevatedButton(
+      child: OutlinedButton(
         onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: selected ? Colors.blue : Colors.grey,
+        style: OutlinedButton.styleFrom(
+          backgroundColor: selected ? theme.primaryColor : Colors.white,
+          side: BorderSide(color: theme.primaryColor),
+          elevation: 2, // Add a bit of elevation
         ),
         child: Text(
           text,
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: selected ? Colors.white : theme.primaryColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -225,15 +236,24 @@ class FilterCardsState extends State<FilterCards> {
                 }).toList(),
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Apply the filter options
-                  // Call a method or navigate back with the selected filter options
-                  debugPrint(filterOptions.toString());
-                  widget.selectedFilters(filterOptions); // Invoke the callback with the data
-                  Navigator.pop(context); // Close the child page
-                },
-                child: const Text('Apply Filters'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Apply the filter options
+                      // Call a method or navigate back with the selected filter options
+                      debugPrint(filterOptions.toString());
+                      widget.selectedFilters(
+                          filterOptions); // Invoke the callback with the data
+                      Navigator.pop(context); // Close the child page
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor, // Use primary color from the theme
+                    ),
+                    child: const Text('Apply Filters'),
+                  ),
+                ],
               ),
             ],
           ),

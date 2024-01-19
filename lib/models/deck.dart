@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/utils.dart';
@@ -209,5 +211,20 @@ class Deck {
     this.cards = cards;
     this.extra = extra;
     this.lastUpdated = lastUpdated;
+  }
+
+  //   Base64
+  // TODO Create buttons to share and import deck using base64
+  String toBase64() {
+    String jsonString = jsonEncode(toJson());
+    String base64String = base64Encode(utf8.encode(jsonString));
+    return base64String;
+  }
+
+  // Decode base64 string to Deck object
+  static Deck fromBase64(String base64String) {
+    String jsonString = utf8.decode(base64Decode(base64String));
+    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    return Deck.fromJson(jsonMap);
   }
 }

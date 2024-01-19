@@ -1,3 +1,4 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -163,6 +164,12 @@ class _DeckDetailState extends State<DeckDetail> {
                             });
                       },
                       icon: const Icon(Icons.photo_size_select_large),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _copyToClipboardAndShowMessage();
+                      },
+                      icon: const Icon(Icons.copy),
                     ),
                     IconButton(
                       onPressed: () {
@@ -432,5 +439,17 @@ class _DeckDetailState extends State<DeckDetail> {
       widget.deck.sortDeck();
       hasChanged = true;
     }
+  }
+
+  void _copyToClipboardAndShowMessage() {
+    String base64String = widget.deck.toBase64();
+
+    FlutterClipboard.copy(base64String).then((value) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Data has been copied to the clipboard.'),
+        ),
+      );
+    });
   }
 }
