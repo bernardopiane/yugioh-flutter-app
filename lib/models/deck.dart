@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/utils.dart';
 
@@ -20,7 +21,7 @@ class Deck {
   Deck.withId(this.name, this.id);
 
   Deck(this.name) {
-    id = DateTime.now().millisecondsSinceEpoch.toString();
+    id = const Uuid().v4();
     lastUpdated = DateTime.now(); // Set the savedDate when the deck is created
     cards = [];
     extra = [];

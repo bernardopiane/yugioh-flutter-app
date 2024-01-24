@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:yugi_deck/models/deck.dart';
 import 'package:yugi_deck/models/deck_list.dart';
 import 'package:yugi_deck/pages/deck_detail.dart';
@@ -196,6 +197,8 @@ void _showInputDialog(BuildContext context) {
 }
 
 void _importDeckFromBase64(String data, BuildContext context) {
+  Uuid uuid = const Uuid();
   Deck newDeck = Deck.fromBase64(data);
+  newDeck.id = uuid.v4();
   Provider.of<DeckList>(context, listen: false).addDeck(newDeck);
 }
