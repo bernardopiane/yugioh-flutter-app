@@ -19,6 +19,9 @@ jobs:
 
       - name: Set up JDK
         uses: actions/setup-java@v4.0.0
+        with:
+            distribution: 'zulu'
+            
         
       - name: Set up Flutter
         uses: flutter-actions/setup-flutter@v2.3
