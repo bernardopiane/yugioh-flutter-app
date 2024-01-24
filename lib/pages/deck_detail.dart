@@ -127,58 +127,113 @@ class _DeckDetailState extends State<DeckDetail> {
               : AppBar(
                   title: Text(widget.deck.name),
                   actions: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CardAddPage(
-                                      deck: widget.deck,
-                                      addCard: _addCard,
-                                    )),
-                          );
-                          // _openSearchCardDialog(context);
-                        },
-                        icon: const Icon(Icons.add)),
-                    IconButton(
-                        onPressed: () {
-                          if (deckCards.length < 40) {
-                            var snackBar = const SnackBar(
-                              content: Text("Your deck has less than 40 cards"),
-                            );
-                            snackbarKey.currentState?.showSnackBar(snackBar);
-                          }
-                          _saveDeck();
-                          hasChanged = false;
-                        },
-                        icon: const Icon(Icons.save)),
-                    IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return CardWidthSlider(
-                                notifyParent: changeWidth,
-                                currentWidth: cardWidth,
-                              );
-                            });
+                    // IconButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => CardAddPage(
+                    //           deck: widget.deck,
+                    //           addCard: _addCard,
+                    //         ),
+                    //       ),
+                    //     );
+                    //   },
+                    //   icon: const Icon(Icons.add, semanticLabel: 'Add Card'),
+                    // ),
+                    // IconButton(
+                    //   onPressed: () {
+                    //     if (deckCards.length < 40) {
+                    //       var snackBar = const SnackBar(
+                    //         content: Text("Your deck has less than 40 cards"),
+                    //       );
+                    //       snackbarKey.currentState?.showSnackBar(snackBar);
+                    //     }
+                    //     _saveDeck();
+                    //     hasChanged = false;
+                    //   },
+                    //   icon: const Icon(Icons.save, semanticLabel: 'Save Deck'),
+                    // ),
+                    // IconButton(
+                    //   onPressed: () {
+                    //     showModalBottomSheet(
+                    //       context: context,
+                    //       builder: (context) {
+                    //         return CardWidthSlider(
+                    //           notifyParent: changeWidth,
+                    //           currentWidth: cardWidth,
+                    //         );
+                    //       },
+                    //     );
+                    //   },
+                    //   icon: const Icon(Icons.photo_size_select_large,
+                    //       semanticLabel: 'Adjust Card Size'),
+                    // ),
+                    // IconButton(
+                    //   onPressed: () {
+                    //     _copyToClipboardAndShowMessage();
+                    //   },
+                    //   icon:
+                    //       const Icon(Icons.copy, semanticLabel: 'Copy to Clipboard'),
+                    // ),
+                    // IconButton(
+                    //   onPressed: () {
+                    //     toggleDeleteView();
+                    //   },
+                    //   icon: const Icon(Icons.delete, semanticLabel: 'Delete'),
+                    // ),
+                    PopupMenuButton<String>(
+                      onSelected: (value) => _handleClick(value),
+                      itemBuilder: (BuildContext context) {
+                        return [
+                          const PopupMenuItem<String>(
+                            value: 'save',
+                            child: ListTile(
+                              leading: Icon(Icons.save),
+                              title: Text('Save Deck'),
+                            ),
+                          ),
+                          const PopupMenuItem<String>(
+                            value: 'adjustSize',
+                            child: ListTile(
+                              leading: Icon(Icons.photo_size_select_large),
+                              title: Text('Adjust Card Size'),
+                            ),
+                          ),
+                          const PopupMenuItem<String>(
+                            value: 'copyToClipboard',
+                            child: ListTile(
+                              leading: Icon(Icons.copy),
+                              title: Text('Copy to Clipboard'),
+                            ),
+                          ),
+                          const PopupMenuItem<String>(
+                            value: 'toggleDeleteView',
+                            child: ListTile(
+                              leading: Icon(Icons.delete),
+                              title: Text('Delete a Card'),
+                            ),
+                          ),
+                        ];
                       },
-                      icon: const Icon(Icons.photo_size_select_large),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _copyToClipboardAndShowMessage();
-                      },
-                      icon: const Icon(Icons.copy),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        toggleDeleteView();
-                      },
-                      icon: const Icon(Icons.delete),
                     ),
                   ],
                 ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CardAddPage(
+                    deck: widget.deck,
+                    addCard: _addCard,
+                  ),
+                ),
+              );
+            },
+            backgroundColor: Colors.amber[800],
+            child: const Icon(Icons.add),
+          ),
           body: TabBarView(
             children: [
               SafeArea(
@@ -451,5 +506,42 @@ class _DeckDetailState extends State<DeckDetail> {
         ),
       );
     });
+  }
+
+  _handleClick(String value) {
+    switch (value) {
+      case "save":
+        if (deckCards.length < 40) {
+          var snackBar = const SnackBar(
+            content: Text("Your deck has less than 40 cards"),
+          );
+          snackbarKey.currentState?.showSnackBar(snackBar);
+        }
+        _saveDeck();
+        hasChanged = false;
+
+        break;
+      case "adjustSize":
+        showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return CardWidthSlider(
+              notifyParent: changeWidth,
+              currentWidth: cardWidth,
+            );
+          },
+        );
+        break;
+
+      case "copyToClipboard":
+        _copyToClipboardAndShowMessage();
+        break;
+
+      case "toggleDeleteView":
+        toggleDeleteView();
+        break;
+
+      default:
+    }
   }
 }
