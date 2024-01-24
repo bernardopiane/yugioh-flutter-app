@@ -1,0 +1,81 @@
+name: Build and Release APK
+
+on:
+  push:
+    branches:
+      - master  # Change this to your main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set current time
+        id: set_time
+        run: echo "TIME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+    
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.3'  # Change this to your desired Flutter version
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download APK artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: app-release
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+          
+      - name: Set current time
+        id: set_time
+        run: echo "::set-output name=time::$(date +'%Y%m%d%H%M%S')"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.set_time.outputs.time }}
+          release_name: Release ${{ steps.set_time.outputs.time }}
+          draft: false
+          prerelease: false
+
+      - name: Upload APK to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: app-release.apk
+          asset_name: app-release.apk
+          asset_content_type: application/vnd.android.package-archive
