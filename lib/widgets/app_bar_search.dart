@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppBarSearch extends StatefulWidget {
+class AppBarSearch extends StatelessWidget {
   const AppBarSearch({
     Key? key,
     required this.searchController,
@@ -13,51 +13,39 @@ class AppBarSearch extends StatefulWidget {
   final VoidCallback clear;
 
   @override
-  State<AppBarSearch> createState() => _AppBarSearchState();
-}
-
-class _AppBarSearchState extends State<AppBarSearch> {
-  bool _searchExpanded = false;
-
-  @override
   Widget build(BuildContext context) {
-    return _searchExpanded
-        ? Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    hintText: 'Search...',
-                    border: InputBorder.none,
-                  ),
-                  controller: widget.searchController,
-                  onEditingComplete: () {
-                    widget.search(widget.searchController.value.text);
-                    FocusScope.of(context).unfocus();
+    return Material(
+      elevation: 2, // Add elevation for Material design
+      borderRadius: BorderRadius.circular(100),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: SizedBox(
+          height: 48, // Adjusted height for better visibility
+          child: Center(
+        child: TextField(
+              autofocus: false,
+              controller: searchController,
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    searchController.clear();
+                    clear();
                   },
                 ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
               ),
-              IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    setState(() {
-                      _searchExpanded = !_searchExpanded;
-                    });
-                  }),
-            ],
-          )
-        : Row(
-            children: [
-              const Expanded(child: Text('App Title')),
-              IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    setState(() {
-                      _searchExpanded = !_searchExpanded;
-                    });
-                  }),
-            ],
+              onEditingComplete: () {
+            search(searchController.value.text);
+                FocusScope.of(context).unfocus();
+              },
+            ),
+          ),
+        ),
+      ),
           );
   }
 }
