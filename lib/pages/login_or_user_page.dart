@@ -24,24 +24,26 @@ class LoginOrUserPageState extends State<LoginOrUserPage> {
       appBar: AppBar(
         title: const Text("Login"),
       ),
-      body: StreamBuilder<User?>(
-        stream: _auth.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            User? user = snapshot.data;
+      body: Center(
+        child: StreamBuilder<User?>(
+          stream: _auth.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active) {
+              User? user = snapshot.data;
 
-            if (user != null) {
-              // User is logged in, display UserInfo widget
-              return UserInfo(user: user);
-            } else {
-              // User is not logged in, display LoginUser widget
-              return const LoginUser();
+              if (user != null) {
+                // User is logged in, display UserInfo widget
+                return UserInfo(user: user);
+              } else {
+                // User is not logged in, display LoginUser widget
+                return const LoginUser();
+              }
             }
-          }
 
-          // Handle loading state if needed
-          return const Center(child: CircularProgressIndicator());
-        },
+            // Handle loading state if needed
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }
@@ -56,21 +58,34 @@ class UserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('Welcome, ${user.email}!',
-            style: Theme.of(context).textTheme.titleLarge),
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Welcome, ${user.email}!',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        const SizedBox(height: 16),
         LogoutWidget(),
-        // TODO remove testing buttons
+        const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () {
             saveToDatabase(context);
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).primaryColor,
+            textStyle: const TextStyle(fontSize: 16),
+          ),
           child: const Text("Save to DB"),
         ),
+        const SizedBox(height: 8), // Add spacing between buttons
         ElevatedButton(
           onPressed: () {
             handleUserLogin(Provider.of<DeckList>(context, listen: false));
           },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).primaryColor,
+            textStyle: const TextStyle(fontSize: 16),
+          ),
           child: const Text("Load from DB"),
         )
       ],
