@@ -125,7 +125,7 @@ class _MainPageState extends State<MainPage>
                   break;
               }
             },
-          )
+          ),
         ],
       ),
       body: FutureBuilder<List<CardV2>>(
