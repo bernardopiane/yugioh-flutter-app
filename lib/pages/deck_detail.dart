@@ -61,361 +61,174 @@ class _DeckDetailState extends State<DeckDetail> {
     //  Load from local file if exists
   }
 
-  Future<bool> _onWillPop() async {
-    if (!hasChanged && !deleteView) {
-      Navigator.of(context).pop(true);
-      return false;
-    }
-    return (await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Are you sure?'),
-            content: const Text('Do you want to save the changes'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('No'),
-              ),
-              TextButton(
-                onPressed: () {
-                  _saveDeck();
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text('Yes'),
-              ),
-            ],
-          ),
-        )) ??
-        false;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: DefaultTabController(
-        length: 2,
-        initialIndex: 0,
-        child: Scaffold(
-          bottomNavigationBar: Material(
-            color: Theme.of(context).dialogBackgroundColor,
-            elevation: 2,
-            child: TabBar(
-              labelColor: Theme.of(context).textTheme.bodyMedium?.color,
-              tabs: [
-                Tab(
-                  child: Text("Main - ${deckCards.length.toString()}"),
-                ),
-                Tab(
-                  child: Text("Extra - ${extraCards.length.toString()}"),
-                ),
-              ],
-            ),
-          ),
-          appBar: deleteView
-              ? AppBar(
-                  title: const Text("Remove card(s)"),
-                  actions: [
-                    IconButton(
-                      onPressed: () {
-                        toggleDeleteView();
-                      },
-                      icon: const Icon(Icons.check),
-                    ),
-                  ],
-                )
-              : AppBar(
-                  title: Text(widget.deck.name),
-                  actions: [
-                    // IconButton(
-                    //   onPressed: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => CardAddPage(
-                    //           deck: widget.deck,
-                    //           addCard: _addCard,
-                    //         ),
-                    //       ),
-                    //     );
-                    //   },
-                    //   icon: const Icon(Icons.add, semanticLabel: 'Add Card'),
-                    // ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     if (deckCards.length < 40) {
-                    //       var snackBar = const SnackBar(
-                    //         content: Text("Your deck has less than 40 cards"),
-                    //       );
-                    //       snackbarKey.currentState?.showSnackBar(snackBar);
-                    //     }
-                    //     _saveDeck();
-                    //     hasChanged = false;
-                    //   },
-                    //   icon: const Icon(Icons.save, semanticLabel: 'Save Deck'),
-                    // ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     showModalBottomSheet(
-                    //       context: context,
-                    //       builder: (context) {
-                    //         return CardWidthSlider(
-                    //           notifyParent: changeWidth,
-                    //           currentWidth: cardWidth,
-                    //         );
-                    //       },
-                    //     );
-                    //   },
-                    //   icon: const Icon(Icons.photo_size_select_large,
-                    //       semanticLabel: 'Adjust Card Size'),
-                    // ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     _copyToClipboardAndShowMessage();
-                    //   },
-                    //   icon:
-                    //       const Icon(Icons.copy, semanticLabel: 'Copy to Clipboard'),
-                    // ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     toggleDeleteView();
-                    //   },
-                    //   icon: const Icon(Icons.delete, semanticLabel: 'Delete'),
-                    // ),
-                    PopupMenuButton<String>(
-                      onSelected: (value) => _handleClick(value),
-                      itemBuilder: (BuildContext context) {
-                        return [
-                          const PopupMenuItem<String>(
-                            value: 'save',
-                            child: ListTile(
-                              leading: Icon(Icons.save),
-                              title: Text('Save Deck'),
-                            ),
-                          ),
-                          const PopupMenuItem<String>(
-                            value: 'adjustSize',
-                            child: ListTile(
-                              leading: Icon(Icons.photo_size_select_large),
-                              title: Text('Adjust Card Size'),
-                            ),
-                          ),
-                          const PopupMenuItem<String>(
-                            value: 'copyToClipboard',
-                            child: ListTile(
-                              leading: Icon(Icons.copy),
-                              title: Text('Copy to Clipboard'),
-                            ),
-                          ),
-                          const PopupMenuItem<String>(
-                            value: 'toggleDeleteView',
-                            child: ListTile(
-                              leading: Icon(Icons.delete),
-                              title: Text('Delete a Card'),
-                            ),
-                          ),
-                        ];
-                      },
-                    ),
-                  ],
-                ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CardAddPage(
-                    deck: widget.deck,
-                    addCard: _addCard,
-                  ),
-                ),
-              );
-            },
-            backgroundColor: Colors.amber[800],
-            child: const Icon(Icons.add),
-          ),
-          body: TabBarView(
-            children: [
-              SafeArea(
-                minimum: const EdgeInsets.all(8),
-                child: GridView.builder(
-                    itemCount: deckCards.length,
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: cardWidth,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: cardAspRatio,
-                    ),
-                    itemBuilder: (BuildContext ctx, index) {
-                      if (deleteView) {
-                        return Stack(
-                          children: [
-                            MyCard(
-                              cardInfo: deckCards.elementAt(index),
-                              fullImage: true,
-                              noTap: true,
-                            ),
-                            Positioned(
-                                top: 0,
-                                right: 0,
-                                child: FloatingActionButton(
-                                  onPressed: () {
-                                    deleteCard(deckCards.elementAt(index));
-                                  },
-                                  backgroundColor: Colors.red,
-                                  mini: true,
-                                  child: const Icon(Icons.close),
-                                )),
-                          ],
-                        );
-                      } else {
-                        return MyCard(
-                          cardInfo: deckCards.elementAt(index),
-                          fullImage: true,
-                        );
-                      }
-                    }),
+    return DefaultTabController(
+      length: 2,
+      initialIndex: 0,
+      child: Scaffold(
+        bottomNavigationBar: Material(
+          color: Theme.of(context).dialogBackgroundColor,
+          elevation: 2,
+          child: TabBar(
+            labelColor: Theme.of(context).textTheme.bodyMedium?.color,
+            tabs: [
+              Tab(
+                child: Text("Main - ${deckCards.length.toString()}"),
               ),
-              SafeArea(
-                minimum: const EdgeInsets.all(8),
-                child: GridView.builder(
-                    itemCount: extraCards.length,
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: cardWidth,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: cardAspRatio,
-                    ),
-                    itemBuilder: (BuildContext ctx, index) {
-                      if (deleteView) {
-                        return Stack(
-                          children: [
-                            MyCard(
-                              cardInfo: extraCards.elementAt(index),
-                              fullImage: true,
-                              noTap: true,
-                            ),
-                            // Material(
-                            //   color: Colors.transparent,
-                            //   child: InkWell(
-                            //     onTap: () {
-                            //       handleSelectedCards(
-                            //           extraCards.elementAt(index));
-                            //     },
-                            //   ),
-                            // ),
-                            Positioned(
-                                top: 0,
-                                right: 0,
-                                child: FloatingActionButton(
-                                  onPressed: () {
-                                    deleteCard(extraCards.elementAt(index));
-                                  },
-                                  backgroundColor: Colors.red,
-                                  mini: true,
-                                  child: const Icon(Icons.close),
-                                )),
-                          ],
-                        );
-                      } else {
-                        return MyCard(
-                          cardInfo: extraCards.elementAt(index),
-                          fullImage: true,
-                        );
-                      }
-                    }),
-                // child: GridView(
-                //   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                //     maxCrossAxisExtent: cardWidth,
-                //     mainAxisSpacing: 12,
-                //     crossAxisSpacing: 12,
-                //     childAspectRatio: cardAspRatio,
-                //   ),
-                //   children: _buildExtra(),
-                // ),
+              Tab(
+                child: Text("Extra - ${extraCards.length.toString()}"),
               ),
             ],
           ),
         ),
+        appBar: deleteView
+            ? AppBar(
+                title: const Text("Remove card(s)"),
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      toggleDeleteView();
+                    },
+                    icon: const Icon(Icons.check),
+                  ),
+                ],
+              )
+            : AppBar(
+                title: Text(widget.deck.name),
+                actions: [
+                  PopupMenuButton<String>(
+                    onSelected: (value) => _handleClick(value),
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        const PopupMenuItem<String>(
+                          value: 'adjustSize',
+                          child: ListTile(
+                            leading: Icon(Icons.photo_size_select_large),
+                            title: Text('Adjust Card Size'),
+                          ),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'copyToClipboard',
+                          child: ListTile(
+                            leading: Icon(Icons.copy),
+                            title: Text('Copy to Clipboard'),
+                          ),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'toggleDeleteView',
+                          child: ListTile(
+                            leading: Icon(Icons.delete),
+                            title: Text('Delete a Card'),
+                          ),
+                        ),
+                      ];
+                    },
+                  ),
+                ],
+              ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CardAddPage(
+                  deck: widget.deck,
+                  addCard: _addCard,
+                ),
+              ),
+            );
+          },
+          backgroundColor: Colors.amber[800],
+          child: const Icon(Icons.add),
+        ),
+        body: TabBarView(
+          children: [
+            SafeArea(
+              minimum: const EdgeInsets.all(8),
+              child: GridView.builder(
+                  itemCount: deckCards.length,
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: cardWidth,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: cardAspRatio,
+                  ),
+                  itemBuilder: (BuildContext ctx, index) {
+                    if (deleteView) {
+                      return Stack(
+                        children: [
+                          MyCard(
+                            cardInfo: deckCards.elementAt(index),
+                            fullImage: true,
+                            noTap: true,
+                          ),
+                          Positioned(
+                              top: 0,
+                              right: 0,
+                              child: FloatingActionButton(
+                                onPressed: () {
+                                  deleteCard(deckCards.elementAt(index));
+                                },
+                                backgroundColor: Colors.red,
+                                mini: true,
+                                child: const Icon(Icons.close),
+                              )),
+                        ],
+                      );
+                    } else {
+                      return MyCard(
+                        cardInfo: deckCards.elementAt(index),
+                        fullImage: true,
+                      );
+                    }
+                  }),
+            ),
+            SafeArea(
+              minimum: const EdgeInsets.all(8),
+              child: GridView.builder(
+                  itemCount: extraCards.length,
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: cardWidth,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: cardAspRatio,
+                  ),
+                  itemBuilder: (BuildContext ctx, index) {
+                    if (deleteView) {
+                      return Stack(
+                        children: [
+                          MyCard(
+                            cardInfo: extraCards.elementAt(index),
+                            fullImage: true,
+                            noTap: true,
+                          ),
+                          Positioned(
+                              top: 0,
+                              right: 0,
+                              child: FloatingActionButton(
+                                onPressed: () {
+                                  deleteCard(extraCards.elementAt(index));
+                                },
+                                backgroundColor: Colors.red,
+                                mini: true,
+                                child: const Icon(Icons.close),
+                              )),
+                        ],
+                      );
+                    } else {
+                      return MyCard(
+                        cardInfo: extraCards.elementAt(index),
+                        fullImage: true,
+                      );
+                    }
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }
-
-  // List<Widget> _buildCards() {
-  //   List<Widget> widgets = [];
-  //
-  //   for (var element in deckCards) {
-  //     if (deleteView) {
-  //       if (selectedCards.contains(element)) {
-  //         widgets.add(
-  //           Stack(
-  //             children: [
-  //               MyCard(
-  //                 cardInfo: element,
-  //                 fullImage: true,
-  //                 noTap: true,
-  //               ),
-  //               Material(
-  //                 color: Colors.grey.withOpacity(0.60),
-  //                 child: InkWell(
-  //                   onTap: () {
-  //                     handleSelectedCards(element);
-  //                   },
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                 top: -10,
-  //                 right: -10,
-  //                 child: IconButton(
-  //                   icon: const Icon(Icons.remove_circle_outline),
-  //                   onPressed: () {},
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       } else {
-  //         widgets.add(
-  //           Stack(
-  //             children: [
-  //               MyCard(
-  //                 cardInfo: element,
-  //                 fullImage: true,
-  //                 noTap: true,
-  //               ),
-  //               Material(
-  //                 color: Colors.transparent,
-  //                 child: InkWell(
-  //                   onTap: () {
-  //                     handleSelectedCards(element);
-  //                   },
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                   top: 0,
-  //                   right: 0,
-  //                   child: FloatingActionButton(
-  //                     onPressed: () {
-  //                       deleteCard(element);
-  //                     },
-  //                     backgroundColor: Colors.red,
-  //                     mini: true,
-  //                     child: const Icon(Icons.close),
-  //                   )),
-  //             ],
-  //           ),
-  //         );
-  //       }
-  //     } else {
-  //       widgets.add(MyCard(
-  //         cardInfo: element,
-  //         fullImage: true,
-  //       ));
-  //     }
-  //   }
-  //
-  //   return widgets;
-  // }
 
   addToState(CardV2 element) {
     //TODO: Check if api returns extra deck type - remove hardcoded
@@ -510,17 +323,6 @@ class _DeckDetailState extends State<DeckDetail> {
 
   _handleClick(String value) {
     switch (value) {
-      case "save":
-        if (deckCards.length < 40) {
-          var snackBar = const SnackBar(
-            content: Text("Your deck has less than 40 cards"),
-          );
-          snackbarKey.currentState?.showSnackBar(snackBar);
-        }
-        _saveDeck();
-        hasChanged = false;
-
-        break;
       case "adjustSize":
         showModalBottomSheet(
           context: context,
