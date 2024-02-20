@@ -56,14 +56,13 @@ class UserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
           'Welcome, ${user.email}!',
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Theme.of(context).textTheme.headline6,
         ),
         const SizedBox(height: 16),
         LogoutWidget(),
@@ -73,12 +72,11 @@ class UserInfo extends StatelessWidget {
             saveToDatabase(context);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).primaryColor,
             textStyle: const TextStyle(fontSize: 16),
           ),
           child: const Text("Save to DB"),
         ),
-        const SizedBox(height: 8), // Add spacing between buttons
         ElevatedButton(
           onPressed: () {
             final DeckListGetX deckListGetX = Get.find<DeckListGetX>();
@@ -86,7 +84,7 @@ class UserInfo extends StatelessWidget {
             handleUserLogin(deckListGetX);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).primaryColor,
             textStyle: const TextStyle(fontSize: 16),
           ),
           child: const Text("Load from DB"),
