@@ -68,14 +68,6 @@ class _MainPageState extends State<MainPage>
                 _scaffoldkey.currentState!.openEndDrawer();
               },
               icon: const Icon(Icons.filter_list)),
-          // Consumer<ThemeNotifier>(builder: (context, themeNotifier, _) {
-          //   return Switch(
-          //     value: themeNotifier.currentTheme == ThemeMode.dark,
-          //     onChanged: (value) {
-          //       themeNotifier.toggleTheme(); // Toggle the theme
-          //     },
-          //   );
-          // }),
           PopupMenuButton<int>(
             itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
               const PopupMenuItem<int>(
@@ -120,7 +112,7 @@ class _MainPageState extends State<MainPage>
                   break;
               }
             },
-          )
+          ),
         ],
       ),
       body: FutureBuilder<List<CardV2>>(

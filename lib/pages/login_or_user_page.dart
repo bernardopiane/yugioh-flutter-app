@@ -62,7 +62,7 @@ class UserInfo extends StatelessWidget {
       children: <Widget>[
         Text(
           'Welcome, ${user.email}!',
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 16),
         LogoutWidget(),
