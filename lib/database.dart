@@ -81,6 +81,33 @@ Future<Map<String, dynamic>?> getUserData() async {
   }
 }
 
+Future<int> fetchDeckQuantity(BuildContext context) async {
+  try {
+    final auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
+
+    if (user == null) {
+      debugPrint('No user is signed in');
+      return 0;
+    }
+
+    final userDocRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final decksCollection = userDocRef.collection('decks');
+    final decksQuerySnapshot = await decksCollection.get();
+
+    if (decksQuerySnapshot.docs.isNotEmpty) {
+      return decksQuerySnapshot.docs.length;
+    }
+    return 0;
+  } catch (error, stackTrace) {
+    debugPrint('Failed to fetch deck quantity: $error\n$stackTrace');
+    // Handle the error
+
+    // Return a negative value or throw an exception to indicate failure
+    throw Exception('Failed to fetch deck quantity');
+  }
+}
+
 Future<void> handleUserLogin(DeckList deckListProvider) async {
   try {
     FirebaseAuth auth = FirebaseAuth.instance;
