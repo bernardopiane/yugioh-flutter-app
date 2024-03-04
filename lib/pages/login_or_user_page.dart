@@ -49,10 +49,28 @@ class LoginOrUserPageState extends State<LoginOrUserPage> {
   }
 }
 
-class UserInfo extends StatelessWidget {
+class UserInfo extends StatefulWidget {
   final User user;
 
   const UserInfo({super.key, required this.user});
+
+  @override
+  State<UserInfo> createState() => _UserInfoState();
+}
+
+class _UserInfoState extends State<UserInfo> {
+  int databaseDeckQuantity = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    fetchDeckQuantity(context).then((value){
+      setState(() {
+        databaseDeckQuantity = value;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +79,32 @@ class UserInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          'Welcome, ${user.email}!',
+          'Welcome, ${widget.user.email}!',
           style: Theme.of(context).textTheme.titleLarge,
+        ),
+        Expanded(
+          child: GridView.count(
+            // Create a grid with 2 columns. If you change the scrollDirection to
+            // horizontal, this produces 2 rows.
+            crossAxisCount: 2,
+            // Generate 100 widgets that display their index in the List.
+            children: [
+              Card(
+                child: Center(
+                    child: Text(
+                  "You have ${Provider.of<DeckList>(context, listen: false).decks.length} decks saved in app",
+                  textAlign: TextAlign.center,
+                )),
+              ),
+              Card(
+                child: Center(
+                    child: Text(
+                  "You have $databaseDeckQuantity decks saved in the cloud",
+                  textAlign: TextAlign.center,
+                )),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 16),
         LogoutWidget(),
