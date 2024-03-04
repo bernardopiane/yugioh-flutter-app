@@ -154,6 +154,10 @@ Future<void> handleUserLogin(DeckListGetX deckListGetX) async {
     // Handle errors (e.g., no internet connection, Firestore not reachable, etc.)
     debugPrint('Error handling user login: $e\n$stackTrace');
   }
+  const snackBar = SnackBar(
+    content: Text("Imported decks from database"),
+  );
+  snackbarKey.currentState?.showSnackBar(snackBar);
 }
 
 List<Deck> getUserDecks(List<dynamic> data) {
