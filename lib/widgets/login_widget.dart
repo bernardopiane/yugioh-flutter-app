@@ -20,7 +20,6 @@ class LoginWidgetState extends State<LoginWidget> {
   String? _error;
 
   Future<void> _loginUser(DeckList deckListProvider) async {
-
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -79,7 +78,8 @@ class LoginWidgetState extends State<LoginWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () => _loginUser(Provider.of<DeckList>(context, listen: false)),
+                onPressed: () =>
+                    _loginUser(Provider.of<DeckList>(context, listen: false)),
                 child: const Text('Login'),
               ),
               const SizedBox(width: 24.0),
@@ -88,8 +88,8 @@ class LoginWidgetState extends State<LoginWidget> {
                   Navigator.pushNamed(context, "/register");
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Colors.green, // Change the color for Register button
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue, // Text color
                 ),
                 child: const Text('Register'),
               ),
