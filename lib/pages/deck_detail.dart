@@ -11,8 +11,6 @@ import 'package:yugi_deck/widgets/card_width_slider.dart';
 import 'package:yugi_deck/widgets/my_card.dart';
 import 'package:yugi_deck/pages/card_add_page.dart';
 
-import '../globals.dart';
-
 class DeckDetail extends StatefulWidget {
   const DeckDetail({Key? key, required this.deck}) : super(key: key);
   final Deck deck;
