@@ -31,6 +31,7 @@ class DataProvider extends ChangeNotifier {
   }
 
   Future<void> fetchDataAndStoreInHive() async {
+
     var box = await Hive.openBox("database");
 
     try {
@@ -49,64 +50,44 @@ class DataProvider extends ChangeNotifier {
 
         if (box.get("database_version") != databaseVersion ||
             box.get("last_update") != lastUpdate) {
-          try {
-            final newData = await fetchNewData();
-            box.put("database_version", databaseVersion);
-            box.put("last_update", lastUpdate);
-            setResult(newData);
-            var jsonData = jsonEncode(newData);
-            box.put("json_data", jsonData);
-          } catch (e) {
-            var snackBar = const SnackBar(
-              content: Text(
-                  "Failed to fetch latest cards from API. Data may be outdated"),
-            );
-            snackbarKey.currentState?.showSnackBar(snackBar);
-            debugPrint("Error fetching new data: $e");
-
-            setResult(box.get("json_data"));
-
-            // Handle the error
-          }
+          final newData =
+              await fetchNewData(); // Assume fetchNewData is implemented elsewhere
+          box.put("database_version", databaseVersion);
+          box.put("last_update", lastUpdate);
+          setResult(newData);
+          var jsonData = jsonEncode(newData);
+          box.put("json_data", jsonData);
         } else {
           var jsonData = box.get("json_data");
           List<dynamic> list = jsonData != null ? jsonDecode(jsonData) : [];
-
           List<CardV2> cardList =
               list.map((card) => CardV2.fromJson(card)).toList();
-
           setResult(cardList);
         }
       } else {
         debugPrint("Error fetching API database version");
-        var snackBar = const SnackBar(
+        const snackBar = SnackBar(
           content: Text("Failed to connect to the API. Please restart the app"),
         );
         snackbarKey.currentState?.showSnackBar(snackBar);
-
         // TODO: Handle API call failure
       }
     } on TimeoutException catch (_) {
-      debugPrint("Try Catch 1.");
-      var jsonData = box.get("json_data");
-      List<dynamic> list = jsonData != null ? jsonDecode(jsonData) : [];
-
-      List<CardV2> cardList =
-          list.map((card) => CardV2.fromJson(card)).toList();
-
-      setResult(cardList);
+      debugPrint("TimeoutException occurred");
+      handleDataFromBox(box);
     } on SocketException catch (_) {
-      debugPrint("Try Catch 2");
-      var jsonData = box.get("json_data");
-      List<dynamic> list = jsonData != null ? jsonDecode(jsonData) : [];
-
-      List<CardV2> cardList =
-          list.map((card) => CardV2.fromJson(card)).toList();
-
-      setResult(cardList);
+      debugPrint("SocketException occurred");
+      handleDataFromBox(box);
     } catch (e) {
       debugPrint("An error occurred: $e");
     }
+  }
+
+  void handleDataFromBox(Box box) {
+    var jsonData = box.get("json_data");
+    List<dynamic> list = jsonData != null ? jsonDecode(jsonData) : [];
+    List<CardV2> cardList = list.map((card) => CardV2.fromJson(card)).toList();
+    setResult(cardList);
   }
 
   Future<List<CardV2>> fetchNewData() async {
