@@ -90,8 +90,8 @@ class LoginWidgetState extends State<LoginWidget> {
                   Navigator.pushNamed(context, "/register");
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      Colors.green, // Change the color for Register button
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue, // Text color
                 ),
                 child: const Text('Register'),
               ),
