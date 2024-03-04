@@ -31,7 +31,7 @@ class _DeckDetailState extends State<DeckDetail> {
 
   double cardWidth = 100;
 
-  bool deleteView = false;
+  bool displayDeleteView = false;
 
   bool hasChanged = false;
 
@@ -80,7 +80,7 @@ class _DeckDetailState extends State<DeckDetail> {
             ],
           ),
         ),
-        appBar: deleteView
+        appBar: displayDeleteView
             ? AppBar(
                 title: const Text("Remove card(s)"),
                 actions: [
@@ -125,21 +125,23 @@ class _DeckDetailState extends State<DeckDetail> {
                   ),
                 ],
               ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CardAddPage(
-                  deck: widget.deck,
-                  addCard: _addCard,
-                ),
-              ),
-            );
-          },
-          backgroundColor: Colors.amber[800],
-          child: const Icon(Icons.add),
-        ),
+        floatingActionButton: !displayDeleteView
+            ? FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CardAddPage(
+                        deck: widget.deck,
+                        addCard: _addCard,
+                      ),
+                    ),
+                  );
+                },
+                backgroundColor: Colors.amber[800],
+                child: const Icon(Icons.add),
+              )
+            : null,
         body: TabBarView(
           children: [
             SafeArea(
@@ -153,7 +155,7 @@ class _DeckDetailState extends State<DeckDetail> {
                     childAspectRatio: cardAspRatio,
                   ),
                   itemBuilder: (BuildContext ctx, index) {
-                    if (deleteView) {
+                    if (displayDeleteView) {
                       return Stack(
                         children: [
                           MyCard(
@@ -193,7 +195,7 @@ class _DeckDetailState extends State<DeckDetail> {
                     childAspectRatio: cardAspRatio,
                   ),
                   itemBuilder: (BuildContext ctx, index) {
-                    if (deleteView) {
+                    if (displayDeleteView) {
                       return Stack(
                         children: [
                           MyCard(
@@ -269,7 +271,7 @@ class _DeckDetailState extends State<DeckDetail> {
 
   void toggleDeleteView() {
     setState(() {
-      deleteView = !deleteView;
+      displayDeleteView = !displayDeleteView;
     });
   }
 
