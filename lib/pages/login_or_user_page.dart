@@ -73,7 +73,7 @@ class UserInfo extends StatelessWidget {
             saveToDatabase(context);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).colorScheme.background,
             textStyle: const TextStyle(fontSize: 16),
           ),
           child: const Text("Save to DB"),
@@ -86,7 +86,7 @@ class UserInfo extends StatelessWidget {
             handleUserLogin(deckListGetX);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).colorScheme.background,
             textStyle: const TextStyle(fontSize: 16),
           ),
           child: const Text("Load from DB"),
