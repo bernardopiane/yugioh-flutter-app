@@ -8,8 +8,8 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hive/hive.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:http/http.dart' as http;
+import 'package:yugi_deck/utils.dart';
 
-import 'globals.dart';
 
 class DataProvider extends GetxController {
   RxList<CardV2> cards = <CardV2>[].obs;
@@ -70,10 +70,7 @@ class DataProvider extends GetxController {
         }
       } else {
         debugPrint("Error fetching API database version");
-        const snackBar = SnackBar(
-          content: Text("Failed to connect to the API. Please restart the app"),
-        );
-        snackbarKey.currentState?.showSnackBar(snackBar);
+        showSnackBar("Failed to connect to the API. Please restart the app");
         // TODO: Handle API call failure
       }
     } on TimeoutException catch (_) {
@@ -140,10 +137,7 @@ class DataProvider extends GetxController {
       var jsonData = jsonEncode(newData);
       box.put("json_data", jsonData);
     } catch (e) {
-      var snackBar = const SnackBar(
-        content: Text("Failed to fetch latest cards from API"),
-      );
-      snackbarKey.currentState?.showSnackBar(snackBar);
+      showSnackBar("Failed to fetch latest cards from API");
       debugPrint("Error fetching new data: $e");
       // Handle the error
     }

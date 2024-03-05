@@ -75,8 +75,7 @@ class _MyAppState extends State<MyApp> {
       // Handle loading errors
       debugPrint('Error loading data: $error');
       // Show error message to the user
-      const snackBar = SnackBar(content: Text('Failed to load data'));
-      snackbarKey.currentState?.showSnackBar(snackBar);
+      showSnackBar("Failed to load data");
     } finally {
       setState(() {
         isLoading = false;

@@ -20,6 +20,7 @@ Future<void> saveToDatabase(BuildContext context) async {
     User? currentUser = auth.currentUser;
     if (currentUser == null) {
       debugPrint('User not authenticated. Cannot save to the database.');
+      showSnackBar("User not authenticated. Cannot save to the database.");
       return;
     }
 
@@ -92,7 +93,8 @@ Future<int> fetchDeckQuantity(BuildContext context) async {
       return 0;
     }
 
-    final userDocRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final userDocRef =
+        FirebaseFirestore.instance.collection('users').doc(user.uid);
     final decksCollection = userDocRef.collection('decks');
     final decksQuerySnapshot = await decksCollection.get();
 
@@ -154,10 +156,7 @@ Future<void> handleUserLogin(DeckListGetX deckListGetX) async {
     // Handle errors (e.g., no internet connection, Firestore not reachable, etc.)
     debugPrint('Error handling user login: $e\n$stackTrace');
   }
-  const snackBar = SnackBar(
-    content: Text("Imported decks from database"),
-  );
-  snackbarKey.currentState?.showSnackBar(snackBar);
+  showSnackBar("Imported decks from database");
 }
 
 List<Deck> getUserDecks(List<dynamic> data) {
