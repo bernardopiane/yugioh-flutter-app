@@ -92,6 +92,10 @@ class Deck {
   }
 
   void addCard(CardV2 card) {
+    // Initialize cards and extra with no cards
+    initializeDeck();
+
+    debugPrint("Entered addCard");
     if (isExtraDeck(card)) {
       if (extra != null && extra!.length >= 15) {
         throw Exception('Extra deck can have a maximum of 15 cards');
@@ -114,6 +118,12 @@ class Deck {
       }
     }
     updateSavedDate();
+  }
+
+  void initializeDeck() {
+    // If variable is not initialized, initialize it with empty lists
+    cards ??= [];
+    extra ??= [];
   }
 
   setCards(List<CardV2> cardList) {

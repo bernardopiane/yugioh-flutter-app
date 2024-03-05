@@ -52,10 +52,7 @@ Future<List<CardV2>> fetchCardList(String url, BuildContext context) async {
       var jsonData = jsonDecode(response.body);
 
       if (jsonData["error"] != null) {
-        var snackBar = SnackBar(
-          content: Text(jsonData["error"].toString()),
-        );
-        snackbarKey.currentState?.showSnackBar(snackBar);
+        showSnackBar(jsonData["error"].toString());
 
         return cardV2List;
       }
@@ -69,31 +66,18 @@ Future<List<CardV2>> fetchCardList(String url, BuildContext context) async {
 
       return cardV2List;
     } else {
-      var snackBar = SnackBar(
-        content: Text(
-            'Failed to fetch card data. Status code: ${response.statusCode}'),
-      );
-      snackbarKey.currentState?.showSnackBar(snackBar);
+      showSnackBar(
+          "Failed to fetch card data. Status code: ${response.statusCode}");
       return [];
     }
   } on TimeoutException {
-    var snackBar = const SnackBar(
-      content:
-          Text('Request timed out. Please check your internet connection.'),
-    );
-    snackbarKey.currentState?.showSnackBar(snackBar);
+    showSnackBar("Request timed out. Please check your internet connection.");
     return [];
   } on SocketException {
-    var snackBar = const SnackBar(
-      content: Text('No internet connection.'),
-    );
-    snackbarKey.currentState?.showSnackBar(snackBar);
+    showSnackBar("No internet connection.");
     return [];
   } catch (e) {
-    var snackBar = const SnackBar(
-      content: Text('An error occurred. Please try again later.'),
-    );
-    snackbarKey.currentState?.showSnackBar(snackBar);
+    showSnackBar("An error occurred. Please try again later.");
     return [];
   }
 }
@@ -139,4 +123,12 @@ Future<List<CardV2>> searchCards(List<CardV2> cards, String searchPhrase) {
 
 Future<List<CardV2>> convertToFuture(List<CardV2> cardList) {
   return Future.value(cardList);
+}
+
+void showSnackBar(String message) {
+  snackbarKey.currentState?.clearSnackBars();
+  SnackBar snackBar = SnackBar(
+    content: Text(message),
+  );
+  snackbarKey.currentState?.showSnackBar(snackBar);
 }
