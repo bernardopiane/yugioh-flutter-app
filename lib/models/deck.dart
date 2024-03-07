@@ -124,6 +124,7 @@ class Deck {
     // If variable is not initialized, initialize it with empty lists
     cards ??= [];
     extra ??= [];
+    updateSavedDate();
   }
 
   setCards(List<CardV2> cardList) {
