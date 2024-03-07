@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:yugi_deck/widgets/google_sign_in_widget.dart';
 import 'package:yugi_deck/widgets/login_widget.dart';
+import 'package:yugi_deck/widgets/user_card_info.dart';
 
 import '../database.dart';
 import '../models/deck_list_getx.dart';
@@ -63,8 +64,7 @@ class _UserInfoState extends State<UserInfo> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    fetchDeckQuantity(context).then((value){
+    fetchDeckQuantity(context).then((value) {
       setState(() {
         databaseDeckQuantity = value;
       });
@@ -82,29 +82,41 @@ class _UserInfoState extends State<UserInfo> {
           'Welcome, ${widget.user.email}!',
           style: Theme.of(context).textTheme.titleLarge,
         ),
-        Expanded(
-          child: GridView.count(
-            // Create a grid with 2 columns. If you change the scrollDirection to
-            // horizontal, this produces 2 rows.
-            crossAxisCount: 2,
-            // Generate 100 widgets that display their index in the List.
-            children: [
-              Card(
-                child: Center(
-                    child: Text(
-                  "You have ${Provider.of<DeckList>(context, listen: false).decks.length} decks saved in app",
-                  textAlign: TextAlign.center,
-                )),
+        Row(
+          children: [
+            UserCardInfo(
+                message:
+                    "You have ${Provider.of<DeckList>(context, listen: false).decks.length} decks saved in app"),
+            UserCardInfo(
+                message:
+                    "You have $databaseDeckQuantity decks saved in the cloud"),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                saveToDatabase(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.background,
+                textStyle: const TextStyle(fontSize: 16),
               ),
-              Card(
-                child: Center(
-                    child: Text(
-                  "You have $databaseDeckQuantity decks saved in the cloud",
-                  textAlign: TextAlign.center,
-                )),
+              child: const Text("Save to DB"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                handleUserLogin(Provider.of<DeckList>(context, listen: false));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.background,
+                textStyle: const TextStyle(fontSize: 16),
               ),
-            ],
-          ),
+              child: const Text("Load from DB"),
+            )
+          ],
         ),
         const SizedBox(height: 16),
         LogoutWidget(),
