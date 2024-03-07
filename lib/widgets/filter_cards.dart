@@ -249,10 +249,17 @@ class FilterCardsState extends State<FilterCards> {
                       Navigator.pop(context); // Close the child page
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor, // Use primary color from the theme
+                      backgroundColor: Theme.of(context)
+                          .primaryColor, // Use primary color from the theme
                     ),
-                    child: const Text('Apply Filters'),
-                  ),
+                    child: Text('Apply Filters',
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .primaryTextTheme
+                              .titleMedium
+                              ?.color,
+                        )),
+                  )
                 ],
               ),
             ],
