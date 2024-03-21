@@ -141,55 +141,10 @@ class _MainPageState extends State<MainPage>
             return CardGridView(cardList: snapshot.data!);
           }
           return Container(); // unreachable
-          //
-
-          // if (snapshot.connectionState != ConnectionState.done) {
-          //   child = SizedBox(
-          //     height: MediaQuery.of(context).size.height,
-          //     width: MediaQuery.of(context).size.width,
-          //     child: const Center(
-          //       child: CircularProgressIndicator(),
-          //     ),
-          //   );
-          // }
-          // if (snapshot.hasError) {
-          //   debugPrint(snapshot.error.toString());
-          //   child = const Text("Failed to load data");
-          // } else if (snapshot.hasData) {
-          //   child = CardGridView(cardList: snapshot.data!);
-          //   // return GridView(
-          //   //   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          //   //     maxCrossAxisExtent: 200,
-          //   //     mainAxisSpacing: 12,
-          //   //     crossAxisSpacing: 12,
-          //   //     childAspectRatio: 59 / 86,
-          //   //   ),
-          //   //   children: _buildList(snapshot.data!),
-          //   // );
-          // } else {
-          //   child = const CircularProgressIndicator();
-          // }
-          //
-          // return Center(
-          //   child: AnimatedSwitcher(
-          //     duration: const Duration(milliseconds: 225),
-          //     child: child,
-          //   ),
-          // );
         },
       ),
     );
   }
-
-  // List<Widget> _buildList(List<CardInfoEntity> data) {
-  //   List<Widget> widgets = [];
-  //
-  //   for (var element in data) {
-  //     widgets.add(GridTile(child: MyCard(cardInfo: element)));
-  //   }
-  //
-  //   return widgets;
-  // }
 
   _search(String value) async {
     List<CardV2> tempCards = await data;

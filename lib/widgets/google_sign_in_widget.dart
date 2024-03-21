@@ -12,35 +12,42 @@ class GoogleSignInWidget extends StatefulWidget {
 class GoogleSignInWidgetState extends State<GoogleSignInWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  bool isSigningIn = false; // New variable to handle sign-in process state
 
   Future<User?> _handleSignIn() async {
+    setState(() {
+      isSigningIn = true;
+    });
+
     try {
-      // Trigger Google sign-in process
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
       if (googleSignInAccount == null) {
-        // User canceled the sign-in
         return null;
       }
 
-      // Obtain GoogleSignInAuthentication for Firebase
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
 
-      // Authenticate with Firebase using GoogleSignInAuthentication
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken,
+        // idToken: googleSignInAuthentication.idToken,
+      //   Google services latest has ID Token problems on android
       );
 
-      // Sign in to Firebase with the Google credentials
       final UserCredential authResult =
           await _auth.signInWithCredential(credential);
 
-      // Return the authenticated user
+      setState(() {
+        isSigningIn = false; // Update state after sign-in process finishes
+      });
+
       return authResult.user;
     } catch (error) {
       debugPrint('Error during Google sign-in: $error');
+      setState(() {
+        isSigningIn = false; // Update state to allow button press on error
+      });
       return null;
     }
   }
@@ -48,27 +55,20 @@ class GoogleSignInWidgetState extends State<GoogleSignInWidget> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () async {
-        User? user = await _handleSignIn();
-        if (user != null) {
-          // Handle successful sign-in, for example, navigate to the user's page
-          debugPrint('Google sign-in successful. User: ${user.displayName}');
-        } else {
-          // Handle unsuccessful sign-in
-          debugPrint('Google sign-in unsuccessful.');
-        }
-      },
+      onPressed: !isSigningIn
+          ? _handleSignIn
+          : null, // Disable button if sign-in in progress
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.black,
-        backgroundColor: Colors.white, // Text color
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
-        ),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
-      child: const Text(
-        'Sign In with Google',
-        style: TextStyle(fontSize: 16.0),
-      ),
+      child: isSigningIn
+          ? const CircularProgressIndicator()
+          : const Text(
+              'Sign In with Google',
+              style: TextStyle(fontSize: 16.0),
+            ), // Show a spinner while signing in
     );
   }
 }

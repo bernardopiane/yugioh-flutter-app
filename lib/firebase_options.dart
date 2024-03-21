@@ -25,7 +25,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -67,15 +70,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '183865338046',
     projectId: 'yugioh-deck-67dd9',
     storageBucket: 'yugioh-deck-67dd9.appspot.com',
-    iosBundleId: 'com.bernardopiane.yugiDeck',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD8Fi1AEt3y1vQNcrBB-tfGUU6zG7-AkbU',
-    appId: '1:183865338046:ios:fd5efc0d127f47c06856ef',
-    messagingSenderId: '183865338046',
-    projectId: 'yugioh-deck-67dd9',
-    storageBucket: 'yugioh-deck-67dd9.appspot.com',
+    androidClientId: '183865338046-c2rtb8ugu579s93i0u33q90ma2to7r3j.apps.googleusercontent.com',
+    iosClientId: '183865338046-73d1svv0jdunrbnnd8h02k4hf3mr6oa2.apps.googleusercontent.com',
     iosBundleId: 'com.bernardopiane.yugiDeck',
   );
 }
