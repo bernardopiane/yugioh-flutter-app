@@ -50,13 +50,8 @@ class CardAddPageState extends State<CardAddPage> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => FilterPage(
-                          applyFilter: applyFilter,
-                          activeFilters: activeFilters)),
-                );
+                Get.to(FilterPage(
+                    applyFilter: applyFilter, activeFilters: activeFilters));
               },
               icon: const Icon(Icons.filter))
         ],

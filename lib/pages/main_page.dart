@@ -105,10 +105,7 @@ class _MainPageState extends State<MainPage>
             onSelected: (int value) {
               switch (value) {
                 case 0:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AboutPage()),
-                  );
+                  Get.to(const AboutPage());
                   break;
                 case 1:
                   themeController.toggleTheme();
@@ -117,11 +114,7 @@ class _MainPageState extends State<MainPage>
                   dataProvider.forceUpdate();
                   break;
                 case 3:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginOrUserPage()),
-                  );
+                  Get.to(const LoginOrUserPage());
                   break;
               }
             },

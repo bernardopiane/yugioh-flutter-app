@@ -10,7 +10,6 @@ import 'package:yugi_deck/pages/login_or_user_page.dart';
 import 'package:yugi_deck/pages/my_home_page.dart';
 import 'package:yugi_deck/pages/register_page.dart';
 import 'package:yugi_deck/pages/splash_page.dart';
-import 'package:yugi_deck/widgets/theme_controller.dart';
 
 // Firebase
 import 'package:firebase_core/firebase_core.dart';
@@ -75,7 +74,7 @@ class _MyAppState extends State<MyApp> {
       // Handle loading errors
       debugPrint('Error loading data: $error');
       // Show error message to the user
-      showSnackBar("Failed to load data");
+      Get.snackbar("Error", "Failed to load data");
     } finally {
       setState(() {
         isLoading = false;

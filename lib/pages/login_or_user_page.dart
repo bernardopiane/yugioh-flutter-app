@@ -62,6 +62,8 @@ class UserInfo extends StatefulWidget {
 class _UserInfoState extends State<UserInfo> {
   int databaseDeckQuantity = 0;
 
+  final DeckListGetX deckListGetX = Get.put(DeckListGetX());
+
   @override
   void initState() {
     fetchDeckQuantity(context).then((value) {
@@ -86,7 +88,7 @@ class _UserInfoState extends State<UserInfo> {
           children: [
             UserCardInfo(
                 message:
-                    "You have ${Provider.of<DeckList>(context, listen: false).decks.length} decks saved in app"),
+                    "You have ${deckListGetX.decks.length} decks saved in app"),
             UserCardInfo(
                 message:
                     "You have $databaseDeckQuantity decks saved in the cloud"),
@@ -108,7 +110,7 @@ class _UserInfoState extends State<UserInfo> {
             ),
             ElevatedButton(
               onPressed: () {
-                handleUserLogin(Provider.of<DeckList>(context, listen: false));
+                handleUserLogin(deckListGetX);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.background,

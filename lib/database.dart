@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/models/deck_list_getx.dart';
+import 'package:yugi_deck/utils.dart';
 
 import 'models/deck.dart';
 
@@ -20,7 +21,7 @@ Future<void> saveToDatabase(BuildContext context) async {
     User? currentUser = auth.currentUser;
     if (currentUser == null) {
       debugPrint('User not authenticated. Cannot save to the database.');
-      showSnackBar("User not authenticated. Cannot save to the database.");
+      Get.snackbar("Error", "User not authenticated. Cannot save to the database.");
       return;
     }
 
