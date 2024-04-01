@@ -1,10 +1,10 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/models/deck.dart';
-import 'package:yugi_deck/models/deck_list.dart';
+import 'package:yugi_deck/models/deck_list_getx.dart';
 import 'package:yugi_deck/utils.dart';
 import 'package:yugi_deck/variables.dart';
 import 'package:yugi_deck/widgets/card_width_slider.dart';
@@ -127,61 +127,6 @@ class _DeckDetailState extends State<DeckDetail> {
               : AppBar(
                   title: Text(widget.deck.name),
                   actions: [
-                    // IconButton(
-                    //   onPressed: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => CardAddPage(
-                    //           deck: widget.deck,
-                    //           addCard: _addCard,
-                    //         ),
-                    //       ),
-                    //     );
-                    //   },
-                    //   icon: const Icon(Icons.add, semanticLabel: 'Add Card'),
-                    // ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     if (deckCards.length < 40) {
-                    //       var snackBar = const SnackBar(
-                    //         content: Text("Your deck has less than 40 cards"),
-                    //       );
-                    //       snackbarKey.currentState?.showSnackBar(snackBar);
-                    //     }
-                    //     _saveDeck();
-                    //     hasChanged = false;
-                    //   },
-                    //   icon: const Icon(Icons.save, semanticLabel: 'Save Deck'),
-                    // ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     showModalBottomSheet(
-                    //       context: context,
-                    //       builder: (context) {
-                    //         return CardWidthSlider(
-                    //           notifyParent: changeWidth,
-                    //           currentWidth: cardWidth,
-                    //         );
-                    //       },
-                    //     );
-                    //   },
-                    //   icon: const Icon(Icons.photo_size_select_large,
-                    //       semanticLabel: 'Adjust Card Size'),
-                    // ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     _copyToClipboardAndShowMessage();
-                    //   },
-                    //   icon:
-                    //       const Icon(Icons.copy, semanticLabel: 'Copy to Clipboard'),
-                    // ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     toggleDeleteView();
-                    //   },
-                    //   icon: const Icon(Icons.delete, semanticLabel: 'Delete'),
-                    // ),
                     PopupMenuButton<String>(
                       onSelected: (value) => _handleClick(value),
                       itemBuilder: (BuildContext context) {
@@ -295,15 +240,6 @@ class _DeckDetailState extends State<DeckDetail> {
                               fullImage: true,
                               noTap: true,
                             ),
-                            // Material(
-                            //   color: Colors.transparent,
-                            //   child: InkWell(
-                            //     onTap: () {
-                            //       handleSelectedCards(
-                            //           extraCards.elementAt(index));
-                            //     },
-                            //   ),
-                            // ),
                             Positioned(
                                 top: 0,
                                 right: 0,
@@ -324,15 +260,6 @@ class _DeckDetailState extends State<DeckDetail> {
                         );
                       }
                     }),
-                // child: GridView(
-                //   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                //     maxCrossAxisExtent: cardWidth,
-                //     mainAxisSpacing: 12,
-                //     crossAxisSpacing: 12,
-                //     childAspectRatio: cardAspRatio,
-                //   ),
-                //   children: _buildExtra(),
-                // ),
               ),
             ],
           ),
@@ -340,82 +267,6 @@ class _DeckDetailState extends State<DeckDetail> {
       ),
     );
   }
-
-  // List<Widget> _buildCards() {
-  //   List<Widget> widgets = [];
-  //
-  //   for (var element in deckCards) {
-  //     if (deleteView) {
-  //       if (selectedCards.contains(element)) {
-  //         widgets.add(
-  //           Stack(
-  //             children: [
-  //               MyCard(
-  //                 cardInfo: element,
-  //                 fullImage: true,
-  //                 noTap: true,
-  //               ),
-  //               Material(
-  //                 color: Colors.grey.withOpacity(0.60),
-  //                 child: InkWell(
-  //                   onTap: () {
-  //                     handleSelectedCards(element);
-  //                   },
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                 top: -10,
-  //                 right: -10,
-  //                 child: IconButton(
-  //                   icon: const Icon(Icons.remove_circle_outline),
-  //                   onPressed: () {},
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       } else {
-  //         widgets.add(
-  //           Stack(
-  //             children: [
-  //               MyCard(
-  //                 cardInfo: element,
-  //                 fullImage: true,
-  //                 noTap: true,
-  //               ),
-  //               Material(
-  //                 color: Colors.transparent,
-  //                 child: InkWell(
-  //                   onTap: () {
-  //                     handleSelectedCards(element);
-  //                   },
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                   top: 0,
-  //                   right: 0,
-  //                   child: FloatingActionButton(
-  //                     onPressed: () {
-  //                       deleteCard(element);
-  //                     },
-  //                     backgroundColor: Colors.red,
-  //                     mini: true,
-  //                     child: const Icon(Icons.close),
-  //                   )),
-  //             ],
-  //           ),
-  //         );
-  //       }
-  //     } else {
-  //       widgets.add(MyCard(
-  //         cardInfo: element,
-  //         fullImage: true,
-  //       ));
-  //     }
-  //   }
-  //
-  //   return widgets;
-  // }
 
   addToState(CardV2 element) {
     //TODO: Check if api returns extra deck type - remove hardcoded
@@ -441,11 +292,13 @@ class _DeckDetailState extends State<DeckDetail> {
   }
 
   void _saveDeck() async {
-    final deckListProvider = Provider.of<DeckList>(context, listen: false);
 
-    deckListProvider.setCards(widget.deck, deckCards);
-    deckListProvider.setExtra(widget.deck, extraCards);
-    await deckListProvider.saveToFile(widget.deck);
+    final DeckListGetX dataProvider = Get.find<DeckListGetX>();
+
+    dataProvider.setCards(widget.deck, deckCards);
+    dataProvider.setExtra(widget.deck, extraCards);
+
+    await dataProvider.saveToFile(widget.deck);
 
     hasChanged = false;
   }

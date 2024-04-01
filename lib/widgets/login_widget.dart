@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:yugi_deck/database.dart';
 
-import '../models/deck_list.dart';
+import '../models/deck_list_getx.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({Key? key}) : super(key: key);
@@ -17,9 +17,11 @@ class LoginWidgetState extends State<LoginWidget> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final DeckListGetX deckListGetX = Get.find<DeckListGetX>();
+
   String? _error;
 
-  Future<void> _loginUser(DeckList deckListProvider) async {
+  Future<void> _loginUser(DeckListGetX deckListGetX) async {
 
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -27,7 +29,7 @@ class LoginWidgetState extends State<LoginWidget> {
         password: _passwordController.text,
       );
 
-      handleUserLogin(deckListProvider);
+      handleUserLogin(deckListGetX);
 
       debugPrint('User logged in: ${userCredential.user!.email}');
       // You can handle the logged-in user as needed
@@ -79,7 +81,7 @@ class LoginWidgetState extends State<LoginWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () => _loginUser(Provider.of<DeckList>(context, listen: false)),
+                onPressed: () => _loginUser(deckListGetX),
                 child: const Text('Login'),
               ),
               const SizedBox(width: 24.0),

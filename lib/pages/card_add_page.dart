@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/models/filter_options.dart';
 import 'package:yugi_deck/pages/filter_page.dart';
@@ -29,6 +29,8 @@ class CardAddPageState extends State<CardAddPage> {
 
   final TextEditingController _controller = TextEditingController();
   bool isFiltered = false;
+
+  final DataProvider dataProvider = Get.put(DataProvider());
 
   @override
   void dispose() {
@@ -154,8 +156,7 @@ class CardAddPageState extends State<CardAddPage> {
       });
     } else {
       setState(() {
-        cardResult = searchCards(
-            Provider.of<DataProvider>(context, listen: false).cards, query);
+        cardResult = searchCards(dataProvider.cards, query);
       });
     }
   }
@@ -164,8 +165,7 @@ class CardAddPageState extends State<CardAddPage> {
     setState(() {
       activeFilters = filterOptions;
     });
-    List<CardV2> cardList =
-        Provider.of<DataProvider>(context, listen: false).cards;
+    List<CardV2> cardList = dataProvider.cards;
 
     List<CardV2> filtered = cardList.where((card) {
       if (filterOptions.cardTypes.isNotEmpty) {
@@ -222,8 +222,7 @@ class CardAddPageState extends State<CardAddPage> {
         cardResult = cardList;
       });
     } else {
-      List<CardV2> allCards =
-          Provider.of<DataProvider>(context, listen: false).cards;
+      List<CardV2> allCards = dataProvider.cards;
       setState(() {
         isFiltered = false;
         cardResult = convertToFuture(allCards);
@@ -236,8 +235,7 @@ class CardAddPageState extends State<CardAddPage> {
     setState(() {
       isFiltered = false;
       activeFilters = FilterOptions();
-      cardResult = convertToFuture(
-          Provider.of<DataProvider>(context, listen: false).cards);
+      cardResult = convertToFuture(dataProvider.cards);
     });
   }
 }

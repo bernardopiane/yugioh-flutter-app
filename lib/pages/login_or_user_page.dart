@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
-import 'package:yugi_deck/models/deck_list.dart';
+import 'package:get/get.dart';
 import 'package:yugi_deck/widgets/google_sign_in_widget.dart';
 import 'package:yugi_deck/widgets/login_widget.dart';
 
 import '../database.dart';
+import '../models/deck_list_getx.dart';
 import '../widgets/logout_widget.dart';
 
 class LoginOrUserPage extends StatefulWidget {
@@ -54,6 +54,7 @@ class UserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -69,7 +70,9 @@ class UserInfo extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            handleUserLogin(Provider.of<DeckList>(context, listen: false));
+            final DeckListGetX deckListGetX = Get.find<DeckListGetX>();
+
+            handleUserLogin(deckListGetX);
           },
           child: const Text("Load from DB"),
         )

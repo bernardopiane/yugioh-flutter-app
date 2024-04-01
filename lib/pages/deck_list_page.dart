@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:yugi_deck/models/deck.dart';
-import 'package:yugi_deck/models/deck_list.dart';
+import 'package:yugi_deck/models/deck_list_getx.dart';
 import 'package:yugi_deck/pages/deck_detail.dart';
 
 class DeckListPage extends StatefulWidget {
@@ -14,6 +14,8 @@ class DeckListPage extends StatefulWidget {
 
 class _DeckListPageState extends State<DeckListPage> {
   String? inputDeckName;
+
+  final DeckListGetX deckListGetX = Get.put(DeckListGetX());
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +45,10 @@ class _DeckListPageState extends State<DeckListPage> {
                   TextButton(
                     onPressed: () {
                       if (inputDeckName != null && inputDeckName!.isNotEmpty) {
-                        Provider.of<DeckList>(context, listen: false)
-                            .addDeck(Deck(inputDeckName!));
+                        final DeckListGetX deckProvider =
+                            Get.find<DeckListGetX>();
+
+                        deckProvider.addDeck(Deck(inputDeckName!));
                         inputDeckName = "";
                         Navigator.pop(context);
                       }
@@ -71,16 +75,20 @@ class _DeckListPageState extends State<DeckListPage> {
         ],
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.only(top: 8),
-          children: _buildDeckList(context),
+        child: Obx(
+          () => ListView(
+            padding: const EdgeInsets.only(top: 8),
+            children: _buildDeckList(context),
+          ),
         ),
       ),
     );
   }
 
   List<Widget> _buildDeckList(BuildContext context) {
-    return Provider.of<DeckList>(context).decks.map((element) {
+    final DeckListGetX deckListGetX = Get.find<DeckListGetX>();
+
+    return deckListGetX.decks.map((element) {
       return Card(
         elevation: 4.0,
         margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -101,20 +109,16 @@ class _DeckListPageState extends State<DeckListPage> {
             },
             onSelected: (String value) {
               if (value == "delete") {
-                Provider.of<DeckList>(context, listen: false)
-                    .deleteDeck(element.id!);
+                final DeckListGetX deckListGetX = Get.find<DeckListGetX>();
+
+                deckListGetX.deleteDeck(element.id!);
               } else if (value == "rename") {
                 _showRenameDialog(context, element);
               }
             },
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DeckDetail(deck: element),
-              ),
-            );
+            Get.to(DeckDetail(deck: element));
           },
         ),
       );
@@ -145,8 +149,9 @@ class _DeckListPageState extends State<DeckListPage> {
             TextButton(
               onPressed: () {
                 if (inputDeckName != null && inputDeckName!.isNotEmpty) {
-                  Provider.of<DeckList>(context, listen: false)
-                      .renameDeck(deck, inputDeckName!);
+                  final DeckListGetX deckListGetX = Get.find<DeckListGetX>();
+
+                  deckListGetX.renameDeck(deck, inputDeckName!);
                   inputDeckName = "";
                   Navigator.pop(context);
                 }
@@ -197,8 +202,10 @@ void _showInputDialog(BuildContext context) {
 }
 
 void _importDeckFromBase64(String data, BuildContext context) {
+  final DeckListGetX deckListGetX = Get.find<DeckListGetX>();
+
   Uuid uuid = const Uuid();
   Deck newDeck = Deck.fromBase64(data);
   newDeck.id = uuid.v4();
-  Provider.of<DeckList>(context, listen: false).addDeck(newDeck);
+  deckListGetX.addDeck(newDeck);
 }

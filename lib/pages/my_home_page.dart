@@ -36,19 +36,19 @@ class _MyHomePageState extends State<MyHomePage> {
     _pageController = PageController(initialPage: _selectedIndex);
   }
 
+  void _onPageChanged(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: PageView(
-          onPageChanged: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          controller: _pageController,
-          children: _pages,
-        ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).dialogBackgroundColor,

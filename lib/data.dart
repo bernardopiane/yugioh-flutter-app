@@ -3,16 +3,21 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hive/hive.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:http/http.dart' as http;
 
 import 'globals.dart';
 
-class DataProvider extends ChangeNotifier {
-  List<CardV2> cards = [];
+class DataProvider extends GetxController {
+  RxList<CardV2> cards = <CardV2>[].obs;
 
-  DataProvider(this.cards);
+
+  DataProvider();
+
+  DataProvider.withCards(this.cards);
 
   Future<void> loadData() async {
     //  Check if already exists
@@ -26,8 +31,7 @@ class DataProvider extends ChangeNotifier {
   }
 
   setResult(List<CardV2> res) {
-    cards = res;
-    notifyListeners();
+    cards = res.obs;
   }
 
   Future<void> fetchDataAndStoreInHive() async {

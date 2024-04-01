@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:yugi_deck/models/card_v2.dart';
-import 'package:yugi_deck/models/deck_list.dart';
+import 'package:yugi_deck/models/deck_list_getx.dart';
 
 import 'models/deck.dart';
 
 Future<void> saveToDatabase(BuildContext context) async {
+  DeckListGetX deckListGetX = Get.find<DeckListGetX>();
+
   try {
     final FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    List<Deck> deckList = Provider.of<DeckList>(context, listen: false).decks;
+    List<Deck> deckList = deckListGetX.decks;
 
     // Ensure the user is authenticated before proceeding
     User? currentUser = auth.currentUser;
@@ -80,7 +82,7 @@ Future<Map<String, dynamic>?> getUserData() async {
   }
 }
 
-Future<void> handleUserLogin(DeckList deckListProvider) async {
+Future<void> handleUserLogin(DeckListGetX deckListGetX) async {
   try {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
@@ -106,15 +108,15 @@ Future<void> handleUserLogin(DeckList deckListProvider) async {
 
       // Do something with the loaded deck data (e.g., update UI or save to local storage)
       for (var deckEntry in deckList) {
-        Deck? curDeck = deckListProvider.decks
+        Deck? curDeck = deckListGetX.decks
             .where((element) => element.id == deckEntry.id)
             .firstOrNull;
         if (curDeck != null) {
           if (curDeck.lastUpdated!.isBefore(deckEntry.lastUpdated!)) {
-            deckListProvider.addDeck(deckEntry);
+            deckListGetX.addDeck(deckEntry);
           }
         } else {
-          deckListProvider.addDeck(deckEntry);
+          deckListGetX.addDeck(deckEntry);
         }
       }
     } else {

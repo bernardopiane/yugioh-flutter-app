@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:yugi_deck/data.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/pages/about_page.dart';
 import 'package:yugi_deck/pages/login_or_user_page.dart';
-import 'package:yugi_deck/widgets/theme_notifier.dart';
+import 'package:yugi_deck/widgets/theme_controller.dart';
 import 'package:yugi_deck/widgets/app_bar_search.dart';
 import '../models/filter_options.dart';
 import '../utils.dart';
@@ -22,6 +22,8 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>
     with AutomaticKeepAliveClientMixin {
+  bool _displaySearchBar = true;
+
   @override
   bool get wantKeepAlive => true;
 
@@ -36,6 +38,10 @@ class _MainPageState extends State<MainPage>
   String searchTerm = "";
 
   TextEditingController searchController = TextEditingController();
+
+  final ThemeController themeController = Get.put(ThemeController());
+
+  final DataProvider dataProvider = Get.put(DataProvider());
 
   @override
   void initState() {
@@ -57,25 +63,26 @@ class _MainPageState extends State<MainPage>
           child: FilterPage(
               applyFilter: applyFilter, activeFilters: activeFilters)),
       appBar: AppBar(
-        title: AppBarSearch(
-          searchController: searchController,
-          search: _search,
-          clear: _clearSearch,
-        ),
+        title: _displaySearchBar
+            ? const Text("Card List")
+            : AppBarSearch(
+                searchController: searchController,
+                search: _search,
+                clear: _clearSearch,
+              ),
         actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  _displaySearchBar = !_displaySearchBar;
+                });
+              },
+              icon: const Icon(Icons.search)),
           IconButton(
               onPressed: () {
                 _scaffoldkey.currentState!.openEndDrawer();
               },
               icon: const Icon(Icons.filter_list)),
-          // Consumer<ThemeNotifier>(builder: (context, themeNotifier, _) {
-          //   return Switch(
-          //     value: themeNotifier.currentTheme == ThemeMode.dark,
-          //     onChanged: (value) {
-          //       themeNotifier.toggleTheme(); // Toggle the theme
-          //     },
-          //   );
-          // }),
           PopupMenuButton<int>(
             itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
               const PopupMenuItem<int>(
@@ -104,12 +111,10 @@ class _MainPageState extends State<MainPage>
                   );
                   break;
                 case 1:
-                  Provider.of<ThemeNotifier>(context, listen: false)
-                      .toggleTheme();
+                  themeController.toggleTheme();
                   break;
                 case 2:
-                  Provider.of<DataProvider>(context, listen: false)
-                      .forceUpdate();
+                  dataProvider.forceUpdate();
                   break;
                 case 3:
                   Navigator.push(
@@ -201,11 +206,9 @@ class _MainPageState extends State<MainPage>
 
   _search(String value) async {
     List<CardV2> tempCards = await data;
-
     if (!isFiltered) {
       setState(() {
-        data = searchCards(
-            Provider.of<DataProvider>(context, listen: false).cards, value);
+        data = searchCards(dataProvider.cards, value);
       });
     } else {
       setState(() {
@@ -220,8 +223,7 @@ class _MainPageState extends State<MainPage>
     setState(() {
       activeFilters = FilterOptions();
       isFiltered = false;
-      data = convertToFuture(
-          Provider.of<DataProvider>(context, listen: false).cards);
+      data = convertToFuture(dataProvider.cards);
     });
   }
 
@@ -234,8 +236,7 @@ class _MainPageState extends State<MainPage>
         data = cardList;
       });
     } else {
-      List<CardV2> allCards =
-          Provider.of<DataProvider>(context, listen: false).cards;
+      List<CardV2> allCards = dataProvider.cards;
       setState(() {
         isFiltered = false;
         data = convertToFuture(allCards);
@@ -247,8 +248,7 @@ class _MainPageState extends State<MainPage>
     setState(() {
       activeFilters = filterOptions;
     });
-    List<CardV2> cardList =
-        Provider.of<DataProvider>(context, listen: false).cards;
+    List<CardV2> cardList = dataProvider.cards;
 
     List<CardV2> filtered = cardList.where((card) {
       if (filterOptions.cardTypes.isNotEmpty) {
