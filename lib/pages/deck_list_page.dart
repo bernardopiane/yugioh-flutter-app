@@ -118,7 +118,7 @@ class _DeckListPageState extends State<DeckListPage> {
             },
           ),
           onTap: () {
-            Get.to(DeckDetail(deck: element));
+            Get.to(() => DeckDetail(deck: element));
           },
         ),
       );

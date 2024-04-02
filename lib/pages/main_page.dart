@@ -114,7 +114,7 @@ class _MainPageState extends State<MainPage>
                   dataProvider.forceUpdate();
                   break;
                 case 3:
-                  Get.to(const LoginOrUserPage());
+                  Get.to(() => const LoginOrUserPage());
                   break;
               }
             },

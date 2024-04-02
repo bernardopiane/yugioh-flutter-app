@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "183865338046-6gb6hon5gjt3b2s22n001qb6psnb4a2r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bernardopiane.yugi_deck",
+            "certificate_hash": "7d643e4cef0f3b4ba4bce31df222e3b28db9664e"
+          }
+        },
+        {
           "client_id": "183865338046-c2rtb8ugu579s93i0u33q90ma2to7r3j.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
