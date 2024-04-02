@@ -306,6 +306,7 @@ class _DeckDetailState extends State<DeckDetail> {
       widget.deck.sortDeck();
       hasChanged = true;
     }
+    _saveDeck();
   }
 
   void _copyToClipboardAndShowMessage() {
