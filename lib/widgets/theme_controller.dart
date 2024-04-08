@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:get/get.dart';
+enum ThemeType { light, dark }
 
 class ThemeController extends GetxController {
   late SharedPreferences _prefs;
-  late RxBool _isDarkMode;
+  Rx<ThemeMode> themeMode = ThemeMode.system.obs;
 
   @override
   void onInit() {
     super.onInit();
-    _isDarkMode = false.obs; // Initialize as false
     _loadThemeFromPrefs();
   }
 
   Future<void> _loadThemeFromPrefs() async {
     _prefs = await SharedPreferences.getInstance();
-    _isDarkMode.value = _prefs.getBool('isDarkMode') ?? false;
+    final String? savedTheme = _prefs.getString('theme');
+    if (savedTheme != null) {
+      themeMode.value = savedTheme == 'dark' ? ThemeMode.dark : ThemeMode.light;
+    }
   }
-
-  bool get isDarkMode => _isDarkMode.value;
-
-  ThemeMode get currentTheme => _isDarkMode.value ? ThemeMode.dark : ThemeMode.light;
 
   void toggleTheme() {
-    _isDarkMode.value = !_isDarkMode.value;
-    _prefs.setBool("isDarkMode", _isDarkMode.value);
+    if (themeMode.value == ThemeMode.light) {
+      themeMode.value = ThemeMode.dark;
+      _saveThemeToPrefs('dark');
+    } else {
+      themeMode.value = ThemeMode.light;
+      _saveThemeToPrefs('light');
+    }
+    debugPrint("Theme changed to ${themeMode.value}");
+  }
+
+  Future<void> _saveThemeToPrefs(String theme) async {
+    await _prefs.setString('theme', theme);
   }
 }
-

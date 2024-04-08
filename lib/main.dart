@@ -13,6 +13,7 @@ import 'package:yugi_deck/pages/splash_page.dart';
 
 // Firebase
 import 'package:firebase_core/firebase_core.dart';
+import 'package:yugi_deck/widgets/theme_controller.dart';
 import 'firebase_options.dart';
 //
 
@@ -58,6 +59,8 @@ class _MyAppState extends State<MyApp> {
 
   DeckListGetX deckListGetX = Get.put(DeckListGetX());
   DataProvider dataProvider = Get.put(DataProvider());
+  ThemeController themeController = Get.put(ThemeController());
+
 
   @override
   void initState() {
@@ -85,29 +88,31 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
 
-    return GetMaterialApp(
-      title: 'MD Deck',
-      scaffoldMessengerKey: snackbarKey,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        // Define the named routes
-        '/login': (context) => const LoginOrUserPage(),
-        '/register': (context) => const RegisterPage(),
-      },
-      home: AnimatedSwitcher(
-        transitionBuilder: (Widget child, Animation<double> animation) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
+    return Obx((){
+      return GetMaterialApp(
+        title: 'MD Deck',
+        scaffoldMessengerKey: snackbarKey,
+        theme: lightTheme, // Default light theme
+        darkTheme: darkTheme, // Default dark theme
+        themeMode: themeController.themeMode.value, // Use themeMode from ThemeController
+        debugShowCheckedModeBanner: false,
+        initialRoute: '/',
+        routes: {
+          // Define the named routes
+          '/login': (context) => const LoginOrUserPage(),
+          '/register': (context) => const RegisterPage(),
         },
-        duration: const Duration(milliseconds: 500),
-        child: isLoading ? const SplashPage() : const MyHomePage(),
-      ),
-    );
+        home: AnimatedSwitcher(
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          duration: const Duration(milliseconds: 500),
+          child: isLoading ? const SplashPage() : const MyHomePage(),
+        ),
+      );
+    });
   }
 }
