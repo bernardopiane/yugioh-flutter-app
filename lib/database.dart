@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:yugi_deck/models/deck_list_getx.dart';
-import 'package:yugi_deck/utils.dart';
 
 import 'models/deck.dart';
 
@@ -157,7 +156,7 @@ Future<void> handleUserLogin(DeckListGetX deckListGetX) async {
     // Handle errors (e.g., no internet connection, Firestore not reachable, etc.)
     debugPrint('Error handling user login: $e\n$stackTrace');
   }
-  showSnackBar("Imported decks from database");
+  Get.snackbar("Error", "Imported decks from database");
 }
 
 List<Deck> getUserDecks(List<dynamic> data) {

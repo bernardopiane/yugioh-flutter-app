@@ -17,16 +17,6 @@ import 'package:yugi_deck/widgets/theme_controller.dart';
 import 'firebase_options.dart';
 //
 
-// Light theme
-final lightTheme = ThemeData(
-  brightness: Brightness.light,
-);
-
-// Dark theme
-final darkTheme = ThemeData(
-  brightness: Brightness.dark,
-);
-
 Future<void> main() async {
   await Hive.initFlutter();
 
@@ -92,9 +82,9 @@ class _MyAppState extends State<MyApp> {
       return GetMaterialApp(
         title: 'MD Deck',
         scaffoldMessengerKey: snackbarKey,
-        theme: lightTheme, // Default light theme
-        darkTheme: darkTheme, // Default dark theme
-        themeMode: themeController.themeMode.value, // Use themeMode from ThemeController
+        theme: themeController.lightTheme,
+        darkTheme: themeController.darkTheme,
+        themeMode: themeController.themeMode.value,
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {

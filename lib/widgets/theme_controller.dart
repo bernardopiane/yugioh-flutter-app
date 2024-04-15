@@ -8,6 +8,11 @@ class ThemeController extends GetxController {
   late SharedPreferences _prefs;
   Rx<ThemeMode> themeMode = ThemeMode.system.obs;
 
+  // Light theme
+  final lightTheme = ThemeData.light();
+// Dark theme
+  final darkTheme = ThemeData.dark();
+
   @override
   void onInit() {
     super.onInit();

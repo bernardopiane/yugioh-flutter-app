@@ -3,12 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 import 'package:http/http.dart' as http;
-import 'package:yugi_deck/utils.dart';
 
 
 class DataProvider extends GetxController {
@@ -70,7 +68,7 @@ class DataProvider extends GetxController {
         }
       } else {
         debugPrint("Error fetching API database version");
-        showSnackBar("Failed to connect to the API. Please restart the app");
+        Get.snackbar("Error", "Failed to connect to the API. Please restart the app");
         // TODO: Handle API call failure
       }
     } on TimeoutException catch (_) {
@@ -137,7 +135,7 @@ class DataProvider extends GetxController {
       var jsonData = jsonEncode(newData);
       box.put("json_data", jsonData);
     } catch (e) {
-      showSnackBar("Failed to fetch latest cards from API");
+      Get.snackbar("Error", "Failed to fetch latest cards from API");
       debugPrint("Error fetching new data: $e");
       // Handle the error
     }

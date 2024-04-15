@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:yugi_deck/globals.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 
 import 'package:http/http.dart' as http;
@@ -52,7 +53,7 @@ Future<List<CardV2>> fetchCardList(String url, BuildContext context) async {
       var jsonData = jsonDecode(response.body);
 
       if (jsonData["error"] != null) {
-        showSnackBar(jsonData["error"].toString());
+        Get.snackbar("Error", jsonData["error"].toString());
 
         return cardV2List;
       }
@@ -66,18 +67,20 @@ Future<List<CardV2>> fetchCardList(String url, BuildContext context) async {
 
       return cardV2List;
     } else {
-      showSnackBar(
+      Get.snackbar("Error",
           "Failed to fetch card data. Status code: ${response.statusCode}");
       return [];
     }
   } on TimeoutException {
-    showSnackBar("Request timed out. Please check your internet connection.");
+    Get.snackbar(
+        "Error", "Request timed out. Please check your internet connection");
+
     return [];
   } on SocketException {
-    showSnackBar("No internet connection.");
+    Get.snackbar("Error", "No internet connection");
     return [];
   } catch (e) {
-    showSnackBar("An error occurred. Please try again later.");
+    Get.snackbar("Error", "An error occurred. Please try again later");
     return [];
   }
 }
@@ -124,11 +127,11 @@ Future<List<CardV2>> searchCards(List<CardV2> cards, String searchPhrase) {
 Future<List<CardV2>> convertToFuture(List<CardV2> cardList) {
   return Future.value(cardList);
 }
-
-void showSnackBar(String message) {
-  snackbarKey.currentState?.clearSnackBars();
-  SnackBar snackBar = SnackBar(
-    content: Text(message),
-  );
-  snackbarKey.currentState?.showSnackBar(snackBar);
-}
+//
+// void showSnackBar(String message) {
+//   snackbarKey.currentState?.clearSnackBars();
+//   SnackBar snackBar = SnackBar(
+//     content: Text(message),
+//   );
+//   snackbarKey.currentState?.showSnackBar(snackBar);
+// }

@@ -300,7 +300,7 @@ class _DeckDetailState extends State<DeckDetail> {
       });
     } catch (e) {
       debugPrint("Error: ${e.toString()}");
-      showSnackBar(e.toString());
+      Get.snackbar("Error", e.toString());
       return; // Add a return statement here to exit the method
     } finally {
       widget.deck.sortDeck();
@@ -313,7 +313,7 @@ class _DeckDetailState extends State<DeckDetail> {
     String base64String = widget.deck.toBase64();
 
     FlutterClipboard.copy(base64String).then((value) {
-      showSnackBar("Data has been copied to the clipboard.");
+      Get.snackbar("Success", "Data has been copied to the clipboard.");
     });
   }
 
