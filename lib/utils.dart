@@ -3,45 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:yugi_deck/models/card_v2.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-// Future<List<CardV2>> fetchCardList(
-//     String url, BuildContext context) async {
-//   var response = await http.post(Uri.parse(url));
-//
-//   List<CardInfoEntity> cardList = [];
-//   List<CardV2> cardV2List = [];
-//
-//   var json = jsonDecode(response.body);
-//
-//   if (json["error"] != null) {
-//     var snackBar = SnackBar(
-//       content: Text(json["error"].toString()),
-//     );
-//     snackbarKey.currentState?.showSnackBar(snackBar);
-//
-//     // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-//     return cardV2List;
-//   }
-//
-//   var lista = json["data"] as List;
-//
-//
-//   for (var element in lista) {
-//     CardInfoEntity cardInfo = CardInfoEntity.fromJson(element);
-//     CardV2 card = CardV2.fromJson(element);
-//     cardV2List.add(card);
-//     cardList.add(cardInfo);
-//   }
-//
-//   debugPrint(cardV2List.elementAt(0).name);
-//
-//   return cardV2List;
-// }
 
 Future<List<CardV2>> fetchCardList(String url, BuildContext context) async {
   try {
@@ -127,11 +92,4 @@ Future<List<CardV2>> searchCards(List<CardV2> cards, String searchPhrase) {
 Future<List<CardV2>> convertToFuture(List<CardV2> cardList) {
   return Future.value(cardList);
 }
-//
-// void showSnackBar(String message) {
-//   snackbarKey.currentState?.clearSnackBars();
-//   SnackBar snackBar = SnackBar(
-//     content: Text(message),
-//   );
-//   snackbarKey.currentState?.showSnackBar(snackBar);
-// }
+
