@@ -22,7 +22,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>
     with AutomaticKeepAliveClientMixin {
-
   @override
   bool get wantKeepAlive => true;
 
@@ -142,20 +141,23 @@ class _MainPageState extends State<MainPage>
     );
   }
 
-  _search(String value) async {
-    List<CardV2> tempCards = dataProvider.cards;
-    if (!isFiltered) {
-      setState(() {
-        data = searchCards(dataProvider.cards, value);
-      });
-    } else {
-      tempCards = await filterCards(activeFilters);
-      setState(() {
-        data = searchCards(tempCards, value);
-      });
-    }
+  void _search(String value) async {
+    try {
+      List<CardV2> cardsToSearch;
+      if (isFiltered) {
+        cardsToSearch = await filterCards(activeFilters);
+      } else {
+        cardsToSearch = dataProvider.cards;
+      }
 
-    FocusManager.instance.primaryFocus?.unfocus();
+      setState(() {
+        data = searchCards(cardsToSearch, value);
+      });
+    } catch (error) {
+      debugPrint('Error during search: $error');
+    } finally {
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
   }
 
   _clearSearch() {
