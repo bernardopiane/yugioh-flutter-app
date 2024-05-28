@@ -44,6 +44,7 @@ class CardAddPageState extends State<CardAddPage> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: AppBarSearch(
+            pageTitle: "Add a card",
             searchController: _controller,
             search: _searchQuery,
             clear: _clearSearch),
