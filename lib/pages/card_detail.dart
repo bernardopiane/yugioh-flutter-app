@@ -25,6 +25,7 @@ class CardDetail extends StatelessWidget {
         title: CardTitle(
           title: card.name!,
         ),
+        scrolledUnderElevation: 0,
       ),
       body: Container(
         child: Platform.isWindows

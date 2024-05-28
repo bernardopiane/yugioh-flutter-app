@@ -92,4 +92,3 @@ Future<List<CardV2>> searchCards(List<CardV2> cards, String searchPhrase) {
 Future<List<CardV2>> convertToFuture(List<CardV2> cardList) {
   return Future.value(cardList);
 }
-
