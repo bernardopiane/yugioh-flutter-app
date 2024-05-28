@@ -6,11 +6,13 @@ class AppBarSearch extends StatefulWidget {
     required this.searchController,
     required this.search,
     required this.clear,
+    required this.pageTitle,
   }) : super(key: key);
 
   final TextEditingController searchController;
   final Function(String) search;
   final VoidCallback clear;
+  final String pageTitle;
 
   @override
   State<AppBarSearch> createState() => _AppBarSearchState();
@@ -49,7 +51,7 @@ class _AppBarSearchState extends State<AppBarSearch> {
           )
         : Row(
             children: [
-              const Expanded(child: Text('App Title')),
+              Expanded(child: Text(widget.pageTitle)),
               IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {
