@@ -22,7 +22,6 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage>
     with AutomaticKeepAliveClientMixin {
-  bool _displaySearchBar = true;
 
   @override
   bool get wantKeepAlive => true;
@@ -33,9 +32,7 @@ class _MainPageState extends State<MainPage>
 
   late Future<List<CardV2>> data;
 
-  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey();
-
-  String searchTerm = "";
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   TextEditingController searchController = TextEditingController();
 
@@ -55,7 +52,7 @@ class _MainPageState extends State<MainPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      key: _scaffoldkey,
+      key: _scaffoldKey,
       endDrawer: Container(
           width: MediaQuery.of(context).size.width / 1.5,
           height: MediaQuery.of(context).size.height,
@@ -63,24 +60,17 @@ class _MainPageState extends State<MainPage>
           child: FilterPage(
               applyFilter: applyFilter, activeFilters: activeFilters)),
       appBar: AppBar(
-        title: _displaySearchBar
-            ? const Text("Card List")
-            : AppBarSearch(
-                searchController: searchController,
-                search: _search,
-                clear: _clearSearch,
-              ),
+        scrolledUnderElevation: 0,
+        title: AppBarSearch(
+          pageTitle: "Card List",
+          searchController: searchController,
+          search: _search,
+          clear: _clearSearch,
+        ),
         actions: [
           IconButton(
               onPressed: () {
-                setState(() {
-                  _displaySearchBar = !_displaySearchBar;
-                });
-              },
-              icon: const Icon(Icons.search)),
-          IconButton(
-              onPressed: () {
-                _scaffoldkey.currentState!.openEndDrawer();
+                _scaffoldKey.currentState!.openEndDrawer();
               },
               icon: const Icon(Icons.filter_list)),
           PopupMenuButton<int>(
@@ -153,12 +143,13 @@ class _MainPageState extends State<MainPage>
   }
 
   _search(String value) async {
-    List<CardV2> tempCards = await data;
+    List<CardV2> tempCards = dataProvider.cards;
     if (!isFiltered) {
       setState(() {
         data = searchCards(dataProvider.cards, value);
       });
     } else {
+      tempCards = await filterCards(activeFilters);
       setState(() {
         data = searchCards(tempCards, value);
       });
